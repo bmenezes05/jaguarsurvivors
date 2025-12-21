@@ -45,9 +45,14 @@ Este projeto não é apenas um jogo, mas um estudo de performance em ambientes d
 
 Como o projeto utiliza módulos ES6, ele precisa ser servido via protocolo HTTP.
 
-## 🎨 Créditos e Tecnologias
--- **Engine:** Phaser 3
--- **Lógica:** JavaScript Puro (ES6+)
--- **Design de Sistemas:** Inspirado na estrutura de jogos Survivors-like.
 
-Desenvolvido por [Bruno Menz]. Se você gostou do projeto ou quer acompanhar a evolução, deixe uma ⭐ no repositório!
+---
+
+## 🎨 Créditos e Tecnologias
+- **Engine:** Phaser 3
+- **Lógica:** JavaScript Puro (ES6+)
+- **Design de Sistemas:** Inspirado na estrutura de jogos Survivors-like.
+
+---
+
+> **Desenvolvido por [Bruno Menz]. Se você gostou do projeto ou quer acompanhar a evolução, deixe uma ⭐ no repositório!**
