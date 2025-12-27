@@ -1,0 +1,912 @@
+:root {
+    --cor-primaria: #FFD700;
+    /* Amarelo Ouro/Jaguar */
+    --cor-secundaria: #000000;
+    /* Preto */
+    --cor-fundo: #1a1a1a;
+    /* Cinza Escuro */
+    --cor-texto: #ffffff;
+    --cor-perigo: #ff3333;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body {
+    background: #0d0d0d;
+    /* Fundo da página fora do jogo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Roboto', sans-serif;
+    overflow: hidden;
+}
+
+#game-wrapper {
+    position: relative;
+    width: 1280px;
+    height: 720px;
+    box-shadow: 0 0 50px rgba(255, 215, 0, 0.2);
+    /* Brilho amarelo suave */
+    background-color: var(--cor-secundaria);
+    border: 2px solid #333;
+}
+
+#game-container {
+    width: 100%;
+    height: 100%;
+}
+
+/* --- UI COMUM --- */
+.overlay-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.92);
+    /* Fundo quase sólido */
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    color: var(--cor-texto);
+}
+
+.overlay-screen.active {
+    display: flex;
+}
+
+/* Tipografia Jaguar */
+h1 {
+    font-family: 'Anton', sans-serif;
+    /* Fonte de impacto */
+    font-size: 80px;
+    color: var(--cor-primaria);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    text-shadow: 4px 4px 0px #333;
+    /* Sombra sólida */
+}
+
+h2 {
+    font-family: 'Anton', sans-serif;
+    font-size: 32px;
+    color: #fff;
+    margin-bottom: 40px;
+    background-color: var(--cor-primaria);
+    color: var(--cor-secundaria);
+    padding: 5px 20px;
+    transform: skewX(-10deg);
+    /* Estilo itálico forçado/dinâmico */
+}
+
+/* Placeholders de Imagem */
+.logo-placeholder {
+    width: 300px;
+    height: 150px;
+    background-color: #333;
+    border: 2px dashed var(--cor-primaria);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    color: #777;
+    font-size: 14px;
+}
+
+.logo-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.btn {
+    font-family: 'Anton', sans-serif;
+    padding: 20px 60px;
+    font-size: 28px;
+    background: var(--cor-primaria);
+    border: none;
+    color: var(--cor-secundaria);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 10px;
+    text-transform: uppercase;
+    clip-path: polygon(10% 0, 100% 0, 100% 80%, 90% 100%, 0 100%, 0 20%);
+    /* Formato recortado moderno */
+}
+
+.btn:hover {
+    background: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+/* --- CONTAINER PRINCIPAL --- */
+#char-container {
+    display: flex;
+    flex-wrap: wrap;
+    /* Permite quebrar linha se a tela for pequena */
+    justify-content: center;
+    gap: 10px;
+}
+
+/* --- O CARD DO PERSONAGEM --- */
+.char-card {
+    width: 240px;
+    background: rgba(20, 20, 20, 0.9);
+    backdrop-filter: blur(5px);
+    /* Efeito de vidro foscado */
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.char-card:hover {
+    border-color: #ffd700;
+    /* Dourado no hover */
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+
+
+/* --- IMAGEM E HEADER --- */
+.char-header {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.char-placeholder-img {
+    width: 100%;
+    height: 220px;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    border: 1px solid #ffd700;
+}
+
+.char-placeholder-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: -10px -50px;
+}
+
+/* --- STATS BASE (VIDA E VELOCIDADE) --- */
+.char-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+    /* Faz as informações ocuparem o espaço restante */
+}
+
+.char-main-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+    padding: 10px 5px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Coluna de Stats (Esquerda) */
+.char-quick-stats {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.q-stat {
+    font-size: 12px;
+    font-weight: bold;
+    color: #eee;
+    text-align: left;
+    padding-left: 8px;
+}
+
+.char-base-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    padding: 5px;
+}
+
+.stat-row {
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+}
+
+/* ARMA: Agora com mais destaque */
+.char-weapon-display {
+    flex: 1.5;
+    /* Dá um pouco mais de espaço para a arma */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.mini-weapon-icon {
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.3));
+    margin-bottom: 4px;
+}
+
+.weapon-name-label {
+    font-size: 9px;
+    color: #ffd700;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.char-traits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    /* Espaço horizontal entre tags */
+    justify-content: center;
+    line-height: 1.8;
+    /* Aumenta o espaço vertical quando quebra linha */
+}
+
+.trait-good,
+.trait-bad {
+    display: inline-block;
+    white-space: nowrap;
+    /* Impede que o texto da tag quebre */
+    margin-bottom: 4px;
+    /* Garante que uma linha não encoste na outra */
+    padding: 2px 8px;
+    font-size: 10px;
+    border-radius: 12px;
+}
+
+.trait-good {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+    border: 1px solid #2ecc71;
+}
+
+.trait-bad {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+}
+
+/* Ajuste no H3 para caber melhor */
+.char-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+    text-align: center;
+}
+
+/* --- HUD --- */
+#debug-info {
+    display: none;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #fff;
+    font-size: 14px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-left: 3px solid var(--cor-primaria);
+    font-family: 'Roboto', monospace;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+#health-bar-container {
+    width: 200px;
+    height: 25px;
+    position: absolute;
+    top: 40px;
+    /* Adjusted position, below game-timer for example */
+    left: 10px;
+    z-index: 10;
+}
+
+#health-bar-bg {
+    width: 100%;
+    height: 100%;
+    background-color: #333;
+    border: 2px solid #555;
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+}
+
+#health-bar-fill {
+    height: 100%;
+    width: 100%;
+    /* Default to full health */
+    background-color: var(--cor-perigo);
+    border-radius: 3px;
+    transition: width 0.3s ease-out;
+}
+
+#health-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    z-index: 2;
+    /* Ensure text is above the fill */
+}
+
+#wave-info {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 15px;
+    font-family: 'Anton', sans-serif;
+    z-index: 10;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 18px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.icon-box {
+    margin-right: 8px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#wave-display.boss-wave {
+    background: rgba(139, 0, 0, 0.8);
+    border: 1px solid #ff4444;
+    animation: bossPulse 1.5s infinite;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+}
+
+@keyframes bossPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+    }
+
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+    }
+}
+
+#xp-bar-container {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+#xp-bar-bg {
+    width: 100%;
+    height: 20px;
+    background: #000;
+    border: 2px solid #333;
+    position: relative;
+}
+
+#xp-bar-fill {
+    height: 100%;
+    background: var(--cor-primaria);
+    /* Barra Amarela */
+    width: 0%;
+    transition: width 0.2s ease;
+}
+
+#xp-bar-text {
+    position: absolute;
+    top: -25px;
+    width: 100%;
+    text-align: center;
+    color: var(--cor-primaria);
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    text-shadow: 2px 2px 0 #000;
+}
+
+/* Upgrade Screen */
+#upgrade-options {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.upgrade-card {
+    width: 250px;
+    background: #222;
+    border: 1px solid #444;
+    border-left: 4px solid var(--cor-primaria);
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.upgrade-card:hover {
+    transform: scale(1.05);
+    background: #333;
+    border-color: #fff;
+}
+
+.upgrade-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.upgrade-name {
+    font-size: 22px;
+    font-family: 'Anton', sans-serif;
+    color: var(--cor-primaria);
+    margin-bottom: 10px;
+}
+
+.upgrade-description {
+    font-size: 14px;
+    color: #ddd;
+}
+
+/* Timer no topo */
+#game-timer {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-family: 'Anton', sans-serif;
+    font-size: 48px;
+    z-index: 1000;
+    text-shadow: 3px 3px 0 #000;
+    pointer-events: none;
+}
+
+/* Damage number */
+#damage-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-family: 'Anton', sans-serif;
+    font-size: 48px;
+    -webkit-text-stroke: 1px #000;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 999;
+    transition: opacity 0.3s;
+}
+
+#damage-indicator.show {
+    opacity: 1;
+}
+
+/* --- BOSS UI --- */
+#boss-health-container {
+    position: absolute;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    z-index: 1000;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+#boss-health-container.active {
+    opacity: 1;
+}
+
+.boss-name {
+    color: #ff3333;
+    font-family: 'Anton', sans-serif;
+    font-size: 28px;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+    text-shadow: 3px 3px 0 #000;
+    text-transform: uppercase;
+}
+
+.boss-bar-bg {
+    width: 100%;
+    height: 30px;
+    background: #000;
+    border: 3px solid #ff3333;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.boss-bar-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #880000 0%, #ff3333 50%, #880000 100%);
+    background-size: 200% 100%;
+    animation: bloodFlow 3s infinite linear;
+    transition: width 0.2s ease-out;
+}
+
+@keyframes bloodFlow {
+    0% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: -100% 0;
+    }
+}
+
+.boss-health-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+    text-shadow: 2px 2px 2px #000;
+    z-index: 5;
+}
+
+/* --- META SHOP STYLES --- */
+#shop-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    max-width: 1150px;
+    margin-top: 20px;
+}
+
+#shop-header {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 1px solid var(--cor-primaria);
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: var(--cor-primaria);
+    font-family: 'Anton', sans-serif;
+}
+
+.shop-card {
+    width: 200px;
+    background: rgba(30, 30, 30, 0.9);
+    border: 2px solid #444;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.shop-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--cor-primaria);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.shop-card.locked {
+    opacity: 0.7;
+    filter: grayscale(0.5);
+}
+
+.shop-card.maxed {
+    border-color: #2ecc71;
+}
+
+.shop-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.shop-info h3 {
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 5px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.shop-info p {
+    font-size: 12px;
+    color: #aaa;
+    margin-bottom: 10px;
+    min-height: 30px;
+}
+
+.rank-badge {
+    font-size: 12px;
+    color: var(--cor-primaria);
+    display: block;
+}
+
+.btn-buy {
+    width: 100%;
+    padding: 8px;
+    background: var(--cor-primaria);
+    color: #000;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.btn-buy:hover:not(:disabled) {
+    background: #fff;
+}
+
+.btn-buy:disabled {
+    background: #555;
+    color: #888;
+    cursor: not-allowed;
+}
+
+.shop-card.maxed .btn-buy {
+    background: #2ecc71;
+    color: #fff;
+}
+
+/* --- SETTINGS STYLES --- */
+.settings-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 400px;
+}
+
+.setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.setting-row label {
+    color: #fff;
+    font-size: 18px;
+}
+
+input[type=range] {
+    width: 200px;
+    accent-color: var(--cor-primaria);
+}
+
+input[type=checkbox] {
+    width: 24px;
+    height: 24px;
+    accent-color: var(--cor-primaria);
+    cursor: pointer;
+}
+
+.legendary-card-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+.legendary-card-title {
+    margin: 0 0 10px 0;
+    color: var(--cor-secundaria);
+    text-align: center;
+    font-size: 20px;
+}
+
+.legendary-card-type {
+    font-size: 0.9rem;
+    color: var(--cor-primaria);
+    margin-bottom: 20px;
+    font-style: italic;
+    font-size: 9px;
+}
+
+.legendary-card-description {
+    color: var(--cor-primaria);
+    text-align: center;
+    line-height: 1.4;
+}
+
+/* Upgrade Screen */
+#upgrade-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    font-family: Arial, sans-serif;
+}
+
+.upgrade-title {
+    color: gold;
+    margin-bottom: 40px;
+}
+
+.upgrade-cards {
+    display: flex;
+    gap: 24px;
+}
+
+.upgrade-card {
+    width: 220px;
+    height: 400px;
+    background: #222;
+    border: 2px solid #666;
+    border-radius: 8px;
+    padding: 16px;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    align-content: center;
+}
+
+.upgrade-card:hover {
+    transform: translateY(-8px) scale(1.05);
+    border-color: white;
+}
+
+.upgrade-card.evolution {
+    border-color: gold;
+}
+
+.upgrade-icon {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 12px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 48px;
+}
+
+.upgrade-type {
+    display: block;
+    margin-top: 12px;
+    font-size: 12px;
+    color: #aaa;
+}
+
+.upgrade-card h2 {
+    color: var(--cor-secundaria);
+    font-size: 18px;
+}
+
+/* Equips UI */
+#loadout-ui {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 50;
+    pointer-events: none;
+    font-family: 'Roboto', sans-serif;
+}
+
+.loadout-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.loadout-title {
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.loadout-title.weapon {
+    color: #FFD700;
+}
+
+.loadout-title.item {
+    color: #00FF88;
+}
+
+.loadout-slots {
+    display: flex;
+    gap: 6px;
+}
+
+.loadout-slot {
+    width: 44px;
+    height: 44px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid #666;
+    position: relative;
+    border-radius: 4px;
+}
+
+.loadout-slot.weapon {
+    border-color: #FFD700;
+}
+
+.loadout-slot.item {
+    border-color: #00FF88;
+}
+
+.loadout-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
+.slot-level {
+    position: absolute;
+    bottom: 2px;
+    right: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 1px 4px;
+    border-radius: 3px;
+    color: #fff;
+}

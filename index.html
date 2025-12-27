@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jaguar Survivors - MVP Fase 1</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.70.0/phaser.min.js"></script>
+</head>
+
+<body>
+    <div id="game-wrapper">
+        <div id="main-menu" class="overlay-screen active">
+            <div class="logo-placeholder">
+                <span>[ ESPAÇO PARA LOGO 300x150 ]</span>
+            </div>
+
+            <h1>JAGUAR SURVIVORS</h1>
+            <h2>MISSÃO MVP</h2>
+            <button class="btn" onclick="GameEvents.goToCharSelect()">INICIAR MISSÃO</button>
+            <button class="btn" onclick="GameEvents.goToShop()">LOJA & UPGRADES</button>
+            <button class="btn" onclick="GameEvents.goToSettings()">AJUSTES</button>
+        </div>
+
+        <div id="meta-shop" class="overlay-screen">
+            <h1>LOJA DE SUPRIMENTOS</h1>
+            <div id="shop-header">
+                <span id="shop-coins-display">Moedas: 0</span>
+            </div>
+
+            <div id="shop-container">
+                <!-- Shop items injected via JS -->
+            </div>
+
+            <button class="btn" style="margin-top: 20px; background: #555;"
+                onclick="GameEvents.goToMainMenu()">Voltar</button>
+        </div>
+
+        <div id="settings-menu" class="overlay-screen">
+            <h1>CONFIGURAÇÕES</h1>
+
+            <div class="settings-rows">
+                <div class="setting-row">
+                    <label>Volume Principal</label>
+                    <input type="range" id="setting-volume" min="0" max="100" value="100"
+                        onchange="GameEvents.setVolume(this.value)">
+                </div>
+                <div class="setting-row">
+                    <label>Tremor de Tela</label>
+                    <input type="checkbox" id="setting-shake" onchange="GameEvents.toggleShake()" checked>
+                </div>
+            </div>
+
+            <button class="btn" style="margin-top: 20px; background: #555;"
+                onclick="GameEvents.goToMainMenu()">Voltar</button>
+        </div>
+
+        <div id="char-select" class="overlay-screen">
+            <h1>QUEM VAI LIDERAR?</h1>
+            <div id="char-container">
+            </div>
+            <button class="btn" style="margin-top: 20px; background: #555;"
+                onclick="GameEvents.goToMainMenu()">Voltar</button>
+        </div>
+
+        <div id="game-over" class="overlay-screen">
+            <h1 style="color: var(--cor-perigo);">MISSÃO FALHOU</h1>
+            <h2>TEMPO: <span id="survival-time" style="color: #fff">00:00</span></h2>
+            <div style="font-size: 18px; margin-bottom: 20px; color: #aaa; font-family: 'Anton', sans-serif;">
+                NÍVEL ALCANÇADO: <span id="final-level" style="color: var(--cor-primaria)">1</span>
+            </div>
+            <button class="btn" onclick="GameEvents.goToCharSelect()">TENTAR NOVAMENTE</button>
+            <button class="btn" style="background: #333;" onclick="GameEvents.goToMainMenu()">MENU</button>
+        </div>
+
+        <div id="pause-screen" class="overlay-screen">
+            <h1>MISSAO PAUSADA</h1>
+            <button class="btn" onclick="GameEvents.resumeGame()">CONTINUAR</button>
+            <button class="btn" style="background: #555;" onclick="GameEvents.goToMainMenu()">SAIR DA MISSÃO</button>
+        </div>
+
+        <div id="upgrade-screen" class="overlay-screen">
+            <div
+                style="font-size: 56px; color: var(--cor-primaria); font-family: 'Anton', sans-serif; margin-bottom: 20px; text-shadow: 2px 2px 0 #000;">
+                NOVO RECURSO!</div>
+            <div style="font-size: 20px; color: #fff; margin-bottom: 40px;">Escolha um reforço para a missão:</div>
+            <div id="upgrade-options"></div>
+        </div>
+
+        <div id="game-ui" style="display: none;">
+            <div id="game-timer">00:00</div>
+
+            <div id="wave-info">
+                <div class="info-item" id="wave-display">
+                    <div class="icon-box">🌊</div>
+                    <span>ONDA <span id="wave-count">1</span></span>
+                </div>
+                <div class="info-item" id="enemies-display">
+                    <div class="icon-box">👾</div>
+                    <span id="enemy-count">0</span>
+                </div>
+                <div class="info-item" id="kills-display">
+                    <div class="icon-box">💀</div>
+                    <span id="kill-count">0</span>
+                </div>
+            </div>
+
+            <div id="health-bar-container">
+                <div id="health-bar-bg">
+                    <div id="health-bar-fill"></div>
+                    <div id="health-text">100/100</div>
+                </div>
+            </div>
+
+            <div id="xp-bar-container">
+                <div id="xp-bar-text">NÍVEL 1</div>
+                <div id="xp-bar-bg">
+                    <div id="xp-bar-fill"></div>
+                </div>
+            </div>
+
+            <div id="damage-indicator">💥!</div>
+        </div>
+
+        <div id="game-container"></div>
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+</body>
+
+</html>
