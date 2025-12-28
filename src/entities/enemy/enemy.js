@@ -1,5 +1,5 @@
 import { EnemyProjectile } from '../enemyProjectile.js';
-import { CONFIG } from '../../config.js';
+import { CONFIG } from '../../config/config.js';
 
 export class Enemy {
     constructor(scene) {
@@ -279,16 +279,16 @@ export class Enemy {
 
     updateVisuals() {
         // Simple priority: Stun > Freeze > Burn > Poison
-        this.sprite.clearTint();
-
         if (this.activeEffects.has('stun')) {
             this.sprite.setTint(0xFFFF00);
         } else if (this.activeEffects.has('freeze')) {
             this.sprite.setTint(0x00FFFF);
         } else if (this.activeEffects.has('burn')) {
-            this.sprite.setTint(0xFF4500);
+            this.sprite.setTint(0xFF7700);
         } else if (this.activeEffects.has('poison')) {
             this.sprite.setTint(0x00FF00);
+        } else {
+            this.sprite.clearTint();
         }
     }
 

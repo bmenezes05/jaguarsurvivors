@@ -22,34 +22,38 @@ export class MeleeWeaponStrategy extends WeaponStrategy {
             return;
         }
 
-        const atkSpeed = player.stats.attackSpeed;
-        const duration = (config.meleeAnimDuration ?? 250) / atkSpeed;
+        const visual = config.visual || {};
+        const strategyStats = config.strategyStats || {};
 
-        const baseScale = config.scale ?? 0.6;
+        const atkSpeed = player.stats.attackSpeed;
+        const duration = (strategyStats.meleeAnimDuration ?? 250) / atkSpeed;
+
+        const baseScale = visual.scale ?? 0.6;
         const scale = baseScale * player.stats.area;
 
         const facing = player.facingRight ? 1 : -1;
         const radius = player.player.config.bodyWidth * facing;
-        const offsetX = Math.cos(config.angleOrigin) * radius;
-        const offsetY = Math.sin(config.angleOrigin) * radius;
+
+        const angleOrigin = visual.angleOrigin ?? 0;
+
+        const offsetX = Math.cos(angleOrigin) * radius;
+        const offsetY = Math.sin(angleOrigin) * radius;
 
         sprite
-            .setOrigin(config.gripOrigin?.x ?? 0.5, config.gripOrigin?.y ?? 1.5)
-            .setAngle(config.angleOrigin ?? 0)
-            .setPosition(player.x + offsetX, player.y + offsetY)
-            .setScale(scale);
+            .setOrigin(visual.gripOrigin?.x ?? 0.5, visual.gripOrigin?.y ?? 1.5)
+            .setAngle(visual.angleAttackOrigin ?? 0)
+            .setPosition(player.x + offsetX, player.y + offsetY);
 
         this.scene.tweens.add({
             targets: sprite,
-            angle: config.angleAttack * facing ?? 0,
+            angle: (visual.angleAttackEnd ?? 180) * facing,
             duration,
             ease: 'Cubic.easeOut',
             onComplete: () => {
                 sprite
                     .setOrigin(0.5, 0.5)
-                    .setAngle(0)
-                    .setPosition(player.x + offsetX, player.y + offsetY)
-                    .setScale(scale);
+                    .setAngle(visual.angleOrigin ?? 0)
+                    .setPosition(player.x + offsetX, player.y + offsetY);
             }
         });
     }
@@ -57,13 +61,19 @@ export class MeleeWeaponStrategy extends WeaponStrategy {
     spawnHitbox() {
         const { weapon } = this;
         const { config, player, enemySpawner } = weapon;
+        const strategyStats = config.strategyStats || {};
 
         const area = player.stats.area;
-        const base = config.meleeHitbox ?? { width: 200, height: 100 };
+        const base = strategyStats.meleeHitbox ?? { width: 200, height: 100 };
 
         const width = base.width * area;
         const height = base.height * area;
-        const offsetX = (width / 2) * (player.facingRight ? 1 : -1);
+        let offsetX = 0;
+        if (strategyStats.frontalAttack) {
+            offsetX = (width / 2) * (player.facingRight ? 1 : -1);
+        } else {
+            offsetX = strategyStats.meleeOffsetHitbox.x * (player.facingRight ? 1 : -1);
+        }
 
         const hitbox = this.scene.add.zone(
             player.x + offsetX,
@@ -86,9 +96,8 @@ export class MeleeWeaponStrategy extends WeaponStrategy {
             hitEnemies.add(enemy);
         });
 
-        const duration =
-            (config.meleeAnimDuration ?? 250) /
-            player.stats.attackSpeed;
+        const atkSpeed = player.stats.attackSpeed;
+        const duration = (strategyStats.meleeAnimDuration ?? 250) / atkSpeed;
 
         this.scene.time.delayedCall(duration, () => hitbox.destroy());
     }
@@ -97,28 +106,38 @@ export class MeleeWeaponStrategy extends WeaponStrategy {
         const { weapon } = this;
         const { config, player, current } = weapon;
         const { damage, isCritical } = weapon.calculateDamage();
+        const effects = config.effects || {};
+        if (effects.elemental && effects.elemental !== 'none') {
+            enemy.applyEffect(
+                effects.elemental,
+                current.dotDamage,
+                effects.dotDuration || 0
+            );
+        }
 
         enemy.takeDamage(damage, isCritical, player);
 
-        const kb = config.knockback * player.stats.knockback;
-        enemy.applyKnockback(kb, config.knockbackDuration);
+        // Use calculated current knockback
+        const kb = current.knockback;
+        const kbDuration = current.knockbackDuration;
 
-        if (config.elementalEffect && config.elementalEffect !== 'none') {
-            enemy.applyEffect(
-                config.elementalEffect,
-                current.dotDamage,
-                config.dotDuration
-            );
-        }
+        enemy.applyKnockback(kb, kbDuration);
     }
 
     getWeaponSprite() {
         const weaponManager = this.scene.weaponManager;
-        if (!weaponManager || !weaponManager.weaponSprites || weaponManager.weaponSprites.length === 0) {
+        if (!weaponManager || !weaponManager.weapons || weaponManager.weapons.length === 0) {
             return null;
         }
 
         const weaponKey = this.weapon.config.key;
-        return weaponManager.weaponSprites.find(s => s.getData('weaponKey') === weaponKey);
+        const weapon = weaponManager.weapons.find(s => s.weaponKey === weaponKey);
+
+        if (!weapon) {
+            console.warn(`[MeleeWeaponStrategy] Weapon sprite not found for key: ${weaponKey}`);
+            return null;
+        }
+
+        return weapon.sprite;
     }
 }

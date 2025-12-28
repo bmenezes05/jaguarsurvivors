@@ -1,4 +1,4 @@
-import { CONFIG } from '../config.js';
+import { CONFIG } from '../config/config.js';
 import { Enemy } from '../entities/enemy/enemy.js';
 import { ObjectPool } from '../managers/objectPool.js';
 

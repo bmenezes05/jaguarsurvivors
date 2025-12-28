@@ -1,4 +1,4 @@
-import { CONFIG } from '../config.js';
+import { CONFIG } from '../config/config.js';
 
 /**
  * EquipmentManager
@@ -56,11 +56,6 @@ export class EquipmentManager {
     }
 
     // =============== ADD METHODS ===============
-
-    /**
-     * Add a new weapon to inventory
-     * Returns true if successful, false if at limit
-     */
     addWeapon(key) {
         if (!this.canAddWeapon()) {
             console.warn(`[EquipmentManager] Cannot add weapon ${key} - at max limit (${this.maxWeapons})`);
@@ -81,10 +76,6 @@ export class EquipmentManager {
         return true;
     }
 
-    /**
-     * Add a new equipable item to inventory
-     * Returns true if successful, false if at limit
-     */
     addItem(id) {
         if (!this.canAddItem()) {
             console.warn(`[EquipmentManager] Cannot add item ${id} - at max limit (${this.maxItems})`);
@@ -106,10 +97,6 @@ export class EquipmentManager {
 
     // =============== LEVEL UP METHODS ===============
 
-    /**
-     * Level up an existing weapon
-     * Returns true if successful, false if not equipped
-     */
     levelUpWeapon(key) {
         if (!this.hasWeapon(key)) {
             console.warn(`[EquipmentManager] Cannot level up weapon ${key} - not equipped`);
@@ -124,10 +111,6 @@ export class EquipmentManager {
         return true;
     }
 
-    /**
-     * Level up an existing item
-     * Returns true if successful, false if not equipped
-     */
     levelUpItem(id) {
         const item = this.equippedItems.find(i => i.id === id);
 

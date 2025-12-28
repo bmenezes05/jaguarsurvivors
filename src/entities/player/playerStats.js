@@ -1,4 +1,4 @@
-import { CONFIG } from '../../config.js';
+import { CONFIG } from '../../config/config.js';
 import { Stat } from '../../systems/statSystem.js';
 import { SaveManager } from '../../managers/saveManager.js';
 

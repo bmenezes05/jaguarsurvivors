@@ -1,4 +1,4 @@
-import { CONFIG, resetConfig } from '../config.js';
+import { CONFIG, resetConfig } from '../config/config.js';
 import { AudioManager } from '../managers/audio/audioManager.js';
 import { VFXManager } from '../managers/vfx/vfxManager.js';
 

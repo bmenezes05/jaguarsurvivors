@@ -14,13 +14,18 @@ export const VFX_CONFIG = {
         {
             effectClass: FlashEffect,
             condition: () => true,
-            config: { color: 0xFFFFFF, duration: 100 }
+            config: { duration: 100 }
         },
         // Pulse animation
         {
             effectClass: PulseEffect,
             condition: () => true,
-            config: { scale: 1.1, duration: 50 }
+            config: { scale: 1.2, duration: 200 }
+        },
+        {
+            effectClass: SparkEffect,
+            condition: () => true,
+            config: { count: 30, color: 0xff0000, speedMin: 150, speedMax: 300 }
         },
         // Damage Popup (Normal) - Non Crit, Non Boss
         {
@@ -57,12 +62,6 @@ export const VFX_CONFIG = {
             config: { count: 8, color: 0xFFD700, speedMin: 150, speedMax: 300 }
         }
     ],
-    // Critical Hit specifics
-    // NOTE: 'enemy-damaged' fires for both. We just add MORE effects for crit.
-    // ... Actually we can reuse 'enemy-damaged' and have condition: isCritical
-    // Updating 'enemy-damaged' to include Critical specific effects
-
-    // Boss Spawn
     'boss-spawned': [
         {
             effectClass: CameraFlashEffect,
@@ -89,6 +88,11 @@ export const VFX_CONFIG = {
             effectClass: SparkEffect,
             condition: (d) => d.type === 'poison',
             config: { count: 5, color: 0x00FF00, speedMin: 50, speedMax: 150 }
+        },
+        {
+            effectClass: SparkEffect,
+            condition: (d) => d.type === 'burn',
+            config: { count: 5, color: 0xFFD700, speedMin: 50, speedMax: 150 }
         }
     ],
 

@@ -1,68 +1,46 @@
-/**
- * Weapon Configuration
- * 
- * Weapon Types:
- * - 'melee': Close-range weapons using MeleeWeaponStrategy
- * - 'trail': Ranged weapons using TrailWeaponStrategy (creates trail effects)
- * 
- * Trail Weapon Properties (new semantics):
- * - trailSpeed: How fast the trail moves toward target (visual)
- * - lifetimeMs: Duration in ms before trail expires
- * - trailSize: Visual size of the trail effect
- * - trailColor: Color of the trail (hex)
- * - trailTexture: Optional sprite texture for the trail
- * - trailRotation: Whether the trail rotates
- * - trailScale: Visual scale multiplier
- * 
- * Legacy aliases (for backward compatibility):
- * - projectileSpeed → trailSpeed
- * - range → lifetimeMs (when used as duration)
- * - projectileSize → trailSize
- * - projectileColor → trailColor
- * - projectileTexture → trailTexture
- * - projectileRotation → trailRotation
- * - projectileScale → trailScale
- * - type: 'ranged' → type: 'trail'
- */
-
 export const weaponsConfig = [
-    // ==================== MELEE WEAPONS ====================
+
+    // ==================== MELEE ====================
     {
         key: 'weapon_sword',
         name: 'Espada',
         type: 'melee',
         image: 'src/assets/images/weapon_sword.png',
 
-        // Combat stats
-        damage: 25,
-        cooldown: 800,
-        knockback: 150,
-        knockbackDuration: 50,
+        baseStats: {
+            damage: 25,
+            cooldown: 1000,
+            knockback: 150,
+            knockbackDuration: 50
+        },
 
-        // Melee-specific
-        meleeHitbox: { width: 200, height: 100 },
-        meleeAnimDuration: 250,
+        strategyStats: {
+            meleeHitbox: { width: 160, height: 100 },
+            meleeAnimDuration: 250,
+            frontalAttack: true,
+            meleeOffsetHitbox: { x: 100, y: 0 }
+        },
 
-        // Visual
-        scale: 0.6,
-        origin: { x: 0.3, y: 0.5 },
-        gripOrigin: { x: 0.5, y: 1.5 },
-        angleOrigin: 0,
-        angleAttack: 180,
-        rotationSmoothing: 0.2,
+        visual: {
+            scale: 0.5,
+            offset: { x: 30, y: 0 },
+            origin: { x: 0.3, y: 0.5 },
+            gripOrigin: { x: 0.5, y: 1.5 },
+            angleOrigin: 0,
+            angleAttack: 180,
+            rotationSmoothing: 0.2
+        },
 
-        // Effects
-        elementalEffect: 'none',
-        dotDamage: 0,
-        dotDuration: 0,
+        effects: {
+            elemental: 'none',
+            dotDamage: 0,
+            dotDuration: 0
+        },
 
-        // Audio
-        soundKey: 'weapon_sword',
-        hitSoundKey: 'hit',
-
-        // Legacy (unused for melee, but included for consistency)
-        trailSpeed: 500,
-        trailSize: 10
+        audio: {
+            soundKey: 'weapon_sword',
+            hitSoundKey: 'hit'
+        }
     },
     {
         key: 'weapon_arm',
@@ -70,61 +48,41 @@ export const weaponsConfig = [
         type: 'melee',
         image: 'src/assets/images/weapon_arm.png',
 
-        damage: 50,
-        cooldown: 1600,
-        knockback: 300,
-        knockbackDuration: 50,
+        baseStats: {
+            damage: 50,
+            cooldown: 2000,
+            knockback: 200,
+            knockbackDuration: 100
+        },
 
-        meleeHitbox: { width: 200, height: 100 },
-        meleeAnimDuration: 250,
+        strategyStats: {
+            meleeHitbox: { width: 180, height: 200 },
+            meleeAnimDuration: 250,
+            frontalAttack: false,
+            meleeOffsetHitbox: { x: 0, y: 40 },
+        },
 
-        scale: 0.5,
-        origin: { x: 0.25, y: 0.95 },
-        gripOrigin: { x: 0.4, y: 1.5 },
-        angleOrigin: 90,
-        angleAttack: 180,
-        rotationSmoothing: 0.2,
+        visual: {
+            scale: 0.38,
+            offset: { x: 28, y: 40 },
+            origin: { x: 0.3, y: 0.5 },
+            gripOrigin: { x: 0.5, y: 1.5 },
+            angleOrigin: 180,
+            angleAttackOrigin: 0,
+            angleAttackEnd: 900,
+            rotationSmoothing: 0.2
+        },
 
-        elementalEffect: 'none',
-        dotDamage: 0,
-        dotDuration: 0,
+        effects: {
+            elemental: 'none',
+            dotDamage: 0,
+            dotDuration: 0
+        },
 
-        soundKey: 'weapon_hammer',
-        hitSoundKey: 'hit',
-
-        trailSpeed: 500,
-        trailSize: 10
-    },
-    {
-        key: 'weapon_flame_sword',
-        name: 'Espada de fogo',
-        type: 'melee',
-        image: 'src/assets/images/weapon_flame_sword.png',
-
-        damage: 25,
-        cooldown: 800,
-        knockback: 100,
-        knockbackDuration: 50,
-
-        meleeHitbox: { width: 200, height: 100 },
-        meleeAnimDuration: 250,
-
-        scale: 0.6,
-        origin: { x: 0.3, y: 0.5 },
-        gripOrigin: { x: 0.5, y: 1.5 },
-        angleOrigin: 0,
-        angleAttack: 180,
-        rotationSmoothing: 0.2,
-
-        elementalEffect: 'burn',
-        dotDamage: 1,
-        dotDuration: 1000,
-
-        soundKey: 'weapon_sword',
-        hitSoundKey: 'hit',
-
-        trailSpeed: 500,
-        trailSize: 10
+        audio: {
+            soundKey: 'weapon_sword',
+            hitSoundKey: 'hit'
+        }
     },
     {
         key: 'weapon_katana',
@@ -132,199 +90,525 @@ export const weaponsConfig = [
         type: 'melee',
         image: 'src/assets/images/weapon_katana.png',
 
-        damage: 30,
-        cooldown: 600,
-        knockback: 120,
-        knockbackDuration: 50,
+        baseStats: {
+            damage: 20,
+            cooldown: 800,
+            knockback: 120,
+            knockbackDuration: 80
+        },
 
-        meleeHitbox: { width: 220, height: 110 },
-        meleeAnimDuration: 250,
+        strategyStats: {
+            meleeHitbox: { width: 200, height: 100 },
+            meleeAnimDuration: 250,
+            frontalAttack: true,
+            meleeOffsetHitbox: { x: 100, y: 0 }
+        },
 
-        scale: 0.6,
-        origin: { x: 0.25, y: 0.5 },
-        gripOrigin: { x: 0.5, y: 1.5 },
-        angleOrigin: 0,
-        angleAttack: 180,
-        rotationSmoothing: 0.2,
+        visual: {
+            scale: 0.5,
+            offset: { x: 40, y: -10 },
+            origin: { x: 0.3, y: 0.5 },
+            gripOrigin: { x: 0.5, y: 1.5 },
+            angleOrigin: 0,
+            angleAttack: 180,
+            rotationSmoothing: 0.2
+        },
 
-        elementalEffect: 'none',
-        dotDamage: 0,
-        dotDuration: 0,
+        effects: {
+            elemental: 'none',
+            dotDamage: 0,
+            dotDuration: 0
+        },
 
-        soundKey: 'weapon_sword',
-        hitSoundKey: 'hit',
-
-        trailSpeed: 500,
-        trailSize: 10
-    },
-
-    // ==================== TRAIL WEAPONS ====================
-    {
-        key: 'weapon_laser_gun',
-        name: 'Arma Laser',
-        type: 'trail', // NEW: Explicit trail type
-        image: 'src/assets/images/weapon_laser_gun.png',
-
-        damage: 25,
-        cooldown: 800,
-        knockback: 20,
-        knockbackDuration: 50,
-
-        // Trail-specific properties (new semantics)
-        lifetimeMs: 350, // How long the trail exists (was "range")
-        trailSpeed: 500, // Visual movement speed (was "projectileSpeed")
-        trailSize: 10,   // Visual size (was "projectileSize")
-        trailColor: 0x00FFFF,
-        trailTexture: null,
-        trailScale: 1.0,
-        trailRotation: false,
-
-        // Visual
-        scale: 0.6,
-        origin: { x: 0.3, y: 0.5 },
-        gripOrigin: { x: 0.5, y: 1.5 },
-        angleOrigin: 0,
-        angleAttack: 180,
-        rotationSmoothing: 0.2,
-
-        elementalEffect: 'none',
-        dotDamage: 0,
-        dotDuration: 0,
-
-        soundKey: 'weapon_laser',
-        hitSoundKey: 'hit',
-
-        // Legacy aliases for backward compatibility
-        range: 350,
-        projectileSpeed: 500,
-        projectileSize: 10,
-        projectileColor: 0x00FFFF,
-        projectileTexture: null,
-        projectileScale: 1.0,
-        projectileRotation: false
+        audio: {
+            soundKey: 'weapon_sword',
+            hitSoundKey: 'hit'
+        }
     },
     {
-        key: 'weapon_handbag',
-        name: 'Mala de dinheiro',
-        type: 'trail',
-        image: 'src/assets/images/weapon_handbag.png',
+        key: 'weapon_axe',
+        name: 'Machado Sangrento',
+        type: 'melee',
+        image: 'src/assets/images/weapon_axe.png',
 
-        damage: 25,
-        cooldown: 800,
-        knockback: 20,
-        knockbackDuration: 50,
+        baseStats: {
+            damage: 60,
+            cooldown: 1200,
+            knockback: 200,
+            knockbackDuration: 100
+        },
 
-        lifetimeMs: 350,
-        trailSpeed: 500,
-        trailSize: 10,
-        trailColor: 0xFFD700,
-        trailTexture: null,
-        trailScale: 1.0,
-        trailRotation: true,
+        strategyStats: {
+            meleeHitbox: { width: 200, height: 200 },
+            meleeAnimDuration: 250,
+            frontalAttack: true,
+            meleeOffsetHitbox: { x: 100, y: 0 }
+        },
 
-        scale: 0.6,
-        origin: { x: 0.3, y: 0.5 },
-        gripOrigin: { x: 0.5, y: 1.5 },
-        angleOrigin: 0,
-        angleAttack: 180,
-        rotationSmoothing: 0.2,
+        visual: {
+            scale: 0.4,
+            offset: { x: 30, y: 0 },
+            origin: { x: 0.3, y: 0.5 },
+            gripOrigin: { x: 0.5, y: 1.5 },
+            angleOrigin: 0,
+            angleAttackOrigin: 0,
+            angleAttackEnd: 180,
+            rotationSmoothing: 0.2
+        },
 
-        elementalEffect: 'none',
-        dotDamage: 0,
-        dotDuration: 0,
+        effects: {
+            elemental: 'none',
+            dotDamage: 0,
+            dotDuration: 0
+        },
 
-        soundKey: 'weapon_shoot',
-        hitSoundKey: 'hit',
+        audio: {
+            soundKey: 'weapon_sword',
+            hitSoundKey: 'hit'
+        }
+    },
+    {
+        key: 'weapon_hammer',
+        name: 'Martelo Brasileiro',
+        type: 'melee',
+        image: 'src/assets/images/weapon_hammer.png',
 
-        range: 350,
-        projectileSpeed: 500,
-        projectileSize: 10,
-        projectileColor: 0xFFD700,
-        projectileTexture: null,
-        projectileScale: 1.0,
-        projectileRotation: true
+        baseStats: {
+            damage: 80,
+            cooldown: 2200,
+            knockback: 400,
+            knockbackDuration: 300
+        },
+
+        strategyStats: {
+            meleeHitbox: { width: 200, height: 100 },
+            meleeAnimDuration: 250,
+            frontalAttack: true,
+            meleeOffsetHitbox: { x: 100, y: 0 }
+        },
+
+        visual: {
+            scale: 0.4,
+            offset: { x: 40, y: -40 },
+            origin: { x: 0.3, y: 0.5 },
+            gripOrigin: { x: 0.5, y: 1.0 },
+            angleOrigin: 0,
+            angleAttackOrigin: 0,
+            angleAttackEnd: 90,
+            rotationSmoothing: 0.2
+        },
+
+        effects: {
+            elemental: 'none',
+            dotDamage: 0,
+            dotDuration: 0
+        },
+
+        audio: {
+            soundKey: 'weapon_sword',
+            hitSoundKey: 'hit'
+        }
+    },
+    {
+        key: 'weapon_mace',
+        name: 'Maça do Impeachment',
+        type: 'melee',
+        image: 'src/assets/images/weapon_mace.png',
+
+        baseStats: {
+            damage: 80,
+            cooldown: 2200,
+            knockback: 400,
+            knockbackDuration: 300
+        },
+
+        strategyStats: {
+            meleeHitbox: { width: 200, height: 100 },
+            meleeAnimDuration: 250,
+            frontalAttack: true,
+            meleeOffsetHitbox: { x: 100, y: 0 }
+        },
+
+        visual: {
+            scale: 0.45,
+            offset: { x: 40, y: -20 },
+            origin: { x: 0.3, y: 0.5 },
+            gripOrigin: { x: 0.5, y: 1.5 },
+            angleOrigin: 0,
+            angleAttack: 180,
+            rotationSmoothing: 0.2
+        },
+
+        effects: {
+            elemental: 'none',
+            dotDamage: 0,
+            dotDuration: 0
+        },
+
+        audio: {
+            soundKey: 'weapon_sword',
+            hitSoundKey: 'hit'
+        }
     },
     {
         key: 'weapon_magic_staff',
-        name: 'Microfone mágico',
-        type: 'trail',
+        name: 'Microfone Gelado',
+        type: 'melee',
         image: 'src/assets/images/weapon_magic_staff.png',
 
-        damage: 20,
-        cooldown: 1000,
-        knockback: 30,
-        knockbackDuration: 50,
+        baseStats: {
+            damage: 10,
+            cooldown: 1000,
+            knockback: 100,
+            knockbackDuration: 100
+        },
 
-        lifetimeMs: 400,
-        trailSpeed: 400,
-        trailSize: 12,
-        trailColor: 0x9966FF,
-        trailTexture: null,
-        trailScale: 1.2,
-        trailRotation: true,
+        strategyStats: {
+            meleeHitbox: { width: 200, height: 100 },
+            meleeAnimDuration: 250,
+            frontalAttack: true,
+            meleeOffsetHitbox: { x: 100, y: 0 }
+        },
 
-        scale: 0.6,
-        origin: { x: 0.2, y: 0.5 },
-        gripOrigin: { x: 0.5, y: 1.5 },
-        angleOrigin: 0,
-        angleAttack: 180,
-        rotationSmoothing: 0.2,
+        visual: {
+            scale: 0.45,
+            offset: { x: 40, y: -20 },
+            origin: { x: 0.3, y: 0.5 },
+            gripOrigin: { x: 0.5, y: 1.5 },
+            angleOrigin: 0,
+            angleAttack: 180,
+            rotationSmoothing: 0.2
+        },
 
-        elementalEffect: 'freeze',
-        dotDamage: 2,
-        dotDuration: 1500,
+        effects: {
+            elemental: 'freeze',
+            dotDamage: 0,
+            dotDuration: 2000
+        },
 
-        soundKey: 'weapon_spell',
-        hitSoundKey: 'hit',
+        audio: {
+            soundKey: 'weapon_sword',
+            hitSoundKey: 'hit'
+        }
+    },
+    {
+        key: 'weapon_flame_sword',
+        name: 'Espada de Fogo',
+        type: 'melee',
+        image: 'src/assets/images/weapon_flame_sword.png',
 
-        range: 400,
-        projectileSpeed: 400,
-        projectileSize: 12,
-        projectileColor: 0x9966FF,
-        projectileTexture: null,
-        projectileScale: 1.2,
-        projectileRotation: true
+        baseStats: {
+            damage: 10,
+            cooldown: 1000,
+            knockback: 100,
+            knockbackDuration: 100
+        },
+
+        strategyStats: {
+            meleeHitbox: { width: 200, height: 100 },
+            meleeAnimDuration: 250,
+            frontalAttack: true,
+            meleeOffsetHitbox: { x: 100, y: 0 }
+        },
+
+        visual: {
+            scale: 0.45,
+            offset: { x: 40, y: -20 },
+            origin: { x: 0.3, y: 0.5 },
+            gripOrigin: { x: 0.5, y: 1.5 },
+            angleOrigin: 0,
+            angleAttack: 180,
+            rotationSmoothing: 0.2
+        },
+
+        effects: {
+            elemental: 'burn',
+            dotDamage: 2,
+            dotDuration: 2000
+        },
+
+        audio: {
+            soundKey: 'weapon_sword',
+            hitSoundKey: 'hit'
+        }
+    },
+    // ==================== RANGED ====================
+    {
+        key: 'weapon_laser_gun',
+        name: 'Arma Laser',
+        type: 'ranged',
+        image: 'src/assets/images/weapon_laser_gun.png',
+
+        baseStats: {
+            damage: 25,
+            cooldown: 800,
+            knockback: 20,
+            knockbackDuration: 50
+        },
+
+        strategyStats: {
+            projectileSpeed: 500,
+            range: 350,
+            projectileSize: 10
+        },
+
+        projectileVisuals: {
+            spriteKey: 'pixel',
+            tint: 0x00FFFF,
+            scale: 1,
+            animations: []
+        },
+
+        visual: {
+            scale: 0.45,
+            offset: { x: 45, y: 10 }
+        },
+
+        effects: {
+            elemental: 'none',
+            dotDamage: 0,
+            dotDuration: 0
+        },
+
+        audio: {
+            soundKey: 'weapon_laser',
+            hitSoundKey: 'hit'
+        }
     },
     {
         key: 'weapon_rifle',
         name: 'Rifle',
-        type: 'trail',
+        type: 'ranged',
         image: 'src/assets/images/weapon_rifle.png',
 
-        damage: 40,
-        cooldown: 1200,
-        knockback: 200,
-        knockbackDuration: 100,
+        baseStats: {
+            damage: 40,
+            cooldown: 1200,
+            knockback: 200,
+            knockbackDuration: 100
+        },
 
-        // Long-lasting trail (simulates bullet travel)
-        lifetimeMs: 3000, // 3 seconds lifetime
-        trailSpeed: 600,
-        trailSize: 15,
-        trailColor: 0xFFAA00,
-        trailTexture: null,
-        trailScale: 1.0,
-        trailRotation: false,
+        strategyStats: {
+            projectileSpeed: 600,
+            range: 3000,
+            projectileSize: 15
+        },
 
-        scale: 0.6,
-        origin: { x: 0.2, y: 0.3 },
-        gripOrigin: { x: 0.5, y: 1.5 },
-        angleOrigin: 0,
-        angleAttack: 180,
-        rotationSmoothing: 0.2,
+        projectileVisuals: {
+            spriteKey: 'pixel',
+            tint: 0xFFAA00,
+            scale: 1,
+            animations: []
+        },
 
-        elementalEffect: 'none',
-        dotDamage: 0,
-        dotDuration: 0,
+        visual: {
+            scale: 0.45,
+            offset: { x: 30, y: 18 }
+        },
 
-        soundKey: 'weapon_shoot',
-        hitSoundKey: 'hit',
+        effects: {
+            elemental: 'none',
+            dotDamage: 0,
+            dotDuration: 0
+        },
 
-        range: 30000, // Legacy: kept for reference, now use lifetimeMs
-        projectileSpeed: 600,
-        projectileSize: 15,
-        projectileColor: 0xFFAA00,
-        projectileTexture: null,
-        projectileScale: 1.0,
-        projectileRotation: false
+        audio: {
+            soundKey: 'weapon_shoot',
+            hitSoundKey: 'hit'
+        }
+    },
+
+    // ==================== TRAIL ====================
+    {
+        key: 'weapon_handbag',
+        name: 'Mala de Dinheiro',
+        type: 'trail',
+        image: 'src/assets/images/weapon_handbag.png',
+
+        baseStats: {
+            damage: 10,
+            cooldown: 300,
+            knockback: 10,
+            knockbackDuration: 30
+        },
+
+        strategyStats: {
+            lifetimeMs: 800,
+            trailSpeed: 0,
+            trailSize: 14
+        },
+
+        projectileVisuals: {
+            spriteKey: 'proj_bunch_money',
+            scale: 0.5,
+            animations: [
+                { type: 'pulse', scaleMax: 0.5, duration: 2000 }
+            ]
+        },
+
+        visual: {
+            scale: 0.45,
+            offset: { x: -25, y: 50 },
+            origin: { x: 0.3, y: 0.5 },
+            gripOrigin: { x: 0.5, y: 1.5 },
+            angleOrigin: 0,
+            angleAttack: 180,
+            rotationSmoothing: 0.2
+        },
+
+        effects: {
+            elemental: 'none',
+            dotDamage: 0,
+            dotDuration: 0
+        },
+
+        audio: {
+            soundKey: 'weapon_sword',
+            hitSoundKey: 'hit'
+        }
+    },
+    {
+        key: 'weapon_fire_glass',
+        name: 'Rastro de Fogo',
+        type: 'trail',
+        image: 'src/assets/images/weapon_fire_glass.png',
+
+        baseStats: {
+            damage: 6,
+            cooldown: 250,
+            knockback: 0,
+            knockbackDuration: 0
+        },
+
+        strategyStats: {
+            lifetimeMs: 1200,
+            trailSpeed: 0,
+            trailSize: 12,
+        },
+
+        projectileVisuals: {
+            spriteKey: 'proj_fire_trail',
+            scale: 0.5,
+            animations: [
+                { type: 'pulse', scaleMax: 1.5, duration: 2000 }
+            ]
+        },
+
+        visual: {
+            scale: 0.45,
+            offset: { x: -20, y: 30 },
+            origin: { x: 0.3, y: 0.5 },
+            gripOrigin: { x: 0.5, y: 1.5 },
+            angleOrigin: 0,
+            angleAttack: 0,
+            rotationSmoothing: 0.2
+        },
+
+        effects: {
+            elemental: 'burn',
+            dotDamage: 3,
+            dotDuration: 1500
+        },
+
+        audio: {
+            soundKey: 'weapon_poison',
+            hitSoundKey: 'poison'
+        }
+    },
+    {
+        key: 'weapon_poison_glass',
+        name: 'Rastro Tóxico',
+        type: 'trail',
+        image: 'src/assets/images/weapon_poison_glass.png',
+
+        baseStats: {
+            damage: 6,
+            cooldown: 250,
+            knockback: 0,
+            knockbackDuration: 0
+        },
+
+        strategyStats: {
+            lifetimeMs: 1200,
+            trailSpeed: 0,
+            trailSize: 12,
+        },
+
+        projectileVisuals: {
+            spriteKey: 'proj_poison_trail',
+            scale: 0.5,
+            animations: [
+                { type: 'pulse', scaleMax: 1.5, duration: 2000 }
+            ]
+        },
+
+        visual: {
+            scale: 0.45,
+            offset: { x: -20, y: 30 },
+            origin: { x: 0.3, y: 0.5 },
+            gripOrigin: { x: 0.5, y: 1.5 },
+            angleOrigin: 0,
+            angleAttack: 0,
+            rotationSmoothing: 0.2
+        },
+
+        effects: {
+            elemental: 'poison',
+            dotDamage: 3,
+            dotDuration: 1500
+        },
+
+        audio: {
+            soundKey: 'weapon_poison',
+            hitSoundKey: 'poison'
+        }
+    },
+    {
+        key: 'weapon_clt',
+        name: 'Carteira de Trabalho',
+        type: 'trail',
+        image: 'src/assets/images/weapon_clt.png',
+
+        baseStats: {
+            damage: 20,
+            cooldown: 300,
+            knockback: 10,
+            knockbackDuration: 30
+        },
+
+        strategyStats: {
+            lifetimeMs: 800,
+            trailSpeed: 0,
+            trailSize: 14
+        },
+
+        projectileVisuals: {
+            spriteKey: 'proj_clt',
+            scale: 0.4,
+            animations: [
+                { type: 'pulse', scaleMax: 1.5, duration: 2000 }
+            ]
+        },
+
+        visual: {
+            scale: 0.4,
+            offset: { x: -20, y: 30 },
+            origin: { x: 0.3, y: 0.5 },
+            gripOrigin: { x: 0.5, y: 1.5 },
+            angleOrigin: 0,
+            angleAttack: 0,
+            rotationSmoothing: 0.2
+        },
+
+        effects: {
+            elemental: 'stun',
+            dotDamage: 0,
+            dotDuration: 1000
+        },
+
+        audio: {
+            soundKey: 'weapon_sword',
+            hitSoundKey: 'hit'
+        }
     }
 ];

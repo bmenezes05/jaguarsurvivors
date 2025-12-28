@@ -21,17 +21,14 @@
  * - src/config/gameplay.config.js  (XP, Pickups, Status Effects, World)
  * - src/config/index.js            (Aggregator)
  * 
- * WEAPON TYPE MIGRATION:
- * The 'ranged' weapon type has been renamed to 'trail' to better reflect
- * the actual behavior (trail effects, not true projectiles).
+ * WEAPON TYPE SEPARATION:
+ * Weapons are now strictly typed:
+ * - 'melee': Close range attacks (hitbox + animation)
+ * - 'ranged': Projectile based attacks (straight line, range limit)
+ * - 'trail': Trail based attacks (lifetime based, zone control)
  * 
- * New trail weapon properties:
- * - trailSpeed: Visual movement speed (was: projectileSpeed)
- * - lifetimeMs: Duration in ms (was: range when used as duration)
- * - trailSize: Visual size (was: projectileSize)
- * 
- * Legacy properties are preserved for backward compatibility.
+ * Each type has its own strategyStats in weapons.config.js.
  */
 
 // Re-export everything from the modular config
-export { BASE_CONFIG, CONFIG, resetConfig } from './config/index.js';
+export { BASE_CONFIG, CONFIG, resetConfig } from './index.js';

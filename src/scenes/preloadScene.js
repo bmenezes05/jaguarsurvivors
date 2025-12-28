@@ -1,4 +1,4 @@
-import { BASE_CONFIG } from '../config.js';
+import { BASE_CONFIG } from '../config/config.js';
 
 export class PreloadScene extends Phaser.Scene {
     constructor() { super({ key: 'PreloadScene' }); }
@@ -39,6 +39,13 @@ export class PreloadScene extends Phaser.Scene {
         itemSprites.forEach(key => {
             this.load.image(key, `src/assets/images/${key}.png`);
         });
+
+        // Load Projectile Sprites
+        if (BASE_CONFIG.projectiles) {
+            BASE_CONFIG.projectiles.forEach(proj => {
+                if (proj.image) this.load.image(proj.key, proj.image);
+            });
+        }
 
         // Load Map Backgrounds
         BASE_CONFIG.maps.forEach(map => {

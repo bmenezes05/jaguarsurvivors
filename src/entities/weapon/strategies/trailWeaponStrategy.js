@@ -7,17 +7,10 @@ import { createProjectileGroup } from '../../projectile/projectileGroup.js';
  * TrailWeaponStrategy
  * 
  * A weapon strategy that creates time-based trail effects.
- * Unlike a true projectile system, trails are spawned at a position
- * and remain active for a duration (lifetime), dealing damage to
- * enemies they overlap with.
+ * Trails are spawned at a position and remain active for a duration (lifetime),
+ * dealing damage to enemies they overlap with.
  * 
- * Key Concepts:
- * - trailSpeed: Visual speed of the trail effect (how fast it moves toward target)
- * - lifetimeMs: How long the trail remains active (in milliseconds)
- * - trailSize: Visual size of the trail effect
- * 
- * The trails use the Projectile class internally for physics/collision,
- * but the naming and API reflect their true behavior.
+ * Can be stationary (trailSpeed = 0) or moving.
  */
 export class TrailWeaponStrategy extends WeaponStrategy {
     constructor(weapon) {
@@ -41,31 +34,41 @@ export class TrailWeaponStrategy extends WeaponStrategy {
         const { weapon } = this;
         const { config, player, current } = weapon;
 
+        if (!target) return; // Should not happen with current logic but safe check
+
         console.debug("EVENT_EMITTED", { eventName: 'weapon-shoot', payload: config.key });
         this.scene.events.emit('weapon-shoot', config.key);
 
         const angle = Phaser.Math.Angle.Between(
             player.x, player.y, target.x, target.y
         );
-
         // Spawn trail slightly offset from player in direction of target
-        const spawnOffset = config.trailSize ?? config.projectileSize ?? 10;
+        const spawnOffset = current.trailSize ?? 10;
         const x = player.x + Math.cos(angle) * spawnOffset;
         const y = player.y + Math.sin(angle) * spawnOffset;
 
         const { damage, isCritical } = weapon.calculateDamage();
 
-        // Create trail using the pool
-        // Note: Internally uses Projectile class, but we pass trail-oriented semantics
+        // Prepare config object for the projectile/trail
+        // We mix strategy stats with effect stats to provide everything Projectile needs
+        const trailConfig = {
+            ...config.strategyStats,
+            elementalEffect: config.effects?.elemental,
+            dotDamage: current.dotDamage,
+            dotDuration: config.effects?.dotDuration,
+            projectileVisuals: config.projectileVisuals, // Data-Driven Visuals (animations, etc)
+            // Ensure lifetime is passed explicitly from calculated stats
+            lifetimeMs: current.lifetimeMs
+        };
+
         const trail = this.pool.get({
             x,
             y,
             targetX: target.x,
             targetY: target.y,
             damage,
-            weapon: config,
-            // trailSpeed controls visual movement speed
-            projectileSpeed: current.trailSpeed ?? current.projectileSpeed,
+            weapon: trailConfig,
+            projectileSpeed: current.trailSpeed, // Visual speed
             isCritical,
             knockbackMultiplier: player.stats.knockback
         });
@@ -77,8 +80,6 @@ export class TrailWeaponStrategy extends WeaponStrategy {
 
     /**
      * Updates all active trails
-     * Trails are removed when their lifetime expires or they hit an enemy
-     * @param {number} delta - Time since last update in ms
      */
     update(delta) {
         for (let i = this.activeTrails.length - 1; i >= 0; i--) {

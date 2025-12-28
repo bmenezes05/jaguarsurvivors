@@ -1,6 +1,7 @@
-import { CONFIG } from '../../config.js';
+import { CONFIG } from '../../config/config.js';
 import { MeleeWeaponStrategy } from './strategies/meleeWeaponStrategy.js';
 import { TrailWeaponStrategy } from './strategies/trailWeaponStrategy.js';
+import { RangedWeaponStrategy } from './strategies/rangedWeaponStrategy.js';
 
 export class Weapon {
     constructor(scene, playerCombat, enemySpawner, weaponKey) {
@@ -9,53 +10,46 @@ export class Weapon {
         this.enemySpawner = enemySpawner;
 
         this.config = CONFIG.weapon.find(w => w.key === weaponKey);
+
+        if (!this.config) {
+            console.error(`[Weapon] Config not found for key: ${weaponKey}`);
+            return;
+        }
+
         this.cooldownTimer = 0;
 
-        // Base stats with support for both new (trail-oriented) and legacy (projectile-oriented) names
-        this.base = {
-            damage: this.config.damage,
-            cooldown: this.config.cooldown,
-            // For trail weapons: lifetimeMs determines how long the trail exists
-            // For legacy support: falls back to range
-            lifetimeMs: this.config.lifetimeMs ?? this.config.range,
-            // For trail weapons: trailSpeed controls visual movement
-            // For legacy support: falls back to projectileSpeed
-            trailSpeed: this.config.trailSpeed ?? this.config.projectileSpeed,
-            // Size of the trail/projectile visual
-            trailSize: this.config.trailSize ?? this.config.projectileSize ?? 10,
-            // DOT damage for elemental effects
-            dotDamage: this.config.dotDamage ?? 0
-        };
-
-        // Legacy aliases for backward compatibility
-        this.base.range = this.base.lifetimeMs;
-        this.base.projectileSpeed = this.base.trailSpeed;
+        this.baseStats = this.config.baseStats || {};
+        this.strategyStats = this.config.strategyStats || {};
 
         this.current = {};
         this.strategy = this.createStrategy();
     }
 
     createStrategy() {
-        // 'trail' is the new type, 'ranged' is kept for backward compatibility
-        if (this.config.type === 'ranged') {
-            console.warn(
-                `[Weapon] DEPRECATED: type 'ranged' is deprecated for weapon '${this.config.key}'. ` +
-                `Use type 'trail' instead. Ranged behavior has been replaced with trail-based effects.`
-            );
+        const type = this.config.type;
+        switch (type) {
+            case 'melee':
+                return new MeleeWeaponStrategy(this);
+            case 'ranged':
+                return new RangedWeaponStrategy(this);
+            case 'trail':
+                return new TrailWeaponStrategy(this);
+            default:
+                console.warn(`[Weapon] Unknown type '${type}' for weapon '${this.config.key}'. Defaulting to Melee.`);
+                return new MeleeWeaponStrategy(this);
         }
-
-        const isMelee = this.config.type === 'melee';
-        return isMelee
-            ? new MeleeWeaponStrategy(this)
-            : new TrailWeaponStrategy(this);
     }
 
     update(delta) {
         this.cooldownTimer += delta;
         this.updateDynamicStats();
 
-        const target = this.findNearestEnemy(this.current.range);
+        // Determine the range to check for enemies
+        const range = this.current.detectionRange || 400;
+        const target = this.findNearestEnemy(range);
+
         if (!target) return;
+
         this.updateWeaponRotation(target);
 
         if (this.cooldownTimer >= this.current.cooldown) {
@@ -69,15 +63,37 @@ export class Weapon {
     updateDynamicStats() {
         const stats = this.player.stats;
 
-        this.current.damage = this.base.damage * stats.damage;
-        this.current.cooldown = this.base.cooldown / stats.attackSpeed;
-        this.current.lifetimeMs = this.base.lifetimeMs * stats.area;
-        this.current.trailSpeed = this.base.trailSpeed * stats.projectileSpeed;
-        this.current.dotDamage = this.base.dotDamage * stats.elementalDamage;
+        // Base Stats Calculation
+        this.current.damage = (this.baseStats.damage || 0) * stats.damage;
+        this.current.cooldown = (this.baseStats.cooldown || 1000) / stats.attackSpeed;
 
-        // Legacy aliases for backward compatibility with strategies
-        this.current.range = this.current.lifetimeMs;
-        this.current.projectileSpeed = this.current.trailSpeed;
+        // Calculate knockback and duration
+        this.current.knockback = (this.baseStats.knockback || 0) * stats.knockback;
+        this.current.knockbackDuration = this.baseStats.knockbackDuration || 0;
+
+        // Effects
+        this.current.dotDamage = (this.config.effects?.dotDamage || 0) * stats.elementalDamage;
+
+        // Strategy Specific Stats Calculation
+        if (this.config.type === 'ranged') {
+            this.current.projectileSpeed = (this.strategyStats.projectileSpeed || 500) * stats.projectileSpeed;
+            this.current.range = (this.strategyStats.range || 300) * stats.area;
+            this.current.projectileSize = (this.strategyStats.projectileSize || 10) * stats.area;
+            this.current.detectionRange = this.current.range;
+
+        } else if (this.config.type === 'trail') {
+            this.current.lifetimeMs = (this.strategyStats.lifetimeMs || 1000) * stats.area;
+            this.current.trailSpeed = (this.strategyStats.trailSpeed || 0) * stats.projectileSpeed;
+            this.current.trailSize = (this.strategyStats.trailSize || 10) * stats.area;
+            this.current.detectionRange = 400; // Default range for trail weapons
+
+        } else if (this.config.type === 'melee') {
+            const hitbox = this.strategyStats.meleeHitbox || { width: 100, height: 100 };
+            this.current.meleeHitboxWidth = hitbox.width * stats.area;
+            this.current.meleeHitboxHeight = hitbox.height * stats.area;
+            // Detection range must cover the hitbox
+            this.current.detectionRange = Math.max(this.current.meleeHitboxWidth, this.current.meleeHitboxHeight) * 1.5;
+        }
     }
 
     findNearestEnemy(maxDistance) {
@@ -101,15 +117,20 @@ export class Weapon {
     }
 
     updateWeaponRotation(target) {
+        // Visual Rotation updates only
         const angle = Phaser.Math.Angle.Between(
             this.player.x, this.player.y, target.x, target.y
         );
 
         const desired = this.player.facingRight ? angle : -angle;
-        const smoothing = this.config.rotationSmoothing ?? 0.2;
+        // Access visual config safely
+        const visual = this.config.visual || {};
+        const smoothing = visual.rotationSmoothing ?? 0.2;
 
-        this.config.rotation = Phaser.Math.Linear(
-            this.config.rotation || 0,
+        // We store the rotation on config.rotation temporarily for visual consistency if needed
+        // But better to store on 'current' or instance
+        this.rotation = Phaser.Math.Linear(
+            this.rotation || 0,
             desired,
             smoothing
         );

@@ -11,23 +11,15 @@
  *   ├── MeleeWeaponStrategy
  *   │   - Close-range hitbox attacks
  *   │   - Animation-driven damage zones
- *   │   - Uses meleeHitbox, meleeAnimDuration
+ *   │
+ *   ├── RangedWeaponStrategy
+ *   │   - Fires projectiles in a straight line
+ *   │   - Travel distance based on range
  *   │
  *   └── TrailWeaponStrategy
- *       - Time-based trail effects (renamed from "ranged")
- *       - Spawns visual trails that move toward target
- *       - Uses lifetimeMs, trailSpeed, trailSize
- * 
- * IMPORTANT: RangedWeaponStrategy has been deprecated and removed.
- * Use TrailWeaponStrategy for non-melee weapons.
- * 
- * Property Naming Migration:
- * - OLD: projectileSpeed → NEW: trailSpeed
- * - OLD: range (as duration) → NEW: lifetimeMs
- * - OLD: projectileSize → NEW: trailSize
- * - OLD: type 'ranged' → NEW: type 'trail'
- * 
- * Legacy property names are still supported for backward compatibility.
+ *       - Time-based trail effects
+ *       - Spawns visual trails that move or stay
+ *       - Uses lifetimeMs
  */
 export class WeaponStrategy {
     /**

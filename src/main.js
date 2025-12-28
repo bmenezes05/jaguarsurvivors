@@ -2,7 +2,7 @@ import { PreloadScene } from './scenes/preloadScene.js';
 import { BootScene } from './scenes/bootScene.js';
 import { MapSelectionScene } from './scenes/mapSelectionScene.js';
 import { GameScene } from './scenes/gameScene.js';
-import { CONFIG } from './config.js';
+import { CONFIG } from './config/config.js';
 import { SaveManager } from './managers/saveManager.js';
 import { AchievementManager } from './managers/achievementManager.js';
 
@@ -165,9 +165,7 @@ export const GameEvents = {
             if (s.knockbackResistance > 1.0) traits.push({ text: 'Tanque', good: true });
             if (s.critChance >= 0.1) traits.push({ text: 'Crítico Alto', good: true });
             if (s.evasion >= 0.1) traits.push({ text: 'Esquiva', good: true });
-            //if (s.thorns > 0) traits.push({ text: 'Espinhos', good: true });
             if (s.elementalDamage > 1.0) traits.push({ text: 'Elemental+', good: true });
-            //if (s.area > 1.0) traits.push({ text: 'Área+', good: true });
 
             const traitsHtml = traits.map(t => `<span class="${t.good ? 'trait-good' : 'trait-bad'}">${t.text}</span>`).join(' ');
 

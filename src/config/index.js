@@ -9,6 +9,7 @@
  * src/config/
  * ├── index.js          (this file - aggregator)
  * ├── weapons.config.js
+ * ├── projectiles.config.js
  * ├── enemies.config.js
  * ├── players.config.js
  * ├── maps.config.js
@@ -23,6 +24,7 @@
 
 // Import all modular configs
 import { weaponsConfig } from './weapons.config.js';
+import { projectilesConfig } from './projectiles.config.js';
 import { enemiesConfig, bossesConfig } from './enemies.config.js';
 import { playersConfig } from './players.config.js';
 import { mapsConfig } from './maps.config.js';
@@ -59,6 +61,9 @@ export const BASE_CONFIG = {
 
     // == WEAPON ==
     weapon: weaponsConfig,
+
+    // == PROJECTILES ==
+    projectiles: projectilesConfig,
 
     // == XP ==
     xp: xpConfig,
