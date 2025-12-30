@@ -10,9 +10,14 @@ export class UpgradeUIManager {
         // Pause Phaser
         this.scene.scene.pause();
 
+        // Cleanup existing if any (prevents duplication)
+        const existing = document.getElementById('upgrade-overlay');
+        if (existing) existing.remove();
+
         // Root overlay
         this.root = document.createElement('div');
         this.root.id = 'upgrade-overlay';
+        this.root.className = 'overlay-screen active'; // Add classes for consistency
 
         // Title
         const title = document.createElement('h1');

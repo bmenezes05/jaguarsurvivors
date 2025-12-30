@@ -43,8 +43,8 @@ export class SceneBootstrap {
         this.initWorld();
         this.initPlayer();
         this.initCombat();
-        this.initUI();
         this.initSystems();
+        this.initUI();
     }
 
     /* ------------------------------------------------------------------ */
@@ -134,8 +134,9 @@ export class SceneBootstrap {
             this.scene.mapConfig
         );
 
-        // Initialize missing projectle groups
+        // Initialize missing projectile groups
         this.scene.enemyProjectiles = this.scene.physics.add.group();
+        this.scene.projectileGroup = this.scene.physics.add.group();
 
         this.scene.playerCombat = new PlayerCombatFacade(this.scene.player);
     }

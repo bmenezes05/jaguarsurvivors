@@ -58,9 +58,10 @@ export class Enemy {
         }
 
         // Apply Config
-        this.sprite.setTexture(enemyConfig.key);
-        this.leftLeg.setTexture(enemyConfig.key + "_legs");
-        this.rightLeg.setTexture(enemyConfig.key + "_legs");
+        const tex = enemyConfig.textureKey || enemyConfig.key;
+        this.sprite.setTexture(tex);
+        this.leftLeg.setTexture(tex + "_legs");
+        this.rightLeg.setTexture(tex + "_legs");
 
         const tint = enemyConfig.tint || 0xFFFFFF;
         this.sprite.setTint(tint);

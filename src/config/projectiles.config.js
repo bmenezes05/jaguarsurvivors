@@ -15,7 +15,7 @@ export const projectilesConfig = [
     },
     {
         key: 'proj_fire_trail',
-        image: 'src/assets/images/proj_fire_trail.png' // Or specific projectile asset
+        image: 'src/assets/images/proj_poça_fogo.png' // Or specific projectile asset
     },
     {
         key: 'proj_poison_trail',

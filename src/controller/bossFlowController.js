@@ -9,11 +9,6 @@ export class BossFlowController {
     constructor(scene) {
         this.scene = scene;
         this.events = scene.events;
-
-        this.bossUI = scene.bossUIManager;
-        this.legendaryUI = scene.legendaryUIManager;
-        this.legendaryRewardManager = scene.legendaryRewardManager;
-
         this.activeBosses = []; // Array para múltiplos chefes
     }
 
@@ -34,7 +29,8 @@ export class BossFlowController {
             speed: baseEnemy.speed * (bossDef.speedMultiplier || 0.8),
             size: baseEnemy.size * (bossDef.sizeMultiplier || 1.5),
             isBoss: true,
-            bossData: bossDef
+            bossData: bossDef,
+            textureKey: baseEnemy.key // OBRIGATÓRIO: Mantém a textura do inimigo base
         };
 
         // Recalcula escala baseada no multiplicador de tamanho
@@ -63,26 +59,33 @@ export class BossFlowController {
         // Como o spawner limpa inimigos inativos, podemos filtrar aqui.
         this.activeBosses = this.activeBosses.filter(b => b.isActive && b.health > 0);
 
-        if (this.activeBosses.length === 0) {
-            this.bossUI.hide();
+        if (this.activeBosses.length === 0 && this.scene.bossUIManager) {
+            this.scene.bossUIManager.hide();
         }
 
-        // Fluxo de recompensa (sempre que um chefe morre)
-        const rewards = this.legendaryRewardManager.getRandomRewards();
-        this.scene.scene.pause(); // Pause gameplay during legendary selection
-        this.legendaryUI.show(rewards);
+        const rewardManager = this.scene.legendaryRewardManager;
+        const rewardUI = this.scene.legendaryUIManager;
 
-        console.debug("EVENT_EMITTED", { eventName: 'boss-flow-completed', payload: null });
-        this.events.emit('boss-flow-completed');
+        if (rewardManager && rewardUI) {
+            // Fluxo de recompensa (sempre que um chefe morre)
+            const rewards = rewardManager.getRandomRewards();
+            this.scene.scene.pause(); // Pause gameplay during legendary selection
+            rewardUI.show(rewards);
+
+            console.debug("EVENT_EMITTED", { eventName: 'boss-flow-completed', payload: null });
+            this.events.emit('boss-flow-completed');
+        } else {
+            console.error("Missing Legendary Reward Manager or Legendary UI");
+        }
     }
 
     /**
      * Monitora o dano para atualizar a UI do Boss.
      */
     onBossDamaged(boss) {
-        if (this.bossUI) {
+        if (this.scene.bossUIManager) {
             // Just update the health display, don't call show() again
-            this.bossUI.update();
+            this.scene.bossUIManager.update();
         }
     }
 }

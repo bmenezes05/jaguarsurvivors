@@ -46,6 +46,10 @@ export const GameEvents = {
     hideAllOverlays: () => {
         const overlays = document.querySelectorAll('.overlay-screen');
         overlays.forEach(el => el.classList.remove('active'));
+
+        // Also clean up dynamic overlays
+        const upgradeOverlay = document.getElementById('upgrade-overlay');
+        if (upgradeOverlay) upgradeOverlay.remove();
     },
 
     startGame: (charType) => {

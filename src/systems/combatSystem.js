@@ -15,7 +15,7 @@ export class CombatSystem {
 
     registerOverlaps() {
         // Player x Enemies
-        if (this.playerBody && this.enemySpawner?.group) {
+        if (this.playerBody && this.enemySpawner && this.enemySpawner.group) {
             this.scene.physics.add.overlap(
                 this.playerBody,
                 this.enemySpawner.group,
@@ -23,10 +23,16 @@ export class CombatSystem {
                 null,
                 this
             );
+        } else {
+            console.warn("[CombatSystem] Failed to register Player x Enemies overlap: dependencies missing", {
+                playerBody: !!this.playerBody,
+                enemySpawner: !!this.enemySpawner,
+                group: !!this.enemySpawner?.group
+            });
         }
 
         // Projectiles x Enemies (Overlap ÚNICO)
-        if (this.scene.projectileGroup && this.enemySpawner?.group) {
+        if (this.scene.projectileGroup && this.enemySpawner && this.enemySpawner.group) {
             this.scene.physics.add.overlap(
                 this.scene.projectileGroup,
                 this.enemySpawner.group,
@@ -35,8 +41,9 @@ export class CombatSystem {
                 this
             );
         }
+
         // Enemy Projectiles x Player
-        if (this.scene.enemyProjectiles) {
+        if (this.scene.enemyProjectiles && this.playerBody) {
             this.scene.physics.add.overlap(
                 this.playerBody,
                 this.scene.enemyProjectiles,

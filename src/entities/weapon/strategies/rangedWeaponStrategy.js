@@ -26,10 +26,9 @@ export class RangedWeaponStrategy extends WeaponStrategy {
         this.activeProjectiles = [];
         this.pool = new ObjectPool(this.scene, Projectile, 30);
 
-        this.scene.projectileGroup = createProjectileGroup(
-            this.scene,
-            weapon.enemySpawner.group
-        );
+        if (!this.scene.projectileGroup) {
+            this.scene.projectileGroup = createProjectileGroup(this.scene);
+        }
         this.projectileGroup = this.scene.projectileGroup;
     }
 
