@@ -25,6 +25,22 @@ export class HUDManager {
         if (this.elements.timer) this.elements.timer.style.color = '';
     }
 
+    reset() {
+        this.hide();
+        this.updateTimer(this.scene.mapConfig ? this.scene.mapConfig.duration : 0);
+        this.updateWaveInfo(1, 0, 0);
+        this.updateHealth(100, 100);
+        this.updateXP(0, 100, 1);
+
+        // Remove boss wave styling
+        if (this.elements.waveDisplay) {
+            this.elements.waveDisplay.classList.remove('boss-wave');
+            const waveText = this.elements.waveDisplay.querySelector('span');
+            if (waveText) waveText.innerHTML = 'ONDA <span id="wave-count">1</span>';
+            this.elements.waveCount = document.getElementById('wave-count');
+        }
+    }
+
     updateHealth(current, max) {
         const percent = Math.max(0, (current / max) * 100);
         if (this.elements.healthFill) {

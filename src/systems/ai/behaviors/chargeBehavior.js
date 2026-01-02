@@ -42,16 +42,16 @@ export class ChargeBehavior extends BaseBehavior {
         this.stateTimer += delta;
         switch (this.state) {
             case ChargeBehavior.STATES.IDLE:
-                this.updateIdle();
+                this.updateIdle(delta);
                 break;
             case ChargeBehavior.STATES.CHARGING_UP:
-                this.updateChargingUp();
+                this.updateChargingUp(delta);
                 break;
             case ChargeBehavior.STATES.CHARGING:
-                this.updateCharging();
+                this.updateCharging(delta);
                 break;
             case ChargeBehavior.STATES.COOLDOWN:
-                this.updateCooldown();
+                this.updateCooldown(delta);
                 break;
         }
     }
@@ -61,7 +61,7 @@ export class ChargeBehavior extends BaseBehavior {
             this.transitionTo(ChargeBehavior.STATES.CHARGING_UP);
         }
     }
-    updateChargingUp() {
+    updateChargingUp(delta) {
         const chargeUpTime = this.getParam('chargeUpTime', 800);
 
         // Lock direction at start of charge-up or keep tracking

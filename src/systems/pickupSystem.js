@@ -38,11 +38,13 @@ export class PickupSystem {
     }
 
     updateMagnet(delta) {
-        if (!this.pickupManager?.group) return;
+        if (!this.pickupManager?.group || !this.pickupManager.group.children) return;
 
         const magnetRadius = this.player.stats.pickupRadius || 100;
         const playerX = this.player.x;
         const playerY = this.player.y;
+
+        if (typeof this.pickupManager.group.children.iterate !== 'function') return;
 
         this.pickupManager.group.children.iterate(pickup => {
             if (!pickup || !pickup.active) return;

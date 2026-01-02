@@ -87,11 +87,27 @@ export class VFXManager {
                 context.y = args[1];
                 break;
             case 'player-damaged':
-                // args: [amount]
-                context.amount = args[0];
                 if (this.scene.player) {
                     context.x = this.scene.player.x;
                     context.y = this.scene.player.y;
+                }
+                break;
+            case 'structure-damaged':
+                // args: [structure, amount, isCritical]
+                context.target = args[0];
+                context.amount = args[1];
+                context.isCritical = args[2];
+                if (context.target) {
+                    context.x = context.target.x;
+                    context.y = context.target.y;
+                }
+                break;
+            case 'structure-destroyed':
+                // args: [structure]
+                context.target = args[0];
+                if (context.target) {
+                    context.x = context.target.x;
+                    context.y = context.target.y;
                 }
                 break;
             default:

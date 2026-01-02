@@ -10,11 +10,10 @@ import { CameraFlashEffect } from './effects/cameraFlashEffect.js';
 
 export const VFX_CONFIG = {
     'enemy-damaged': [
-        // Standard Flash (White)
         {
             effectClass: FlashEffect,
             condition: () => true,
-            config: { duration: 100 }
+            config: { duration: 100, color: 0x880000 }
         },
         // Pulse animation
         {
@@ -25,7 +24,7 @@ export const VFX_CONFIG = {
         {
             effectClass: SparkEffect,
             condition: () => true,
-            config: { count: 30, color: 0xff0000, speedMin: 150, speedMax: 300 }
+            config: { count: 30, color: 0xff0000, speedMin: 100, speedMax: 500, life: 600 }
         },
         // Damage Popup (Normal) - Non Crit, Non Boss
         {
@@ -70,6 +69,28 @@ export const VFX_CONFIG = {
         }
     ],
 
+    'structure-damaged': [
+        {
+            effectClass: FlashEffect,
+            condition: () => true,
+            config: { duration: 100, color: 0x880000 }
+        },
+        {
+            effectClass: SparkEffect,
+            condition: () => true,
+            config: { count: 30, color: 0xFFFFFF, speedMin: 100, speedMax: 400, life: 500 }
+        }
+    ],
+
+    'structure-destroyed': [
+        {
+            effectClass: SparkEffect,
+            condition: () => true,
+            config: { count: 60, color: 0xAAAAAA, speedMin: 150, speedMax: 500, life: 800 }
+        }
+        // Could add cloud/smoke effect if class exists, using Spark for now as placeholder or generic 
+    ],
+
     'player-damaged': [
         {
             effectClass: ShakeEffect,
@@ -84,15 +105,52 @@ export const VFX_CONFIG = {
     ],
 
     'status-applied': [
+        // Flash
+        {
+            effectClass: FlashEffect,
+            condition: (d) => d.type === 'stun',
+            config: { duration: 100, color: 0xFFFF00 }
+        },
+        {
+            effectClass: FlashEffect,
+            condition: (d) => d.type === 'freeze',
+            config: { duration: 100, color: 0x00FFFF }
+        },
+        {
+            effectClass: FlashEffect,
+            condition: (d) => d.type === 'poison',
+            config: { duration: 100, color: 0x00FF00 }
+        },
+        {
+            effectClass: FlashEffect,
+            condition: (d) => d.type === 'burn',
+            config: { duration: 100, color: 0xFFD700 }
+        },
+        {
+            effectClass: FlashEffect,
+            condition: (d) => d.type === 'enrage',
+            config: { duration: 100, color: 0xFF0000 }
+        },
+        // Spark
+        {
+            effectClass: SparkEffect,
+            condition: (d) => d.type === 'stun',
+            config: { count: 30, color: 0xFFFF00, speedMin: 100, speedMax: 500, life: 600 }
+        },
+        {
+            effectClass: SparkEffect,
+            condition: (d) => d.type === 'freeze',
+            config: { count: 30, color: 0x00FFFF, speedMin: 100, speedMax: 500, life: 600 }
+        },
         {
             effectClass: SparkEffect,
             condition: (d) => d.type === 'poison',
-            config: { count: 5, color: 0x00FF00, speedMin: 50, speedMax: 150 }
+            config: { count: 30, color: 0x00FF00, speedMin: 100, speedMax: 500, life: 600 }
         },
         {
             effectClass: SparkEffect,
             condition: (d) => d.type === 'burn',
-            config: { count: 5, color: 0xFFD700, speedMin: 50, speedMax: 150 }
+            config: { count: 30, color: 0xFFD700, speedMin: 100, speedMax: 500, life: 600 }
         }
     ],
 

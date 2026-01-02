@@ -34,7 +34,8 @@ export class EnemySpawner {
      * Inicializa/Reseta o estado para uma nova onda.
      */
     initWave(waveIndex) {
-        if (!this.waves[waveIndex]) {
+        // Safety check to prevent double init or invalid config
+        if (!this.waves || !this.waves[waveIndex]) {
             console.warn(`Wave ${waveIndex} not found in config.`);
             return;
         }
@@ -176,12 +177,52 @@ export class EnemySpawner {
     /**
      * Spawna uma entidade específica.
      */
-    spawnEntity(config, options = {}) {
+    spawnEntity(config, options = {}, onSpawn = null) {
         const ang = options.angle || Math.random() * Math.PI * 2;
         const dist = options.distance || this.waveConfig.spawnDistance || 700;
 
-        const x = options.x || this.player.x + Math.cos(ang) * dist;
-        const y = options.y || this.player.y + Math.sin(ang) * dist;
+        const margin = 50;
+        const x = Phaser.Math.Clamp(
+            options.x || this.player.x + Math.cos(ang) * dist,
+            margin,
+            CONFIG.world.width - margin
+        );
+        const y = Phaser.Math.Clamp(
+            options.y || this.player.y + Math.sin(ang) * dist,
+            margin,
+            CONFIG.world.height - margin
+        );
+
+        // Finalize spawn logic helper to avoid duplication
+        const finalize = () => {
+            const entity = this._spawnFinal(x, y, config);
+            if (onSpawn) {
+                onSpawn(entity);
+            }
+            return entity;
+        };
+
+        // Use Telegraph if available
+        if (this.scene.telegraphManager) {
+            const telegraphType = config.isBoss ? 'boss' : (config.isElite ? 'elite' : 'enemy');
+
+            // Override radius if config provides it or use default
+            const tOptions = {
+                radius: config.size ? config.size * 0.8 : undefined
+            };
+
+            this.scene.telegraphManager.showTelegraph(x, y, telegraphType, () => {
+                finalize();
+            }, tOptions);
+            return null; // Interaction deferred
+        }
+
+        return finalize();
+    }
+
+    _spawnFinal(x, y, config) {
+        // Double check scene active state to prevent spawning after shutdown
+        if (!this.scene || !this.scene.sys || !this.scene.sys.isActive()) return null;
 
         const enemy = this.enemyPool.get({ x, y, enemyConfig: config });
 
@@ -198,14 +239,20 @@ export class EnemySpawner {
      * Reseta o spawner para o estado inicial.
      */
     reset() {
+        if (!this.enemies) return;
+
+        // In shutdown, the physics group might be unstable.
+        // We focus on clearing our local arrays and the pool.
         this.enemies.forEach(e => {
-            if (this.group.contains(e.container)) {
-                this.group.remove(e.container);
+            if (this.enemyPool) {
+                this.enemyPool.release(e);
             }
-            this.enemyPool.release(e);
         });
+
         this.enemies = [];
-        this.enemyPool.clear();
+        if (this.enemyPool) {
+            this.enemyPool.clear();
+        }
     }
 
     getGroup() { return this.group; }

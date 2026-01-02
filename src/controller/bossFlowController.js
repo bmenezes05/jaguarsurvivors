@@ -12,6 +12,10 @@ export class BossFlowController {
         this.activeBosses = []; // Array para múltiplos chefes
     }
 
+    reset() {
+        this.activeBosses = [];
+    }
+
     /**
      * Inicia o spawn de um boss.
      * @param {string} bossKey Chave do boss em CONFIG.bosses
@@ -35,18 +39,21 @@ export class BossFlowController {
 
         // Recalcula escala baseada no multiplicador de tamanho
         const scale = (finalBossConfig.size / baseEnemy.size) * (baseEnemy.bodyScale || 0.4);
+        const legsScale = (finalBossConfig.size / baseEnemy.size) * (baseEnemy.legsScale || 0.1);
         finalBossConfig.bodyScale = scale;
-        finalBossConfig.legsScale = scale;
+        finalBossConfig.legsScale = legsScale;
 
-        // Solicita ao Spawner a criação física
-        const bossEntity = this.scene.enemySpawner.spawnEntity(finalBossConfig);
+        // Solicita ao Spawner a criação física (Callback handling for telegraphs)
+        this.scene.enemySpawner.spawnEntity(finalBossConfig, {}, (bossEntity) => {
+            if (!bossEntity) return;
 
-        // Adiciona à lista de ativos
-        this.activeBosses.push(bossEntity);
+            // Adiciona à lista de ativos
+            this.activeBosses.push(bossEntity);
 
-        // Notifica sistemas (UI, Câmera, Audio) via evento central
-        console.debug("EVENT_EMITTED", { eventName: 'boss-spawned', payload: bossEntity });
-        this.events.emit('boss-spawned', bossEntity);
+            // Notifica sistemas (UI, Câmera, Audio) via evento central
+            console.debug("EVENT_EMITTED", { eventName: 'boss-spawned', payload: bossEntity });
+            this.events.emit('boss-spawned', bossEntity);
+        });
     }
 
     /**

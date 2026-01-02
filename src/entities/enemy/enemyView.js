@@ -87,28 +87,22 @@ export class EnemyView {
     }
 
     setFacing(isRight) {
-        const scale = Math.abs(this.container.scaleX);
-        this.container.setScale(isRight ? scale : -scale, 1);
+        // Use 1 or -1 based on base scale, do not read current scaleX to avoid accumulation errors
+        const dir = isRight ? 1 : -1;
+        this.container.setScale(dir, 1);
 
         const newOffsetX = isRight ? (-this.bodyWidth / 2) : (this.bodyWidth / 2);
         this.container.body.setOffset(newOffsetX, -this.bodyHeight / 2);
     }
 
-    setTint(color) {
-        this.sprite.setTint(color);
-        this.leftLeg.setTint(color);
-        this.rightLeg.setTint(color);
-    }
-
-    clearTint() {
-        this.sprite.clearTint();
-        this.leftLeg.clearTint();
-        this.rightLeg.clearTint();
-    }
+    // Tinting is now handled by VFXManager iterating over the container children
+    // to keep visual logic decoupled from the Entity View.
 
     destroy() {
         this.container.setVisible(false);
-        this.container.body.enable = false;
+        if (this.container.body) {
+            this.container.body.enable = false;
+        }
     }
 
     get x() { return this.container.x; }

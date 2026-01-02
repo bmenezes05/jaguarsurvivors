@@ -17,6 +17,7 @@ export class EnemySystem {
     }
 
     sortDepth() {
+        if (!this.group || !this.group.children || typeof this.group.children.iterate !== 'function') return;
         this.group.children.iterate(container => {
             if (!container || !container.active) return;
             container.setDepth(container.y);

@@ -29,6 +29,7 @@ export class GameEventHandler {
         this.registerBossEvents();
         this.registerStageEvents();
         this.registerPickupEvents();
+        this.registerStructureEvents();
     }
 
     registerPlayerEvents() {
@@ -168,7 +169,44 @@ export class GameEventHandler {
                 case 'coin':
                     this.scene.coins = (this.scene.coins || 0) + 1;
                     break;
+                case 'coin':
+                    this.scene.coins = (this.scene.coins || 0) + 1;
+                    break;
             }
         });
+    }
+
+    registerStructureEvents() {
+        // Handled by VFXManager and AudioManager via configs
+        // We keep the listeners here only if there is logic OUTSIDE of vfx/audio causing side effects
+        // But the user asked to move vfx/audio logic.
+
+        // Ensure events are emitted by the structure itself (Structure.js does this).
+        // So we don't need to do anything here for Audio/VFX.
+
+        // However, if we need special logic like "shake camera on big structure death", we can add it.
+        // For now, clean up.
+    }
+
+    destroy() {
+        this.events.off('player-damaged');
+        this.events.off('player-health-changed');
+        this.events.off('player-died');
+        this.events.off('enemy-damaged');
+        this.events.off('weapon-attack');
+        this.events.off('weapon-shoot');
+        this.events.off('weapon-equipped');
+        this.events.off('weapon-leveled');
+        this.events.off('item-equipped');
+        this.events.off('item-leveled');
+        this.events.off('level-up');
+        this.events.off('legendary-drop');
+        this.events.off('wave-changed');
+        this.events.off('boss-spawned');
+        this.events.off('boss-died');
+        this.events.off('stage-event');
+        this.events.off('pickup-collected');
+        this.events.off('structure-damaged');
+        this.events.off('structure-destroyed');
     }
 }

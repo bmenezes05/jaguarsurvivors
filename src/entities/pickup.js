@@ -41,11 +41,10 @@ export class Pickup extends Phaser.GameObjects.Container {
         this.alpha = 1;
         this.setScale(0);
 
-        // Update Visuals - use sprite instead of emoji text
         this.shape.setFillStyle(this.pickupConfig.color);
 
         // Use sprite from config, fallback to pickup_bomb if not specified
-        const spriteKey = this.pickupConfig.spriteKey || 'pickup_bomb';
+        const spriteKey = this.pickupConfig.spriteKey;
         this.icon.setTexture(spriteKey);
         this.icon.setScale(this.pickupConfig.scale || 1.0);
 
@@ -81,6 +80,7 @@ export class Pickup extends Phaser.GameObjects.Container {
     collect() {
         if (!this.isActive) return;
         this.isActive = false;
+        this.body.enable = false; // IMMEDIATE DISABLE
 
         // Stop tweens
         if (this.floatTween) this.floatTween.remove();

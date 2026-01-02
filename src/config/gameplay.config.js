@@ -119,3 +119,42 @@ export const equipmentLimitsConfig = {
     maxWeapons: 2,
     maxItems: 3
 };
+
+
+
+// ==================== TELEGRAPH SYSTEM ====================
+export const telegraphConfig = {
+    defaults: {
+        duration: 1000, // ms before spawn
+        alpha: 0.4,
+        startScale: 0.1,
+        endScale: 1.0
+    },
+    types: {
+        enemy: {
+            color: 0xFF0000, // Red
+            radius: 30,
+            shape: 'circle'
+        },
+        elite: {
+            color: 0xFF8C00, // Dark Orange
+            radius: 45,
+            shape: 'circle'
+        },
+        boss: {
+            color: 0xFF0000, // Red
+            radius: 80,
+            shape: 'circle'
+        },
+        item: {
+            color: 0x00FF00, // Green
+            radius: 20,
+            shape: 'circle'
+        },
+        structure: {
+            color: 0x00FF00, // Green (same as item)
+            radius: 50, // Larger for structures
+            shape: 'circle'
+        }
+    }
+};

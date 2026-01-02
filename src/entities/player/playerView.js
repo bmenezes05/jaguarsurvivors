@@ -80,4 +80,65 @@ export class PlayerView {
     clearBlink() {
         this.container.alpha = 1;
     }
+
+    createDashTrail() {
+        // Create ghost of Body
+        const bodyGhost = this.scene.add.image(
+            this.container.x, // Container already has X/Y
+            this.container.y + (this.config.bodyOffset || -10),
+            this.config.key
+        )
+            .setScale(this.config.bodyScale || 0.4)
+            .setAlpha(0.6)
+            .setTint(0x00FFFF); // Cyan tint for dash
+
+        // Flip based on current scale
+        bodyGhost.flipX = this.container.scaleX < 0;
+
+        // Create ghost of Legs
+        const legTex = this.config.key + '_legs';
+        const legConfig = this.config.legs || { x: 0, y: 16 };
+
+        // We only show one "legs" image for simplicity in trail or both?
+        // Let's just do body for cleaner read or both for completeness.
+        // Let's do body only to reduce noise/performance cost, as requested "Clean and non-intrusive"
+        // But "Clear motion trail" implies the silhouette. I will add legs too if it looks weird without.
+        // The implementation plan says "visual conveys speed".
+        // Let's stick to Body for now, it's the main identifier.
+        // Actually, let's add legs too, it's easy.
+
+        const leftLegGhost = this.scene.add.image(
+            this.container.x + (this.leftLeg.x * this.container.scaleX),
+            this.container.y + this.leftLeg.y,
+            legTex
+        )
+            .setScale(this.config.legsScale || 0.3)
+            .setOrigin(this.leftLeg.originX, this.leftLeg.originY)
+            .setRotation(this.leftLeg.rotation)
+            .setAlpha(0.6)
+            .setTint(0x00FFFF);
+
+        const rightLegGhost = this.scene.add.image(
+            this.container.x + (this.rightLeg.x * this.container.scaleX),
+            this.container.y + this.rightLeg.y,
+            legTex
+        )
+            .setScale(this.config.legsScale || 0.3)
+            .setOrigin(this.rightLeg.originX, this.rightLeg.originY)
+            .setRotation(this.rightLeg.rotation)
+            .setAlpha(0.6)
+            .setTint(0x00FFFF);
+
+        // Tween out
+        this.scene.tweens.add({
+            targets: [bodyGhost, leftLegGhost, rightLegGhost],
+            alpha: 0,
+            duration: 300,
+            onComplete: () => {
+                bodyGhost.destroy();
+                leftLegGhost.destroy();
+                rightLegGhost.destroy();
+            }
+        });
+    }
 }

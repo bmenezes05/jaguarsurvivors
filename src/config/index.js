@@ -41,10 +41,12 @@ import {
     statusEffectsConfig,
     pickupsConfig,
     worldConfig,
-    equipmentLimitsConfig
+    equipmentLimitsConfig,
+    telegraphConfig
 } from './gameplay.config.js';
 import { difficultyConfig } from './difficulty.config.js';
 import { bossPhaseConfig } from './bossPhases.config.js';
+import { structuresConfig } from './structures.config.js';
 /**
  * BASE_CONFIG - Immutable base configuration
  * Used for resetting CONFIG to initial state
@@ -89,7 +91,10 @@ export const BASE_CONFIG = {
     // == AI DIFFICULTY SCALING ==
     difficulty: difficultyConfig,
     // == BOSS PHASE CONFIGURATIONS ==
-    bossPhases: bossPhaseConfig
+    // == STRUCTURES ==
+    structures: structuresConfig,
+    // == TELEGRAPH ==
+    telegraph: telegraphConfig
 };
 /**
  * CONFIG - Mutable configuration object

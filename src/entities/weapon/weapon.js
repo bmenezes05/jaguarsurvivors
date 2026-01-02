@@ -100,6 +100,7 @@ export class Weapon {
         let nearest = null;
         let minDist = maxDistance;
 
+        // 1. Check Enemies
         for (const enemy of this.enemySpawner.enemies) {
             if (!enemy.isActive) continue;
 
@@ -110,6 +111,23 @@ export class Weapon {
             if (dist < minDist) {
                 minDist = dist;
                 nearest = enemy;
+            }
+        }
+
+        // 2. Check Structures
+        if (this.scene.structureSystem && this.scene.structureSystem.structures) {
+            for (const struct of this.scene.structureSystem.structures) {
+                if (!struct.isActive) continue;
+
+                // Simple check: treat structure as a targetable point (its center)
+                const dist = Phaser.Math.Distance.Between(
+                    this.player.x, this.player.y, struct.x, struct.y
+                );
+
+                if (dist < minDist) {
+                    minDist = dist;
+                    nearest = struct; // Duck-typing: structure has x, y, and takeDamage
+                }
             }
         }
 

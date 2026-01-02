@@ -54,6 +54,8 @@ export class EnemyMovement {
     }
 
     applyKnockback(force, duration, angle) {
+        if (!this.enemy.view.container || !this.enemy.view.container.body) return;
+
         this.knockbackTimer = duration;
 
         this.enemy.view.container.body.setVelocity(

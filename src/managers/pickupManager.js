@@ -16,6 +16,19 @@ export class PickupManager {
     }
 
     spawn(x, y, type) {
+        if (this.scene.telegraphManager) {
+            this.scene.telegraphManager.showTelegraph(x, y, 'item', () => {
+                this._spawnActual(x, y, type);
+            });
+        } else {
+            this._spawnActual(x, y, type);
+        }
+    }
+
+    _spawnActual(x, y, type) {
+        // Safety check
+        if (!this.scene.sys.isActive()) return;
+
         const pickup = this.pool.get({ x, y, type });
         this.activePickups.push(pickup);
 

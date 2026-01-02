@@ -275,16 +275,6 @@ export const bossPhaseConfig = {
                 trigger: { type: 'immediate' },
                 behaviors: [
                     {
-                        key: 'orbit',
-                        duration: 4000,
-                        params: {
-                            preferredDistance: 250,
-                            orbitSpeed: 1.5,
-                            approachSpeed: 1.2,
-                            orbitDirection: 1
-                        }
-                    },
-                    {
                         key: 'charge',
                         duration: 3000,
                         params: {

@@ -43,5 +43,6 @@ export const audioConfig = {
     laser: 'src/assets/audio/laser.mp3',
     cinematic1: 'src/assets/audio/cinematic1.mp3',
     cinematic2: 'src/assets/audio/cinematic2.mp3',
-    cinematic3: 'src/assets/audio/cinematic3.mp3'
+    cinematic3: 'src/assets/audio/cinematic3.mp3',
+    dash_start: 'src/assets/audio/evasion.mp3'
 };

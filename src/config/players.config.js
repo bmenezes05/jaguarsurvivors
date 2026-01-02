@@ -32,6 +32,12 @@ export const playersConfig = [
             walkBobAmplitude: 2,
             restDamping: { rotation: 0.9, position: 0.2 }
         },
+        dash: {
+            duration: 250,
+            speed: 1000,
+            cooldown: 1000
+        },
+
         stats: {
             moveSpeed: 1.0,
             maxHealth: 1.0,
@@ -75,6 +81,12 @@ export const playersConfig = [
             walkBobAmplitude: 2,
             restDamping: { rotation: 0.9, position: 0.2 }
         },
+        dash: {
+            duration: 250,
+            speed: 1000,
+            cooldown: 1000
+        },
+
         stats: {
             moveSpeed: 0.8,
             knockbackResistance: 1.2,
@@ -108,6 +120,12 @@ export const playersConfig = [
             walkBobAmplitude: 2,
             restDamping: { rotation: 0.9, position: 0.2 }
         },
+        dash: {
+            duration: 250,
+            speed: 1000,
+            cooldown: 1000
+        },
+
         stats: {
             moveSpeed: 1.3,
             attackSpeed: 1.3,
@@ -142,6 +160,12 @@ export const playersConfig = [
             walkBobAmplitude: 2,
             restDamping: { rotation: 0.9, position: 0.2 }
         },
+        dash: {
+            duration: 250,
+            speed: 1000,
+            cooldown: 1000
+        },
+
         stats: {
             damage: 1.5,
             projectileSpeed: 1.2,
@@ -174,6 +198,12 @@ export const playersConfig = [
             walkBobAmplitude: 2,
             restDamping: { rotation: 0.9, position: 0.2 }
         },
+        dash: {
+            duration: 250,
+            speed: 1000,
+            cooldown: 1000
+        },
+
         stats: {
             elementalDamage: 1.4,
             area: 1.2,

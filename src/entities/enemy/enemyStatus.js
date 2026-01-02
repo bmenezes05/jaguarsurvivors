@@ -5,18 +5,11 @@ export class EnemyStatus {
         this.activeEffects = new Map();
 
         // Settings
-        this.damageTickInterval = 500; // ms
-
-        // Base visuals
-        this.originalTint = 0xFFFFFF;
+        this.damageTickInterval = 500; // ms    
     }
 
     reset() {
         this.activeEffects.clear();
-        this.enemy.view.clearTint();
-        this.originalTint = 0xFFFFFF;
-        // Restore if config had tint? EnemyView.spawn handles base tint.
-        // We assume EnemyView.spawn is called resetting everything.
     }
 
     apply(type, config) {
@@ -33,7 +26,6 @@ export class EnemyStatus {
 
         // Event for UI/Sound
         this.scene.events.emit('status-applied', this.enemy, type);
-        this.updateVisuals();
     }
 
     update(delta) {
@@ -56,13 +48,9 @@ export class EnemyStatus {
             // Clean up expired
             if (effect.duration <= 0) {
                 this.activeEffects.delete(type);
-                this.updateVisuals();
             }
         }
 
-        // 2. Refresh visuals if state changes (e.g. enrage check optimization could be here)
-        // But doing it every frame is heavy. We rely on apply/expire to trigger updateVisuals.
-        // However, Enrage is health based. We check Enrage transition.
         this.checkEnrageTransition();
     }
 
@@ -78,7 +66,6 @@ export class EnemyStatus {
         // If newly enraged
         if (isEnraged && !this.isEnraged) {
             this.isEnraged = true;
-            this.updateVisuals();
 
             // Pop effect
             this.scene.tweens.add({
@@ -106,28 +93,6 @@ export class EnemyStatus {
 
     isStunned() {
         return this.activeEffects.has('stun');
-    }
-
-    updateVisuals() {
-        this.enemy.view.clearTint();
-
-        // Priority: Stun > Freeze > Burn > Poison > Enrage > Normal
-        if (this.activeEffects.has('stun')) {
-            this.enemy.view.setTint(0xFFFF00);
-        } else if (this.activeEffects.has('freeze')) {
-            this.enemy.view.setTint(0x00FFFF);
-        } else if (this.activeEffects.has('burn')) {
-            this.enemy.view.setTint(0xFF7700);
-        } else if (this.activeEffects.has('poison')) {
-            this.enemy.view.setTint(0x00FF00);
-        } else if (this.isEnraged) {
-            const bossData = this.enemy.entity.config.bossData || {};
-            this.enemy.view.setTint(bossData.enrageTint || 0xFF0000);
-        } else {
-            // Revert to config tint if needed
-            const configTint = this.enemy.entity.config.tint || 0xFFFFFF;
-            if (configTint !== 0xFFFFFF) this.enemy.view.setTint(configTint);
-        }
     }
 
     onDeath() {

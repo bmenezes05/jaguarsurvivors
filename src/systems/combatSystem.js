@@ -5,6 +5,7 @@ export class CombatSystem {
         this.player = scene.player;
         this.enemySpawner = scene.enemySpawner;
         this.playerBody = scene.player.view.container;
+        this.structureSystem = scene.structureSystem;
 
         this.registerOverlaps();
     }
@@ -52,6 +53,33 @@ export class CombatSystem {
                 this
             );
         }
+
+        // Player x Structures (COLLIDER - Blocks movement)
+        if (this.playerBody && this.structureSystem && this.structureSystem.group) {
+            this.scene.physics.add.collider(
+                this.playerBody,
+                this.structureSystem.group
+            );
+        }
+
+        // Projectiles x Structures (OVERLAP - Damage)
+        if (this.scene.projectileGroup && this.structureSystem && this.structureSystem.group) {
+            this.scene.physics.add.overlap(
+                this.scene.projectileGroup,
+                this.structureSystem.group,
+                this.onProjectileHitStructure,
+                null,
+                this
+            );
+        }
+
+        // // Enemies x Structures (COLLIDER - Blocks movement)
+        // if (this.enemySpawner && this.enemySpawner.group && this.structureSystem && this.structureSystem.group) {
+        //     this.scene.physics.add.collider(
+        //         this.enemySpawner.group,
+        //         this.structureSystem.group
+        //     );
+        // }
     }
 
     /* ------------------------------------------------------------------ */
@@ -84,6 +112,21 @@ export class CombatSystem {
 
         if (projectile && projectile.isActive && enemy) {
             projectile.hit(enemy);
+        }
+    }
+
+    onProjectileHitStructure(projectileSprite, structureContainer) {
+        if (!structureContainer.active) return;
+
+        const projectile = projectileSprite.getData('projectile') || projectileSprite.getData('parent');
+        const structure = structureContainer.getData('parent');
+
+        if (projectile && projectile.isActive && structure) {
+            // Hit logic similar to enemy
+            if (typeof structure.takeDamage === 'function') {
+                structure.takeDamage(projectile.damage, projectile.isCritical);
+            }
+            projectile.kill();
         }
     }
 

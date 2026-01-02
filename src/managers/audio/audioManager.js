@@ -77,6 +77,16 @@ export class AudioManager {
             Object.assign(context, args[0]);
         }
 
+        // Structure events mapping
+        if (eventName === 'structure-damaged') {
+            // args: [structure, amount, isCritical]
+            context.target = args[0];
+            context.amount = args[1];
+            context.isCritical = args[2];
+        } else if (eventName === 'structure-destroyed') {
+            context.target = args[0];
+        }
+
         return context;
     }
 
@@ -229,6 +239,12 @@ export class AudioManager {
 
         } catch (err) {
             console.debug('[AudioManager] Error playing sound', err);
+        }
+    }
+
+    stopAll() {
+        if (this.scene && this.scene.sound) {
+            this.scene.sound.stopAll();
         }
     }
 }

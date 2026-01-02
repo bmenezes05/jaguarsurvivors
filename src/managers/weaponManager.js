@@ -18,6 +18,11 @@ export class WeaponManager {
      * slot info may be provided by some callers
      */
     onWeaponEquipped(weaponKey, slot = null) {
+        // Prevent duplicates
+        if (this.weapons.some(w => w.weaponKey === weaponKey)) {
+            return;
+        }
+
         // Enforce max 2 weapons locally as well
         if (this.weapons.length >= 2) {
             console.debug(`[WeaponManager] Rejecting weapon ${weaponKey} - local limit reached`);

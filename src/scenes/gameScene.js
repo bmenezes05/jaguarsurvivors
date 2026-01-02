@@ -6,12 +6,20 @@ import { StageSystem } from '../systems/stageSystem.js';
 import { PickupSystem } from '../systems/pickupSystem.js';
 import { GameEventHandler } from '../systems/gameEventHandler.js';
 import { DifficultyManager } from '../systems/ai/difficultyManager.js';
+import { StructureSystem } from '../systems/structureSystem.js';
 import { CONFIG } from '../config/config.js';
+import { TelegraphManager } from '../managers/telegraphManager.js';
 
 
 export class GameScene extends Phaser.Scene {
     constructor() {
         super({ key: 'GameScene' });
+    }
+
+    init() {
+        // Ensure clean state on init
+        this.isShuttingDown = false;
+        this.events.on('shutdown', this.shutdown, this);
     }
 
     create(data) {
@@ -22,6 +30,9 @@ export class GameScene extends Phaser.Scene {
         this.playerManager = new PlayerManager(this, this.bootstrap.scene.playerConfig);
         this.playerManager.create();
 
+        // Telegraph System (Visual Feedback)
+        this.telegraphManager = new TelegraphManager(this);
+
         // Enemies + spawner
         this.enemySystem = new EnemySystem(this, this.bootstrap.scene.enemySpawner);
 
@@ -31,6 +42,9 @@ export class GameScene extends Phaser.Scene {
 
         this.pickupSystem = new PickupSystem(this);
         this.stageSystem = new StageSystem(this, this.bootstrap.scene.mapConfig);
+        this.structureSystem = new StructureSystem(this);
+        this.structureSystem.init();
+
         this.combatSystem = new CombatSystem(this);
 
         // Orquestra eventos globais
@@ -56,12 +70,15 @@ export class GameScene extends Phaser.Scene {
     }
 
     update(time, delta) {
+        if (this.isShuttingDown) return;
+
         // Pass delta to all systems (Phaser provides delta in ms)
-        this.playerManager.update(time, delta);
-        this.enemySystem.update(time, delta);
-        this.combatSystem.update(time, delta);
-        this.pickupSystem.update(time, delta);
-        this.stageSystem.update(delta);
+        if (this.playerManager) this.playerManager.update(time, delta);
+        if (this.enemySystem) this.enemySystem.update(time, delta);
+        if (this.combatSystem) this.combatSystem.update(time, delta);
+        if (this.pickupSystem) this.pickupSystem.update(time, delta);
+        if (this.stageSystem) this.stageSystem.update(delta);
+        if (this.structureSystem) this.structureSystem.update(time, delta);
         if (this.xpSystem) this.xpSystem.update(delta, this.player);
 
         // DifficultyManager is time-based and uses scene.time.now
@@ -69,13 +86,14 @@ export class GameScene extends Phaser.Scene {
         // It tracks time via internal methods getElapsedTime() called by clients
 
         // Sync Hud
-        if (this.hud) {
+        if (this.hud && typeof this.hud.updateTimer === 'function') {
             this.hud.updateTimer(this.stageSystem.timeLeft, this.stageSystem.isSuddenDeath);
-            this.hud.updateWaveInfo(
-                this.enemySystem.enemySpawner.wave + 1,
-                this.enemySystem.enemySpawner.enemies.length,
-                this.kills
-            );
+            if (this.enemySystem && this.enemySystem.enemySpawner) {
+                this.hud.updateWaveInfo(
+                    this.enemySystem.enemySpawner.wave + 1,
+                    this.enemySystem.enemySpawner.getEnemies().length
+                );
+            }
         }
     }
 
@@ -101,5 +119,75 @@ export class GameScene extends Phaser.Scene {
                 this.damageTextPool.return(text);
             }
         });
+    }
+    shutdown() {
+        if (this.isShuttingDown) return;
+        this.isShuttingDown = true;
+
+        console.debug('GameScene: Starting shutdown lifecycle...');
+
+        // 1. Clean up Event Handler
+        if (this.gameEvents) {
+            this.gameEvents.destroy();
+        }
+
+        // 2. Clear Timers & Tweens
+        this.time.removeAllEvents();
+        this.tweens.killAll();
+
+        // 3. Destroy Systems
+        if (this.weaponManager) this.weaponManager.destroy();
+        if (this.pickupManager) this.pickupManager.destroy();
+        if (this.telegraphManager) this.telegraphManager.destroy();
+        if (this.equipmentManager) this.equipmentManager.reset();
+
+        if (this.playerManager) {
+            try {
+                this.playerManager.destroy();
+            } catch (e) {
+                console.debug('[GameScene] Error destroying playerManager', e);
+            }
+        }
+
+        if (this.structureSystem) {
+            // System cleanup if any
+        }
+
+        if (this.enemySystem && this.enemySystem.enemySpawner) {
+            this.enemySystem.enemySpawner.reset();
+            // Safety check for group before clearing
+            const enemyGroup = this.enemySystem.enemySpawner.getGroup();
+            if (enemyGroup && typeof enemyGroup.clear === 'function') {
+                try {
+                    enemyGroup.clear(true, true);
+                } catch (e) {
+                    console.debug('[GameScene] Could not clear enemy group during shutdown');
+                }
+            }
+        }
+
+        // 4. UI Cleanup
+        if (this.hud) {
+            if (typeof this.hud.reset === 'function') this.hud.reset();
+            this.hud.hide();
+        }
+
+        if (this.bossUIManager) this.bossUIManager.hide();
+        if (this.upgradeUIManager) this.upgradeUIManager.hide();
+        if (this.legendaryUIManager) this.legendaryUIManager.hide();
+        if (this.gameOverUIManager) this.gameOverUIManager.hide();
+        if (this.loadoutUI) {
+            if (typeof this.loadoutUI.destroy === 'function') this.loadoutUI.destroy();
+        }
+
+        // 5. Input
+        this.input.keyboard.off('keydown-ESC');
+
+        // 6. Audio
+        if (this.audio) {
+            this.audio.stopAll();
+        }
+
+        console.debug('GameScene shutdown complete.');
     }
 }

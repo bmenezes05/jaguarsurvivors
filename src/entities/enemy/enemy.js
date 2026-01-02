@@ -131,9 +131,6 @@ export class Enemy {
     takeDamage(amount, isCritical, attacker) {
         this.entity.takeDamage(amount);
 
-        // Removed explicit view.flashDamage() logic.
-        // The event below is caught by VFXManager which handles visual feedback.
-
         this.scene.events.emit('enemy-damaged', this, amount, isCritical, attacker);
 
         if (this.entity.isDead()) {
@@ -181,13 +178,15 @@ export class Enemy {
         this.status.onDeath();
     }
 
-    // Proxy methods for Tinting (used by VFXManager effects)
-    setTint(color) {
-        this.view.setTint(color);
-    }
-
-    clearTint() {
-        this.view.clearTint();
+    /**
+     * Called by ObjectPool.clear() to permanently remove this instance
+     */
+    destroy() {
+        if (this.view) {
+            // Need to ensure the container is actually destroyed here, 
+            // unlike in the view.destroy() which just hides it (for pooling)
+            if (this.view.container) this.view.container.destroy();
+        }
     }
 
     get x() { return this.view.x; }

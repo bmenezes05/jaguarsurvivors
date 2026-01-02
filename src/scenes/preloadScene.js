@@ -58,6 +58,15 @@ export class PreloadScene extends Phaser.Scene {
             this.load.audio(key, path);
         });
 
+        // Load Structure Sprites
+        if (BASE_CONFIG.structures && BASE_CONFIG.structures.types) {
+            Object.values(BASE_CONFIG.structures.types).forEach(struct => {
+                if (struct.image) {
+                    this.load.image(struct.spriteKey, struct.image);
+                }
+            });
+        }
+
         // Barra de carregamento simples
         this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2, 'CARREGANDO...', {
             fontFamily: 'Anton', fontSize: '32px', fill: '#FFD700'

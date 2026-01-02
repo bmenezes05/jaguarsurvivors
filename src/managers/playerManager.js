@@ -52,4 +52,14 @@ export class PlayerManager {
             this.player.view.container.setDepth(this.player.y);
         }
     }
+
+    destroy() {
+        this.scene.cameras.main.stopFollow();
+        if (this.player) {
+            // Player cleanup logic (if any specific, but container destroy is usually enough)
+            if (this.player.view && this.player.view.container) {
+                this.player.view.container.destroy();
+            }
+        }
+    }
 }

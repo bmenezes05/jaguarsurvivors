@@ -1,6 +1,8 @@
 import { PlayerStats } from './playerStats.js';
 import { PlayerView } from './playerView.js';
 import { PlayerMovement } from './playerMovement.js';
+import { PlayerDash } from './playerDash.js';
+
 
 export class Player {
     constructor(scene, x, y, playerConfig) {
@@ -10,6 +12,8 @@ export class Player {
         this.stats = new PlayerStats(playerConfig);
         this.view = new PlayerView(scene, x, y, playerConfig);
         this.movement = new PlayerMovement(scene, this.view.container, this.stats, playerConfig);
+        this.dash = new PlayerDash(scene, this, playerConfig);
+
 
         this._health = this.stats.maxHealth;
         this.isInvulnerable = false;
@@ -23,7 +27,13 @@ export class Player {
     }
 
     update(delta) {
-        this.movement.update(this.cursors, this.wasd, delta);
+        // Dash logic takes precedence over normal movement
+        const isDashing = this.dash.update(this.cursors, this.wasd, delta);
+
+        if (!isDashing) {
+            this.movement.update(this.cursors, this.wasd, delta);
+        }
+
         this.view.update(delta, this.movement.isMoving);
 
         this._updateInvulnerability(delta);

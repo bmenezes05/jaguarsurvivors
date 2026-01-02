@@ -23,12 +23,12 @@ export const enemiesConfig = [
         shootRange: 0,
         projectileDamage: 0,
         xpValue: 1,
-        bodyScale: 1,
-        legsScale: 0.6,
+        bodyScale: 0.8,
+        legsScale: 0.5,
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: 0, y: 50 },
+        legOffset: { x: 0, y: 40 },
         projectileColor: 0xFF0000,
         projectileScale: 1.0,
         hitSoundKey: 'hit',
@@ -61,15 +61,25 @@ export const enemiesConfig = [
         shootRange: 0,
         projectileDamage: 0,
         xpValue: 1,
-        bodyScale: 0.2,
-        legsScale: 0.3,
+        bodyScale: 0.7,
+        legsScale: 0.4,
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: -6, y: 16 },
+        legOffset: { x: -10, y: 30 },
         hitSoundKey: 'hit',
         dropChance: 0.08,
-        lootTable: 'common'
+        lootTable: 'common',
+        ai: {
+            behaviorKey: 'burst_pursuit',
+            behaviorParams: {
+                pursuitSpeed: 1.5,          // 1.5x speed during pursuit
+                pursuitDuration: 1000,      // Pursue for 1.5s
+                pauseDuration: 800,         // Pause for 0.8s
+                pauseSpeed: 0               // Completely stop during pause
+            }
+        },
+        scalingProfile: 'aggressive'
     },
     {
         key: 'enemy_bandido2',
@@ -88,15 +98,27 @@ export const enemiesConfig = [
         shootRange: 0,
         projectileDamage: 0,
         xpValue: 2,
-        bodyScale: 0.5,
-        legsScale: 0.35,
+        bodyScale: 0.8,
+        legsScale: 0.5,
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: -6, y: 10 },
+        legOffset: { x: 0, y: 40 },
         hitSoundKey: 'hit',
         dropChance: 0.1,
-        lootTable: 'common'
+        lootTable: 'common',
+        ai: {
+            behaviorKey: 'charge',
+            behaviorParams: {
+                chargeUpTime: 800,          // 0.8s wind-up
+                chargeSpeed: 3.0,           // 3x normal speed during charge
+                chargeDuration: 500,        // Charge lasts 0.5s
+                cooldownTime: 1500,         // 1.5s before next charge
+                idleSpeed: 0.3,             // Slow approach between charges
+                lockDirection: true         // Direction locked at charge start
+            }
+        },
+        scalingProfile: 'aggressive'
     },
     {
         key: 'enemy_bolsonarista',
@@ -120,10 +142,21 @@ export const enemiesConfig = [
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: -6, y: 20 },
+        legOffset: { x: 5, y: 45 },
         hitSoundKey: 'hit',
         dropChance: 0.15,
-        lootTable: 'ucommon'
+        lootTable: 'ucommon',
+        ai: {
+            behaviorKey: 'orbit',
+            behaviorParams: {
+                preferredDistance: 200,     // Stay 200px from player
+                orbitSpeed: 0.8,            // Orbit at 80% speed
+                approachSpeed: 1.0,         // Full speed when approaching
+                orbitDirection: 1,          // Clockwise
+                distanceTolerance: 30       // 30px tolerance before adjusting
+            }
+        },
+        scalingProfile: 'ranged'
     },
     {
         key: 'enemy_bolsonarista2',
@@ -142,17 +175,25 @@ export const enemiesConfig = [
         shootRange: 0,
         projectileDamage: 0,
         xpValue: 2,
-        bodyScale: 0.8,
-        legsScale: 0.4,
+        bodyScale: 1,
+        legsScale: 0.45,
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: 0, y: 16 },
+        legOffset: { x: -10, y: 50 },
         projectileColor: 0x9966FF,
         projectileScale: 0.8,
         hitSoundKey: 'hit',
         dropChance: 0.1,
-        lootTable: 'common'
+        lootTable: 'common',
+        ai: {
+            behaviorKey: 'chase',
+            behaviorParams: {
+                speed: 1.0,                 // Normal speed
+                trackingSpeed: 1.0,         // Instant direction updates
+                minDistance: 0              // Chase all the way to player
+            }
+        }
     },
     {
         key: 'enemy_centrao',
@@ -176,7 +217,7 @@ export const enemiesConfig = [
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: 0, y: 10 },
+        legOffset: { x: 0, y: 50 },
         projectileColor: 0x9966FF,
         projectileScale: 0.8,
         hitSoundKey: 'hit',
@@ -205,7 +246,7 @@ export const enemiesConfig = [
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: -6, y: 16 },
+        legOffset: { x: 0, y: 50 },
         projectileColor: 0x9966FF,
         projectileScale: 0.8,
         hitSoundKey: 'hit',
@@ -234,7 +275,7 @@ export const enemiesConfig = [
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: 0, y: 16 },
+        legOffset: { x: 0, y: 50 },
         projectileColor: 0x9966FF,
         projectileScale: 0.8,
         hitSoundKey: 'hit',
@@ -263,7 +304,7 @@ export const enemiesConfig = [
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: 0, y: 16 },
+        legOffset: { x: 0, y: 50 },
         projectileColor: 0x9966FF,
         projectileScale: 0.8,
         hitSoundKey: 'hit',
@@ -292,7 +333,7 @@ export const enemiesConfig = [
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: 0, y: 16 },
+        legOffset: { x: 0, y: 50 },
         projectileColor: 0x9966FF,
         projectileScale: 0.8,
         hitSoundKey: 'hit',
@@ -321,7 +362,7 @@ export const enemiesConfig = [
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: 0, y: 16 },
+        legOffset: { x: 0, y: 50 },
         projectileColor: 0x9966FF,
         projectileScale: 0.8,
         hitSoundKey: 'hit',
@@ -350,7 +391,7 @@ export const enemiesConfig = [
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: 0, y: 16 },
+        legOffset: { x: 0, y: 50 },
         projectileColor: 0x9966FF,
         projectileScale: 0.8,
         hitSoundKey: 'hit',
@@ -379,7 +420,7 @@ export const enemiesConfig = [
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: 0, y: 16 },
+        legOffset: { x: 0, y: 50 },
         projectileColor: 0x9966FF,
         projectileScale: 0.8,
         hitSoundKey: 'hit',
@@ -408,7 +449,7 @@ export const enemiesConfig = [
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: -6, y: 32 },
+        legOffset: { x: 0, y: 50 },
         projectileColor: 0x9966FF,
         projectileScale: 0.8,
         hitSoundKey: 'hit',
@@ -437,7 +478,7 @@ export const enemiesConfig = [
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: -6, y: 32 },
+        legOffset: { x: 0, y: 50 },
         projectileColor: 0x9966FF,
         projectileScale: 0.8,
         hitSoundKey: 'hit',
@@ -466,7 +507,7 @@ export const enemiesConfig = [
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: 10, y: 20 },
+        legOffset: { x: 0, y: 50 },
         projectileColor: 0x9966FF,
         projectileScale: 0.8,
         hitSoundKey: 'hit',
@@ -495,7 +536,7 @@ export const enemiesConfig = [
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: -5, y: 20 },
+        legOffset: { x: 0, y: 50 },
         projectileColor: 0x9966FF,
         projectileScale: 0.8,
         hitSoundKey: 'hit',
@@ -524,11 +565,12 @@ export const enemiesConfig = [
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,
-        legOffset: { x: -5, y: 20 },
+        legOffset: { x: 0, y: 50 },
         projectileColor: 0x9966FF,
         projectileScale: 0.8,
         hitSoundKey: 'hit',
         dropChance: 0.1,
+        isElite: true,
         lootTable: 'common'
     },
     {
@@ -606,8 +648,8 @@ export const enemiesConfig = [
         shootRange: 0,
         projectileDamage: 0,
         xpValue: 2,
-        bodyScale: 0.7,
-        legsScale: 0.0,
+        bodyScale: 0.8,
+        legsScale: 0.1,
         bodyWidth: 60,
         bodyHeight: 100,
         bossScale: 0.6,

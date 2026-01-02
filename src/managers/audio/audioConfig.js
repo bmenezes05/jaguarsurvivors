@@ -146,6 +146,25 @@ export const AUDIO_CONFIG = {
         }
     ],
 
+    'structure-damaged': [
+        {
+            key: 'sfx_hit_flesh', // Reuse hit sound or dedicated
+            condition: () => true,
+            priority: 45,
+            throttle: 50,
+            config: { volume: 0.5, detune: 500 } // Higher pitch for wood/metal?
+        }
+    ],
+
+    'structure-destroyed': [
+        {
+            key: 'sfx_hit_flesh',
+            condition: () => true,
+            priority: 50,
+            config: { volume: 0.8, detune: -200 } // Lower pitch for break
+        }
+    ],
+
     // =========================================================================
     // UI EVENTS
     // =========================================================================

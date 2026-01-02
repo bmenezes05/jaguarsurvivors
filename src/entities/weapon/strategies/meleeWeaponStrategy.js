@@ -86,42 +86,61 @@ export class MeleeWeaponStrategy extends WeaponStrategy {
         hitbox.body.setAllowGravity(false);
         hitbox.body.moves = false;
 
-        const hitEnemies = new Set();
-
-        this.scene.physics.overlap(hitbox, enemySpawner.group, (_, enemySprite) => {
-            const enemy = enemySprite.getData('parent');
-            if (!enemy?.isActive || hitEnemies.has(enemy)) return;
-
-            this.applyDamage(enemy);
-            hitEnemies.add(enemy);
-        });
-
         const atkSpeed = player.stats.attackSpeed;
         const duration = (strategyStats.meleeAnimDuration ?? 250) / atkSpeed;
+
+        const hitTargets = new Set();
+
+        // 1. Hit Enemies
+        this.scene.physics.overlap(hitbox, enemySpawner.group, (_, enemySprite) => {
+            const enemy = enemySprite.getData('parent');
+            if (!enemy?.isActive || hitTargets.has(enemy)) return;
+
+            this.applyDamage(enemy);
+            hitTargets.add(enemy);
+        });
+
+        // 2. Hit Structures
+        if (this.scene.structureSystem && this.scene.structureSystem.group) {
+            this.scene.physics.overlap(hitbox, this.scene.structureSystem.group, (_, structureContainer) => {
+                const structure = structureContainer.getData('parent');
+                if (!structure?.isActive || hitTargets.has(structure)) return;
+
+                // Use the same applyDamage method (handled nicely by duck typing or explicit check)
+                this.applyDamage(structure);
+                hitTargets.add(structure);
+            });
+        }
 
         this.scene.time.delayedCall(duration, () => hitbox.destroy());
     }
 
-    applyDamage(enemy) {
+    applyDamage(target) {
         const { weapon } = this;
         const { config, player, current } = weapon;
         const { damage, isCritical } = weapon.calculateDamage();
         const effects = config.effects || {};
-        if (effects.elemental && effects.elemental !== 'none') {
-            enemy.applyEffect(
+
+        // Helper to check if target is a Structure
+        const isStructure = target.container && target.container.getData('isStructure');
+
+        // Apply Status Effects (Only for Enemies)
+        if (!isStructure && effects.elemental && effects.elemental !== 'none') {
+            target.applyEffect(
                 effects.elemental,
                 current.dotDamage,
                 effects.dotDuration || 0
             );
         }
 
-        enemy.takeDamage(damage, isCritical, player);
+        target.takeDamage(damage, isCritical, player);
 
-        // Use calculated current knockback
-        const kb = current.knockback;
-        const kbDuration = current.knockbackDuration;
-
-        enemy.applyKnockback(kb, kbDuration);
+        // Apply Knockback (Only for Enemies)
+        if (!isStructure) {
+            const kb = current.knockback;
+            const kbDuration = current.knockbackDuration;
+            target.applyKnockback(kb, kbDuration);
+        }
     }
 
     getWeaponSprite() {
