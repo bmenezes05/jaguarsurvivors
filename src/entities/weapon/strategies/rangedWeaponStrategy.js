@@ -87,6 +87,10 @@ export class RangedWeaponStrategy extends WeaponStrategy {
 
         projectile.visual.setData('parent', projectile);
         this.projectileGroup.add(projectile.visual);
+
+        // Re-apply velocity AFTER adding to the group, as adding to a group can reset it.
+        projectile.applyVelocity(x, y, target.x, target.y, speed);
+
         this.activeProjectiles.push(projectile);
     }
 

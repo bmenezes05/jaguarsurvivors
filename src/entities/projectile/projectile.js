@@ -61,7 +61,6 @@ export class Projectile {
         this.visual.setPosition(x, y);
 
         this.applyVisuals();
-        this.applyVelocity(x, y, targetX, targetY, projectileSpeed);
     }
 
     applyVisuals() {
