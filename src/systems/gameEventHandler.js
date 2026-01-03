@@ -128,6 +128,18 @@ export class GameEventHandler {
                 }
             }
         });
+
+        this.events.on('map-completed', () => {
+            if (this.scene.mapCompletedUIManager) {
+                this.scene.mapCompletedUIManager.show();
+            }
+        });
+
+        this.events.on('endless-mode-started', () => {
+            if (this.scene.enemySystem && this.scene.enemySystem.enemySpawner) {
+                this.scene.enemySystem.enemySpawner.startEndlessMode();
+            }
+        });
     }
 
     registerBossEvents() {

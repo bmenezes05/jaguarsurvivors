@@ -13,10 +13,14 @@ export class HUDManager {
             xpFill: document.getElementById('xp-bar-fill'),
             xpText: document.getElementById('xp-bar-text')
         };
+
+        this.scene.events.on('endless-mode-started', this.setEndlessMode, this);
     }
 
     show() {
-        if (this.elements.container) this.elements.container.style.display = 'block';
+        if (this.elements.container) {
+            this.elements.container.style.display = 'block';
+        }
     }
 
     hide() {
@@ -79,6 +83,14 @@ export class HUDManager {
     updateTimer(seconds, isSuddenDeath = false) {
         if (!this.elements.timer) return;
 
+        if (this.scene.isEndlessMode) {
+            const timeToShow = Math.ceil(Math.max(0, seconds));
+            const mins = Math.floor(timeToShow / 60).toString().padStart(2, '0');
+            const secs = (timeToShow % 60).toString().padStart(2, '0');
+            this.elements.timer.textContent = `${mins}:${secs}`;
+            return;
+        }
+
         if (isSuddenDeath) {
             this.elements.timer.style.color = 'red';
             this.elements.timer.textContent = "SUDDEN DEATH";
@@ -89,6 +101,20 @@ export class HUDManager {
         const mins = Math.floor(timeToShow / 60).toString().padStart(2, '0');
         const secs = (timeToShow % 60).toString().padStart(2, '0');
         this.elements.timer.textContent = `${mins}:${secs}`;
+    }
+
+    setEndlessMode() {
+        if (this.elements.timer) {
+            this.elements.timer.style.color = '#ff8c00'; // Deep orange
+        }
+
+        if (this.elements.waveDisplay) {
+            const waveText = this.elements.waveDisplay.querySelector('span');
+            if (waveText) {
+                waveText.innerHTML = 'ENDLESS ONDA <span id="wave-count">1</span>';
+                this.elements.waveCount = document.getElementById('wave-count');
+            }
+        }
     }
 
     setBossWave(isBossWave, wave) {

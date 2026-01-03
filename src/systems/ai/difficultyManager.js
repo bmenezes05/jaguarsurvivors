@@ -28,6 +28,7 @@ export class DifficultyManager {
         this.currentLevel = 0;
         this.isPaused = false;
         this.pausedTime = 0;
+        this.lastDifficultyMultiplier = 1;
 
         console.debug('DifficultyManager reset at time:', this.runStartTime);
     }
@@ -88,22 +89,26 @@ export class DifficultyManager {
      */
     getMultiplier(statKey, profile = null) {
         const elapsed = this.getElapsedTime();
+        let multiplier = 1.0;
 
         // First check profile-specific scaling
         if (profile && this.config.profiles && this.config.profiles[profile]) {
             const profileConfig = this.config.profiles[profile];
             if (profileConfig[statKey]) {
-                return this.calculateMultiplier(elapsed, profileConfig[statKey]);
+                multiplier = this.calculateMultiplier(elapsed, profileConfig[statKey]);
             }
         }
-
         // Fall back to global scaling
-        if (this.config.global && this.config.global[statKey]) {
-            return this.calculateMultiplier(elapsed, this.config.global[statKey]);
+        else if (this.config.global && this.config.global[statKey]) {
+            multiplier = this.calculateMultiplier(elapsed, this.config.global[statKey]);
         }
 
-        // No scaling defined
-        return 1.0;
+        if (statKey === 'health' && multiplier > this.lastDifficultyMultiplier + CONFIG.endlessMode.difficultyIncreaseInterval) {
+            this.lastDifficultyMultiplier = multiplier;
+            this.scene.events.emit('difficulty-increased');
+        }
+
+        return multiplier;
     }
 
     /**
@@ -116,7 +121,10 @@ export class DifficultyManager {
         const { curve, min, max, rampUpTime } = scaling;
 
         // Calculate progress (0 to 1)
-        const progress = Math.min(elapsed / rampUpTime, 1.0);
+        let progress = Math.min(elapsed / rampUpTime, 1.0);
+        if (this.scene.isEndlessMode) {
+            progress = elapsed / rampUpTime;
+        }
 
         switch (curve) {
             case 'linear':

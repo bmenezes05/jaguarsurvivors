@@ -7,6 +7,7 @@ import { ShakeEffect } from './effects/shakeEffect.js';
 import { HitStopEffect } from './effects/hitStopEffect.js';
 import { DamagePopupEffect } from './effects/damagePopupEffect.js';
 import { CameraFlashEffect } from './effects/cameraFlashEffect.js';
+import { ScreenBorderFlashEffect } from './effects/screenBorderFlashEffect.js';
 
 export const VFX_CONFIG = {
     'enemy-damaged': [
@@ -197,6 +198,13 @@ export const VFX_CONFIG = {
             effectClass: FlashEffect,
             condition: (data) => data.type.startsWith('health'),
             config: { duration: 200, color: 0x00FF00 }
+        }
+    ],
+    'difficulty-increased': [
+        {
+            effectClass: ScreenBorderFlashEffect,
+            condition: () => true,
+            config: { color: 0xff8c00, thickness: 20, duration: 300 }
         }
     ]
 };

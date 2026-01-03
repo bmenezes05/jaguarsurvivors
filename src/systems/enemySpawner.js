@@ -25,6 +25,7 @@ export class EnemySpawner {
         // Controle de ciclo de vida da onda
         this.spawnedCount = 0;
         this.isWaveFinished = false;
+        this.isInEndlessMode = false;
 
         // Pool de objetos para performance
         this.enemyPool = new ObjectPool(scene, Enemy, 100);
@@ -140,12 +141,55 @@ export class EnemySpawner {
      * Avança para a próxima onda.
      */
     nextWave() {
-        const nextIndex = this.wave + 1;
-        if (this.waves[nextIndex]) {
-            this.initWave(nextIndex);
+        if (this.isInEndlessMode) {
+            this.initEndlessWave();
         } else {
-            // Opcional: Loop infinito ou emitir evento de vitória
+            const nextIndex = this.wave + 1;
+            if (this.waves[nextIndex]) {
+                this.initWave(nextIndex);
+            } else {
+                if (!this.scene.isEndlessMode) {
+                    this.scene.events.emit('map-completed');
+                }
+            }
         }
+    }
+
+    startEndlessMode() {
+        this.isInEndlessMode = true;
+        this.initEndlessWave();
+    }
+
+    generateEndlessWaveConfig() {
+        const endlessWave = (this.wave - this.waves.length) + 1;
+        const difficulty = 1 + (endlessWave * CONFIG.endlessMode.waveDifficultyMultiplier);
+        const enemyTypes = this.mapConfig.waves[this.mapConfig.waves.length - 1].enemyTypes;
+
+        return {
+            totalEnemies: Math.floor(10 * difficulty),
+            maxOnScreen: Math.floor(15 * difficulty),
+            enemiesPerWave: Math.floor(2 * difficulty),
+            interval: Math.max(100, 500 / difficulty),
+            enemyTypes: enemyTypes,
+            spawnDistance: 700,
+            bossPerWave: Math.random() < CONFIG.endlessMode.bossChance ? 1 : 0,
+        };
+    }
+
+    initEndlessWave() {
+        this.wave++;
+        this.waveConfig = this.generateEndlessWaveConfig();
+        this.spawnedCount = 0;
+        this.timer = 0;
+        this.isWaveFinished = false;
+
+        const payload = {
+            index: this.wave + 1,
+            config: this.waveConfig,
+            isBossWave: false,
+            isEndless: true,
+        };
+        this.scene.events.emit('wave-changed', payload);
     }
 
     /**

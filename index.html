@@ -76,6 +76,16 @@
             <button class="btn" style="background: #333;" onclick="GameEvents.goToMainMenu()">MENU</button>
         </div>
 
+        <div id="map-completed" class="overlay-screen">
+            <h1 style="color: var(--cor-primaria);">MAPA CONCLUÍDO</h1>
+            <h2>TEMPO: <span id="final-survival-time" style="color: #fff">00:00</span></h2>
+            <div style="font-size: 18px; margin-bottom: 20px; color: #aaa; font-family: 'Anton', sans-serif;">
+                NÍVEL ALCANÇADO: <span id="final-level-completed" style="color: var(--cor-primaria)">1</span>
+            </div>
+            <button class="btn" id="start-endless-mode">INICIAR MODO ENDLESS</button>
+            <button class="btn" style="background: #333;" onclick="GameEvents.goToMainMenu()">MENU</button>
+        </div>
+
         <div id="pause-screen" class="overlay-screen">
             <h1>MISSAO PAUSADA</h1>
             <button class="btn" onclick="GameEvents.resumeGame()">CONTINUAR</button>

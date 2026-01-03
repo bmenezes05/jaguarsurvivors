@@ -7,13 +7,17 @@ export class StageSystem {
         this.totalPlayTime = 0;
         this.isSuddenDeath = false;
         this.suddenDeathTimer = 0;
+        this.survivalTimer = 0;
         this.processedEvents = new Set();
     }
 
     update(delta) {
         if (this.scene.scene.isPaused()) return;
 
-        if (!this.isSuddenDeath) {
+        if (this.scene.isEndlessMode) {
+            this.survivalTimer += delta / 1000;
+            this.totalPlayTime += delta / 1000;
+        } else if (!this.isSuddenDeath) {
             this.timeLeft -= delta / 1000;
             this.totalPlayTime += delta / 1000;
 

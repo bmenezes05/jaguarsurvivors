@@ -19,6 +19,7 @@ export class GameScene extends Phaser.Scene {
     init() {
         // Ensure clean state on init
         this.isShuttingDown = false;
+        this.isEndlessMode = false;
         this.events.on('shutdown', this.shutdown, this);
     }
 
@@ -92,7 +93,11 @@ export class GameScene extends Phaser.Scene {
 
         // Sync Hud
         if (this.hud && typeof this.hud.updateTimer === 'function') {
-            this.hud.updateTimer(this.stageSystem.timeLeft, this.stageSystem.isSuddenDeath);
+            if (this.isEndlessMode) {
+                this.hud.updateTimer(this.stageSystem.survivalTimer);
+            } else {
+                this.hud.updateTimer(this.stageSystem.timeLeft, this.stageSystem.isSuddenDeath);
+            }
             if (this.enemySystem && this.enemySystem.enemySpawner) {
                 this.hud.updateWaveInfo(
                     this.enemySystem.enemySpawner.wave + 1,

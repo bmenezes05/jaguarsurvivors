@@ -41,7 +41,8 @@ import {
     statusEffectsConfig,
     worldConfig,
     equipmentLimitsConfig,
-    telegraphConfig
+    telegraphConfig,
+    endlessModeConfig
 } from './gameplay.config.js';
 import { difficultyConfig } from './difficulty.config.js';
 import { bossPhaseConfig } from './bossPhases.config.js';
@@ -93,7 +94,9 @@ export const BASE_CONFIG = {
     // == STRUCTURES ==
     structures: structuresConfig,
     // == TELEGRAPH ==
-    telegraph: telegraphConfig
+    telegraph: telegraphConfig,
+    // == ENDLESS MODE ==
+    endlessMode: endlessModeConfig
 };
 /**
  * CONFIG - Mutable configuration object

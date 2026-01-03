@@ -93,3 +93,10 @@ export const telegraphConfig = {
         }
     }
 };
+
+// ==================== ENDLESS MODE ====================
+export const endlessModeConfig = {
+    difficultyIncreaseInterval: 0.25,
+    waveDifficultyMultiplier: 0.1,
+    bossChance: 0.25,
+};
