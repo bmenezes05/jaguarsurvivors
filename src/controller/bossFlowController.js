@@ -73,16 +73,15 @@ export class BossFlowController {
         const rewardManager = this.scene.legendaryRewardManager;
         const rewardUI = this.scene.legendaryUIManager;
 
-        if (rewardManager && rewardUI) {
+        if (rewardManager && this.scene.bootstrap?.uiFlow) {
             // Fluxo de recompensa (sempre que um chefe morre)
             const rewards = rewardManager.getRandomRewards();
-            this.scene.scene.pause(); // Pause gameplay during legendary selection
-            rewardUI.show(rewards);
+            this.scene.bootstrap.uiFlow.onLegendaryDrop(rewards);
 
             console.debug("EVENT_EMITTED", { eventName: 'boss-flow-completed', payload: null });
             this.events.emit('boss-flow-completed');
         } else {
-            console.error("Missing Legendary Reward Manager or Legendary UI");
+            console.error("Missing Legendary Reward Manager or UIFlowController");
         }
     }
 

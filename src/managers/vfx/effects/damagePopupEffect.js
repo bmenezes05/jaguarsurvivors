@@ -15,7 +15,7 @@ export class DamagePopupEffect extends BaseVFXEffect {
         // In GameEventHandler it called: this.scene.showDamagePopup(...)
 
         if (this.scene.showDamagePopup) {
-            this.scene.showDamagePopup(xPos, yPos, Math.floor(amount), color, scale, context.isCritical);
+            this.scene.showDamagePopup(xPos, yPos, amount, color, scale, context.isCritical);
         }
 
         this.complete();

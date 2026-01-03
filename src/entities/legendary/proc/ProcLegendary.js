@@ -76,6 +76,7 @@ export class ProcLegendary extends BaseLegendary {
      * No cleanup needed for most procs.
      */
     destroy() {
+        if (!this.isActive) return;
         super.destroy();
     }
 }

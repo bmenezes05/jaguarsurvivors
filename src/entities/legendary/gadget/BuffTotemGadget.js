@@ -97,8 +97,10 @@ export class BuffTotemGadget extends GadgetLegendary {
     }
 
     destroy() {
+        if (!this.isActive) return;
+
         // Make sure to remove buff if active
-        if (this.buffApplied && this.scene.player) {
+        if (this.buffApplied && this.scene && this.scene.player) {
             this.removeBuff(this.scene.player);
         }
         super.destroy();

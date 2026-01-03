@@ -77,7 +77,7 @@ export class PickupSystem {
         pickup.collect(player);
 
         console.debug("EVENT_EMITTED", { eventName: 'pickup-collected', payload: pickup.type });
-        this.scene.events.emit('pickup-collected', pickup.type);
+        this.scene.events.emit('pickup-collected', pickup);
     }
 
     /**

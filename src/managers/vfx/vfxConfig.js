@@ -79,6 +79,17 @@ export const VFX_CONFIG = {
             effectClass: SparkEffect,
             condition: () => true,
             config: { count: 30, color: 0xFFFFFF, speedMin: 100, speedMax: 400, life: 500 }
+        },
+        // Damage Popups (Same as enemies for consistency)
+        {
+            effectClass: DamagePopupEffect,
+            condition: (data) => !data.isCritical,
+            config: { color: '#FFFFFF', scale: 1.0 }
+        },
+        {
+            effectClass: DamagePopupEffect,
+            condition: (data) => data.isCritical,
+            config: { color: '#FF4500', scale: 1.8 }
         }
     ],
 
@@ -140,6 +151,52 @@ export const VFX_CONFIG = {
             config: {
                 color: 0xFF0000
             }
+        }
+    ],
+    'pickup-collected': [
+        // Map Bomb
+        {
+            effectClass: CameraFlashEffect,
+            condition: (data) => data.type === 'map_bomb',
+            config: { duration: 300, r: 255, g: 255, b: 255 }
+        },
+        {
+            effectClass: ShakeEffect,
+            condition: (data) => data.type === 'map_bomb',
+            config: { intensity: 0.03, duration: 500 }
+        },
+        {
+            effectClass: SparkEffect,
+            condition: (data) => data.type === 'map_bomb',
+            config: { count: 100, color: 0xFF4500, speedMin: 200, speedMax: 800, life: 1000 }
+        },
+        // Magnet
+        {
+            effectClass: PulseEffect,
+            condition: (data) => data.type === 'magnet',
+            config: { scale: 3.0, duration: 400 }
+        },
+        {
+            effectClass: SparkEffect,
+            condition: (data) => data.type === 'magnet',
+            config: { count: 40, color: 0x0000FF, speedMin: 100, speedMax: 400, life: 500 }
+        },
+        // Boots
+        {
+            effectClass: PulseEffect,
+            condition: (data) => data.type === 'boots',
+            config: { scale: 2.0, duration: 300 }
+        },
+        {
+            effectClass: SparkEffect,
+            condition: (data) => data.type === 'boots',
+            config: { count: 30, color: 0x00FFFF, speedMin: 100, speedMax: 500, life: 600 }
+        },
+        // Health
+        {
+            effectClass: FlashEffect,
+            condition: (data) => data.type.startsWith('health'),
+            config: { duration: 200, color: 0x00FF00 }
         }
     ]
 };

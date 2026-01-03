@@ -7,14 +7,16 @@
 export const pickupsConfig = {
     tables: {
         common: [
-            { type: 'health_kit', chance: 0.8 },
-            { type: 'magnet', chance: 0.15 },
-            { type: 'map_bomb', chance: 0.05 }
+            { type: 'health_kit', chance: 0.7 },
+            { type: 'magnet', chance: 0.1 },
+            { type: 'map_bomb', chance: 0.05 },
+            { type: 'boots', chance: 0.15 }
         ],
         rare: [
-            { type: 'health_kit', chance: 0.5 },
-            { type: 'magnet', chance: 0.25 },
-            { type: 'map_bomb', chance: 0.25 }
+            { type: 'health_kit', chance: 0.4 },
+            { type: 'magnet', chance: 0.2 },
+            { type: 'map_bomb', chance: 0.2 },
+            { type: 'boots', chance: 0.2 }
         ],
         boss: [
             { type: 'health_kit_big', chance: 1.0 }
@@ -33,7 +35,7 @@ export const pickupsConfig = {
         },
         health_kit_big: {
             color: 0x00FF00,
-            scale: 1.5,
+            scale: 1.0,
             spriteKey: 'pickup_cure',
             image: 'src/assets/images/pickup_cure.png',
             icon: '➕',
@@ -44,11 +46,21 @@ export const pickupsConfig = {
         magnet: {
             color: 0x0000FF,
             scale: 1.0,
-            spriteKey: 'pickup_speedboots',
-            image: 'src/assets/images/pickup_speedboots.png',
+            spriteKey: 'pickup_shield', // Using shield as placeholder for magnet shape
+            image: 'src/assets/images/pickup_shield.png',
             icon: '🧲',
             shape: 'circle',
-            effect: 'magnet',
+            effect: 'magnet'
+        },
+        boots: {
+            color: 0x00FFFF,
+            scale: 1.0,
+            spriteKey: 'pickup_speedboots',
+            image: 'src/assets/images/pickup_speedboots.png',
+            icon: '👟',
+            shape: 'circle',
+            effect: 'speed_boost',
+            value: 0.5,
             duration: 5000
         },
         map_bomb: {

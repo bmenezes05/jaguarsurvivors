@@ -42,8 +42,9 @@ export class BaseLegendary {
      * Optional - override if cleanup is needed.
      */
     destroy() {
-        // Optional - override in subclass if cleanup is needed
+        if (!this.isActive) return;
         this.isActive = false;
+        this.scene = null; // Prevent further scene access
     }
 
     /**

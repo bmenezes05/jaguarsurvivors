@@ -122,11 +122,4 @@ export class AutoTurretGadget extends GadgetLegendary {
         });
     }
 
-    destroy() {
-        // Clean up projectiles
-        if (this.projectiles) {
-            this.projectiles.clear(true, true);
-        }
-        super.destroy();
-    }
 }

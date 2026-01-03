@@ -78,6 +78,8 @@ export class CompanionLegendary extends BaseLegendary {
      * Cleanup companion sprite.
      */
     destroy() {
+        if (!this.isActive) return;
+
         if (this.sprite) {
             this.sprite.destroy();
             this.sprite = null;

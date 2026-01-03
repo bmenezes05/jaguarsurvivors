@@ -14,10 +14,9 @@ export class DifficultyManager {
     constructor(scene, config) {
         this.scene = scene;
         this.config = config;
-        this.runStartTime = 0;
-        this.currentLevel = 0;
-        this.isPaused = false;
-        this.pausedTime = 0;
+
+        // Fully initialize/reset state
+        this.reset();
     }
 
     /**

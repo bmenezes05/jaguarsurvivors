@@ -59,6 +59,8 @@ export class GadgetLegendary extends BaseLegendary {
      * Cleanup all visual elements and physics.
      */
     destroy() {
+        if (!this.isActive) return;
+
         // Destroy all sprites
         this.sprites.forEach(sprite => {
             if (sprite && sprite.destroy) {
@@ -76,8 +78,12 @@ export class GadgetLegendary extends BaseLegendary {
         this.graphics = [];
 
         // Clear projectile group
-        if (this.projectiles) {
-            this.projectiles.clear(true, true);
+        if (this.projectiles && this.projectiles.scene) {
+            try {
+                this.projectiles.clear(true, true);
+            } catch (e) {
+                console.debug('GadgetLegendary: Error clearing projectiles during destroy', e);
+            }
             this.projectiles = null;
         }
 

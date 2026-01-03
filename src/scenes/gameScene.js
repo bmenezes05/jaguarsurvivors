@@ -39,6 +39,7 @@ export class GameScene extends Phaser.Scene {
         // Difficulty Manager (AI Scaling)
         // Uses CONFIG.difficulty which contains global and profile-specific scaling curves
         this.difficultyManager = new DifficultyManager(this, CONFIG.difficulty);
+        this.difficultyManager.reset();
 
         this.pickupSystem = new PickupSystem(this);
         this.stageSystem = new StageSystem(this, this.bootstrap.scene.mapConfig);
@@ -108,8 +109,9 @@ export class GameScene extends Phaser.Scene {
     showDamagePopup(x, y, amount, color, scale, isCritical) {
         if (!this.damageTextPool) return;
 
-        const text = this.damageTextPool.get(x, y, amount);
-        text.setText(amount);
+        const roundedAmount = Math.round(amount);
+        const text = this.damageTextPool.get(x, y, roundedAmount);
+        text.setText(roundedAmount);
         text.setStyle({ fill: color });
         text.setScale(scale);
 
@@ -129,6 +131,11 @@ export class GameScene extends Phaser.Scene {
         this.isShuttingDown = true;
 
         console.debug('GameScene: Starting shutdown lifecycle...');
+
+        // 0. UI Flow Cleanup (Must happen first)
+        if (this.bootstrap && this.bootstrap.uiFlow) {
+            this.bootstrap.uiFlow.destroy();
+        }
 
         // 1. Clean up Event Handler
         if (this.gameEvents) {

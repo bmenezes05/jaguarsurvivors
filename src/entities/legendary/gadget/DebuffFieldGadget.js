@@ -148,6 +148,8 @@ export class DebuffFieldGadget extends GadgetLegendary {
     }
 
     destroy() {
+        if (!this.isActive) return;
+
         // Restore all affected enemies
         this.affectedEnemies.forEach((originalSpeed, enemy) => {
             this.removeDebuff(enemy, originalSpeed);

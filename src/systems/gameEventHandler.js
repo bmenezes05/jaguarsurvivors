@@ -150,26 +150,46 @@ export class GameEventHandler {
         });
     }
     registerPickupEvents() {
-        this.events.on('pickup-collected', (type) => {
+        this.events.on('pickup-collected', (pickup) => {
+            const type = pickup.type;
+            const player = this.playerManager.player;
+
             switch (type) {
                 case 'health_kit':
-                    this.playerManager.player.heal(this.playerManager.player.stats.maxHealth * 0.2);
+                    player.heal(player.stats.maxHealth * 0.2);
                     break;
                 case 'health_kit_big':
-                    this.playerManager.player.heal(this.playerManager.player.stats.maxHealth * 0.5);
+                    player.heal(player.stats.maxHealth * 0.5);
                     break;
                 case 'map_bomb':
-                    this.scene.enemySystem.killAllVisible();
-                    this.scene.cameras.main.shake(300, 0.01);
+                    // Deals massive damage to all enemies currently on screen
+                    this.scene.enemySpawner.getEnemies().forEach(enemy => {
+                        // Using the standard damage system so it triggers VFX per enemy and counts as player kill
+                        enemy.takeDamage(999999, false, player);
+                    });
+                    this.scene.cameras.main.shake(500, 0.02);
+                    this.audio.play('explosion');
                     break;
                 case 'magnet':
-                    this.playerManager.player.stats.pickupRadiusStat.addMultiplier(2.0);
-                    this.scene.time.delayedCall(5000, () => {
-                        this.playerManager.player.stats.pickupRadiusStat.addMultiplier(-2.0);
-                    });
+                    // Attracts all gems on map
+                    if (this.scene.xpSystem) {
+                        this.scene.xpSystem.activateMagnet();
+                    }
+                    this.audio.play('magic');
                     break;
-                case 'coin':
-                    this.scene.coins = (this.scene.coins || 0) + 1;
+                case 'boots':
+                    // Temporary movement speed boost
+                    const speedMultiplier = 0.5; // +50% speed
+                    player.stats.moveSpeedStat.addMultiplier(speedMultiplier);
+
+                    this.audio.play('evasion');
+
+                    // Remove after 5 seconds
+                    this.scene.time.delayedCall(5000, () => {
+                        if (player.active) {
+                            player.stats.moveSpeedStat.addMultiplier(-speedMultiplier);
+                        }
+                    });
                     break;
                 case 'coin':
                     this.scene.coins = (this.scene.coins || 0) + 1;

@@ -7,9 +7,6 @@ export class UpgradeUIManager {
     show() {
         const upgrades = this.scene.upgradeManager.getSmartUpgradeOptions(3);
 
-        // Pause Phaser
-        this.scene.scene.pause();
-
         // Cleanup existing if any (prevents duplication)
         const existing = document.getElementById('upgrade-overlay');
         if (existing) existing.remove();

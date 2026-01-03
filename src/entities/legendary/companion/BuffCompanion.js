@@ -97,7 +97,7 @@ export class BuffCompanion extends CompanionLegendary {
         player.stats.attackSpeedStat.addMultiplier(attackSpeedBonus);
 
         // Apply shield (temporary health)
-        player.health = Math.min(player.health + shieldAmount, maxHealth + shieldAmount);
+        player.health = Math.min(player.health + shieldAmount, player.stats.maxHealth + shieldAmount);
 
         // Visual feedback
         if (this.aura) {

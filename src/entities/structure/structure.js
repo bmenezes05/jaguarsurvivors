@@ -34,9 +34,6 @@ export class Structure {
         // Visual feedback
         this.view.flash();
         this.scene.events.emit('structure-damaged', this, amount, isCritical);
-        if (typeof this.scene.showDamagePopup === 'function') {
-            this.scene.showDamagePopup(this.x, this.y, amount, isCritical ? '#ff0000' : '#ffffff', isCritical ? 1.5 : 1, isCritical);
-        }
 
         if (this.hp <= 0) {
             this.die();

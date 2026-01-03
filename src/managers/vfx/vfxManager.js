@@ -110,6 +110,15 @@ export class VFXManager {
                     context.y = context.target.y;
                 }
                 break;
+            case 'pickup-collected':
+                // args: [pickup]
+                context.target = args[0];
+                if (context.target) {
+                    context.type = context.target.type;
+                    context.x = context.target.x;
+                    context.y = context.target.y;
+                }
+                break;
             default:
                 // Fallback: try to find x/y in first arg if it's an object
                 if (args[0] && typeof args[0].x === 'number') {

@@ -125,6 +125,8 @@ export class AttackCompanion extends CompanionLegendary {
     }
 
     destroy() {
+        if (!this.isActive) return;
+
         // Clean up all projectiles
         this.projectiles.forEach(proj => {
             if (proj.active) proj.destroy();
