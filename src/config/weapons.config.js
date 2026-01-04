@@ -349,8 +349,8 @@ export const weaponsConfig = [
         slotType: 'primary',
 
         baseStats: {
-            damage: 255,
-            cooldown: 80,
+            damage: 25,
+            cooldown: 120,
             knockback: 20,
             knockbackDuration: 50
         },
@@ -622,6 +622,91 @@ export const weaponsConfig = [
 
         audio: {
             soundKey: 'weapon_sword',
+            hitSoundKey: 'hit'
+        }
+    },
+    {
+        key: 'weapon_scythe',
+        name: 'Foice',
+        type: 'melee',
+        image: 'src/assets/images/weapon_scythe.png',
+        slotType: 'primary',
+
+        baseStats: {
+            damage: 40,
+            cooldown: 1500,
+            knockback: 180,
+            knockbackDuration: 100
+        },
+
+        strategyStats: {
+            meleeHitbox: { width: 220, height: 180 },
+            meleeAnimDuration: 400,
+            frontalAttack: false,
+            meleeOffsetHitbox: { x: 0, y: 0 }
+        },
+
+        visual: {
+            scale: 0.6,
+            offset: { x: 30, y: 0 },
+            origin: { x: 0.4, y: 0.6 },
+            gripOrigin: { x: 0.5, y: 1.5 },
+            angleOrigin: 0,
+            angleAttack: 360,
+            rotationSmoothing: 0.1
+        },
+
+        effects: {
+            elemental: 'none',
+            dotDamage: 0,
+            dotDuration: 0
+        },
+
+        audio: {
+            soundKey: 'weapon_sword',
+            hitSoundKey: 'hit'
+        }
+    },
+    {
+        key: 'weapon_orb',
+        name: 'Orbe Mágico',
+        type: 'ranged',
+        image: 'src/assets/images/weapon_orb.png',
+        slotType: 'primary',
+
+        baseStats: {
+            damage: 30,
+            cooldown: 2000,
+            knockback: 100,
+            knockbackDuration: 80
+        },
+
+        strategyStats: {
+            projectileSpeed: 200,
+            range: 1000,
+            projectileSize: 40
+        },
+
+        projectileVisuals: {
+            spriteKey: 'pixel',
+            tint: 0x9932CC,
+            scale: 2,
+            animations: []
+        },
+
+        visual: {
+            scale: 0.5,
+            offset: { x: 40, y: 10 }
+        },
+
+        effects: {
+            elemental: 'none',
+            dotDamage: 0,
+            dotDuration: 0
+        },
+
+        audio: {
+            soundKey: 'weapon_laser',
             hitSoundKey: 'hit'
         }
     }

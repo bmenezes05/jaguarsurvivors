@@ -15,7 +15,7 @@ export const structuresConfig = {
             image: 'src/assets/images/weapon_handbag.png',
             maxHp: 50,
             solid: true,
-            hitboxScale: 0.8, // Reduce hitbox size
+            hitboxScale: 0.8,
             dropTable: 'common_structure'
         },
         barrel_explosive: {
@@ -24,8 +24,35 @@ export const structuresConfig = {
             image: 'src/assets/images/weapon_handbag.png',
             maxHp: 40,
             solid: true,
-            hitboxScale: 0.7, // Reduce hitbox size
+            hitboxScale: 0.7,
             dropTable: 'rare_structure'
+        },
+        structure_rock_1: {
+            key: 'structure_rock_1',
+            spriteKey: 'structure_rock_1',
+            image: 'src/assets/images/structure_rock_1.png',
+            maxHp: 100,
+            solid: true,
+            hitboxScale: 0.9,
+            dropTable: 'common_structure'
+        },
+        structure_rock_2: {
+            key: 'structure_rock_2',
+            spriteKey: 'structure_rock_2',
+            image: 'src/assets/images/structure_rock_2.png',
+            maxHp: 150,
+            solid: true,
+            hitboxScale: 0.9,
+            dropTable: 'rare_structure'
+        },
+        structure_crystal: {
+            key: 'structure_crystal',
+            spriteKey: 'structure_crystal',
+            image: 'src/assets/images/structure_crystal.png',
+            maxHp: 80,
+            solid: true,
+            hitboxScale: 0.8,
+            dropTable: 'legendary_structure'
         }
     },
 
@@ -40,6 +67,11 @@ export const structuresConfig = {
             { type: 'nothing', chance: 0.4 },
             { type: 'xp_gem_medium', chance: 0.4, value: 20 },
             { type: 'magnet', chance: 0.2 }
+        ],
+        legendary_structure: [
+            { type: 'nothing', chance: 0.2 },
+            { type: 'xp_gem_large', chance: 0.6, value: 50 },
+            { type: 'treasure_chest', chance: 0.2 }
         ]
     }
 };
