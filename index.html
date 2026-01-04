@@ -103,18 +103,41 @@
         <div id="game-ui" style="display: none;">
             <div id="game-timer">00:00</div>
 
-            <div id="wave-info">
-                <div class="info-item" id="wave-display">
-                    <div class="icon-box">🌊</div>
-                    <span>ONDA <span id="wave-count">1</span></span>
+            <!-- Standard UI (Waves) -->
+            <div id="standard-ui">
+                <div id="wave-info">
+                    <div class="info-item" id="wave-display">
+                        <div class="icon-box">🌊</div>
+                        <span>ONDA <span id="wave-count">1</span></span>
+                    </div>
+                    <div class="info-item" id="enemies-display">
+                        <div class="icon-box">👾</div>
+                        <span id="enemy-count">0</span>
+                    </div>
+                    <div class="info-item" id="kills-display">
+                        <div class="icon-box">💀</div>
+                        <span id="kill-count">0</span>
+                    </div>
                 </div>
-                <div class="info-item" id="enemies-display">
-                    <div class="icon-box">👾</div>
-                    <span id="enemy-count">0</span>
-                </div>
-                <div class="info-item" id="kills-display">
-                    <div class="icon-box">💀</div>
-                    <span id="kill-count">0</span>
+            </div>
+
+            <!-- Endless UI (Premium) -->
+            <div id="endless-ui" style="display: none;">
+                <div id="endless-stats">
+                    <div class="endless-item skull-counter">
+                        <span class="label">ELIMINAÇÕES</span>
+                        <div class="value-container">
+                            <span class="icon">💀</span>
+                            <span id="endless-kill-count" class="value">0</span>
+                        </div>
+                    </div>
+                    <div class="endless-item danger-level">
+                        <span class="label">NÍVEL DE PERIGO</span>
+                        <div class="value-container">
+                            <span class="icon">👑</span>
+                            <span id="endless-danger-value" class="value">CRÍTICO</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 

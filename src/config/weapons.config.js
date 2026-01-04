@@ -349,8 +349,8 @@ export const weaponsConfig = [
         slotType: 'primary',
 
         baseStats: {
-            damage: 25,
-            cooldown: 800,
+            damage: 255,
+            cooldown: 80,
             knockback: 20,
             knockbackDuration: 50
         },

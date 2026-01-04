@@ -11,7 +11,11 @@ export class HUDManager {
             healthFill: document.getElementById('health-bar-fill'),
             healthText: document.getElementById('health-text'),
             xpFill: document.getElementById('xp-bar-fill'),
-            xpText: document.getElementById('xp-bar-text')
+            xpText: document.getElementById('xp-bar-text'),
+            standardUI: document.getElementById('standard-ui'),
+            endlessUI: document.getElementById('endless-ui'),
+            endlessKillCount: document.getElementById('endless-kill-count'),
+            endlessDangerValue: document.getElementById('endless-danger-value')
         };
 
         this.scene.events.on('endless-mode-started', this.setEndlessMode, this);
@@ -36,12 +40,12 @@ export class HUDManager {
         this.updateHealth(100, 100);
         this.updateXP(0, 100, 1);
 
-        // Remove boss wave styling
-        if (this.elements.waveDisplay) {
-            this.elements.waveDisplay.classList.remove('boss-wave');
-            const waveText = this.elements.waveDisplay.querySelector('span');
-            if (waveText) waveText.innerHTML = 'ONDA <span id="wave-count">1</span>';
-            this.elements.waveCount = document.getElementById('wave-count');
+        // Reset UI visibility
+        if (this.elements.standardUI) this.elements.standardUI.style.display = 'block';
+        if (this.elements.endlessUI) this.elements.endlessUI.style.display = 'none';
+        if (this.elements.timer) {
+            this.elements.timer.classList.remove('endless-timer');
+            this.elements.timer.style.color = '';
         }
     }
 
@@ -78,6 +82,34 @@ export class HUDManager {
         if (this.elements.waveCount) this.elements.waveCount.textContent = wave;
         if (this.elements.enemyCount) this.elements.enemyCount.textContent = enemies;
         if (this.elements.killCount) this.elements.killCount.textContent = kills;
+
+        // Sync endless kill count too if visible
+        if (this.elements.endlessKillCount) {
+            this.elements.endlessKillCount.textContent = kills;
+        }
+
+        // Update danger level based on endless wave
+        if (this.scene.isEndlessMode && this.elements.endlessDangerValue) {
+            this.updateDangerLevel(wave);
+        }
+    }
+
+    updateDangerLevel(wave) {
+        if (!this.elements.endlessDangerValue) return;
+
+        // Map endless waves to descriptive labels
+        const relativeWave = wave - (this.scene.mapConfig?.waves?.length || 0);
+        let label = 'ESTÁVEL';
+        let color = '#ffd700';
+
+        if (relativeWave > 20) { label = 'APOCALÍPTICO'; color = '#ff0000'; }
+        else if (relativeWave > 15) { label = 'SANGRENTO'; color = '#ff3333'; }
+        else if (relativeWave > 10) { label = 'CRÍTICO'; color = '#ff6600'; }
+        else if (relativeWave > 5) { label = 'HOSTIL'; color = '#ff9900'; }
+        else if (relativeWave > 0) { label = 'ALERTA'; color = '#ffd700'; }
+
+        this.elements.endlessDangerValue.textContent = label;
+        this.elements.endlessDangerValue.style.color = color;
     }
 
     updateTimer(seconds, isSuddenDeath = false) {
@@ -105,15 +137,15 @@ export class HUDManager {
 
     setEndlessMode() {
         if (this.elements.timer) {
-            this.elements.timer.style.color = '#ff8c00'; // Deep orange
+            this.elements.timer.classList.add('endless-timer');
         }
 
-        if (this.elements.waveDisplay) {
-            const waveText = this.elements.waveDisplay.querySelector('span');
-            if (waveText) {
-                waveText.innerHTML = 'ENDLESS ONDA <span id="wave-count">1</span>';
-                this.elements.waveCount = document.getElementById('wave-count');
-            }
+        if (this.elements.standardUI) this.elements.standardUI.style.display = 'none';
+        if (this.elements.endlessUI) this.elements.endlessUI.style.display = 'flex';
+
+        // Initial update for kill count
+        if (this.elements.endlessKillCount && this.scene.totalKills !== undefined) {
+            this.elements.endlessKillCount.textContent = this.scene.totalKills;
         }
     }
 

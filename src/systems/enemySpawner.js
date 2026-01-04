@@ -65,7 +65,12 @@ export class EnemySpawner {
         this.handleCleanup();
         this.handleWaves(delta);
         this.updateEnemies(delta);
-        this.checkWaveCompletion();
+
+        if (this.isInEndlessMode) {
+            this.updateEndlessDifficulty(delta);
+        } else {
+            this.checkWaveCompletion();
+        }
     }
 
     /**
@@ -101,8 +106,9 @@ export class EnemySpawner {
     handleWaves(delta) {
         if (!this.waveConfig || this.isWaveFinished) return;
 
-        // Verifica se ainda há cota para spawnar
-        if (this.spawnedCount >= this.waveConfig.totalEnemies) {
+        // In endless mode, we don't limit spawnedCount by totalEnemies
+        // We only limit by maxOnScreen (checked in spawnWave)
+        if (!this.isInEndlessMode && this.spawnedCount >= this.waveConfig.totalEnemies) {
             return;
         }
 
@@ -125,7 +131,7 @@ export class EnemySpawner {
      * Verifica se a onda atual foi completada.
      */
     checkWaveCompletion() {
-        if (this.isWaveFinished) return;
+        if (this.isWaveFinished || this.isInEndlessMode) return;
 
         // Condição: Cota atingida E todos os inimigos derrotados
         const quotaReached = this.spawnedCount >= this.waveConfig.totalEnemies;
@@ -182,6 +188,7 @@ export class EnemySpawner {
         this.spawnedCount = 0;
         this.timer = 0;
         this.isWaveFinished = false;
+        this.endlessIntervalTimer = 0; // Reset internal difficulty timer
 
         const payload = {
             index: this.wave + 1,
@@ -190,6 +197,38 @@ export class EnemySpawner {
             isEndless: true,
         };
         this.scene.events.emit('wave-changed', payload);
+    }
+
+    /**
+     * Updates endless mode difficulty over time.
+     */
+    updateEndlessDifficulty(delta) {
+        this.endlessIntervalTimer = (this.endlessIntervalTimer || 0) + delta;
+
+        // Use config interval (minutes to ms) or default to 30s
+        const intervalInMinutes = CONFIG.endlessMode?.difficultyIncreaseInterval || 0.5;
+        const DIFFICULTY_INCREASE_INTERVAL = intervalInMinutes * 60000;
+
+        if (this.endlessIntervalTimer >= DIFFICULTY_INCREASE_INTERVAL) {
+            this.endlessIntervalTimer = 0;
+            this.wave++;
+            this.waveConfig = this.generateEndlessWaveConfig();
+
+            console.debug('Endless Difficulty Increased', {
+                wave: this.wave,
+                maxOnScreen: this.waveConfig.maxOnScreen,
+                interval: this.waveConfig.interval
+            });
+
+            // Emit wave-changed for HUD and other systems
+            const payload = {
+                index: this.wave + 1,
+                config: this.waveConfig,
+                isBossWave: false,
+                isEndless: true,
+            };
+            this.scene.events.emit('wave-changed', payload);
+        }
     }
 
     /**
@@ -204,8 +243,8 @@ export class EnemySpawner {
         if (enemyTypes.length === 0) return;
 
         for (let i = 0; i < count; i++) {
-            // Verifica cota individualmente para cada spawn no loop
-            if (this.spawnedCount >= this.waveConfig.totalEnemies) break;
+            // Verifica cota individualmente para cada spawn no loop (Ignorado no Endless)
+            if (!this.isInEndlessMode && this.spawnedCount >= this.waveConfig.totalEnemies) break;
 
             // Seleciona tipo aleatório da lista (pode ser expandido para pesos)
             const type = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
@@ -213,7 +252,9 @@ export class EnemySpawner {
 
             if (enemyConfig) {
                 this.spawnEntity(enemyConfig);
-                this.spawnedCount++;
+                if (!this.isInEndlessMode) {
+                    this.spawnedCount++;
+                }
             }
         }
     }

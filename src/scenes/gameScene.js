@@ -20,7 +20,11 @@ export class GameScene extends Phaser.Scene {
         // Ensure clean state on init
         this.isShuttingDown = false;
         this.isEndlessMode = false;
+        this.totalKills = 0;
         this.events.on('shutdown', this.shutdown, this);
+        this.events.on('enemy-killed', () => {
+            this.totalKills++;
+        });
     }
 
     create(data) {
@@ -101,7 +105,8 @@ export class GameScene extends Phaser.Scene {
             if (this.enemySystem && this.enemySystem.enemySpawner) {
                 this.hud.updateWaveInfo(
                     this.enemySystem.enemySpawner.wave + 1,
-                    this.enemySystem.enemySpawner.getEnemies().length
+                    this.enemySystem.enemySpawner.getEnemies().length,
+                    this.totalKills
                 );
             }
         }
