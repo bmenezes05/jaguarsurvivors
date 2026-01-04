@@ -161,7 +161,7 @@ export class PlayerDash {
         // ---- TUNING ----
         const width = 28;
         const height = 4;
-        const offsetY = ((this.player?.config?.bodyHeight || 130) + 10) * -1 / 2; // ↑ sobe mais (ajuste fino aqui)
+        const offsetY = ((this.player?.config?.bodyHeight || 130) + 10) * -1 / 2;
         // ----------------
 
         // Background

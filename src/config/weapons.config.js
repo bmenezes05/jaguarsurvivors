@@ -346,7 +346,7 @@ export const weaponsConfig = [
         name: 'Arma Laser',
         type: 'ranged',
         image: 'src/assets/images/weapon_laser_gun.png',
-        slotType: 'secondary',
+        slotType: 'primary',
 
         baseStats: {
             damage: 25,
@@ -389,7 +389,7 @@ export const weaponsConfig = [
         name: 'Rifle',
         type: 'ranged',
         image: 'src/assets/images/weapon_rifle.png',
-        slotType: 'secondary',
+        slotType: 'primary',
 
         baseStats: {
             damage: 40,
