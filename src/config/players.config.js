@@ -15,7 +15,7 @@ export const playersConfig = [
         acceleration: 2000,
         friction: 1500,
         size: 40,
-        weapon: 'weapon_sword',
+        weapon: 'weapon_rifle',
         health: 120,
         invulnerableTime: 500,
         bodyScale: 0.3,

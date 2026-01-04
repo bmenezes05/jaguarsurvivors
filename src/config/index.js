@@ -91,6 +91,7 @@ export const BASE_CONFIG = {
     // == AI DIFFICULTY SCALING ==
     difficulty: difficultyConfig,
     // == BOSS PHASE CONFIGURATIONS ==
+    bossPhases: bossPhaseConfig,
     // == STRUCTURES ==
     structures: structuresConfig,
     // == TELEGRAPH ==

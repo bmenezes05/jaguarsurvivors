@@ -39,7 +39,7 @@ export class GameScene extends Phaser.Scene {
 
         // Difficulty Manager (AI Scaling)
         // Uses CONFIG.difficulty which contains global and profile-specific scaling curves
-        this.difficultyManager = new DifficultyManager(this, CONFIG.difficulty);
+        this.difficultyManager = new DifficultyManager(this, CONFIG.difficulty, CONFIG.endlessMode);
         this.difficultyManager.reset();
 
         this.pickupSystem = new PickupSystem(this);

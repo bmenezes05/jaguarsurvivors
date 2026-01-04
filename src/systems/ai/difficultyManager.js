@@ -11,9 +11,10 @@
  * - Named profiles for enemy archetypes
  */
 export class DifficultyManager {
-    constructor(scene, config) {
+    constructor(scene, difficultyConfig, endlessConfig) {
         this.scene = scene;
-        this.config = config;
+        this.config = difficultyConfig;
+        this.endlessConfig = endlessConfig;
 
         // Fully initialize/reset state
         this.reset();
@@ -103,7 +104,7 @@ export class DifficultyManager {
             multiplier = this.calculateMultiplier(elapsed, this.config.global[statKey]);
         }
 
-        if (statKey === 'health' && multiplier > this.lastDifficultyMultiplier + CONFIG.endlessMode.difficultyIncreaseInterval) {
+        if (statKey === 'health' && this.endlessConfig && multiplier > this.lastDifficultyMultiplier + this.endlessConfig.difficultyIncreaseInterval) {
             this.lastDifficultyMultiplier = multiplier;
             this.scene.events.emit('difficulty-increased');
         }

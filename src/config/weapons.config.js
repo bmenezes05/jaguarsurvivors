@@ -341,92 +341,92 @@ export const weaponsConfig = [
         }
     },
     // ==================== RANGED ====================
-    // {
-    //     key: 'weapon_laser_gun',
-    //     name: 'Arma Laser',
-    //     type: 'ranged',
-    //     image: 'src/assets/images/weapon_laser_gun.png',
-    //     slotType: 'secondary',
+    {
+        key: 'weapon_laser_gun',
+        name: 'Arma Laser',
+        type: 'ranged',
+        image: 'src/assets/images/weapon_laser_gun.png',
+        slotType: 'secondary',
 
-    //     baseStats: {
-    //         damage: 25,
-    //         cooldown: 800,
-    //         knockback: 20,
-    //         knockbackDuration: 50
-    //     },
+        baseStats: {
+            damage: 25,
+            cooldown: 800,
+            knockback: 20,
+            knockbackDuration: 50
+        },
 
-    //     strategyStats: {
-    //         projectileSpeed: 500,
-    //         range: 350,
-    //         projectileSize: 10
-    //     },
+        strategyStats: {
+            projectileSpeed: 500,
+            range: 350,
+            projectileSize: 10
+        },
 
-    //     projectileVisuals: {
-    //         spriteKey: 'pixel',
-    //         tint: 0x00FFFF,
-    //         scale: 1,
-    //         animations: []
-    //     },
+        projectileVisuals: {
+            spriteKey: 'pixel',
+            tint: 0x00FFFF,
+            scale: 1,
+            animations: []
+        },
 
-    //     visual: {
-    //         scale: 0.45,
-    //         offset: { x: 45, y: 10 }
-    //     },
+        visual: {
+            scale: 0.45,
+            offset: { x: 45, y: 10 }
+        },
 
-    //     effects: {
-    //         elemental: 'none',
-    //         dotDamage: 0,
-    //         dotDuration: 0
-    //     },
+        effects: {
+            elemental: 'none',
+            dotDamage: 0,
+            dotDuration: 0
+        },
 
-    //     audio: {
-    //         soundKey: 'weapon_laser',
-    //         hitSoundKey: 'hit'
-    //     }
-    // },
-    // {
-    //     key: 'weapon_rifle',
-    //     name: 'Rifle',
-    //     type: 'ranged',
-    //     image: 'src/assets/images/weapon_rifle.png',
-    //     slotType: 'secondary',
+        audio: {
+            soundKey: 'weapon_laser',
+            hitSoundKey: 'hit'
+        }
+    },
+    {
+        key: 'weapon_rifle',
+        name: 'Rifle',
+        type: 'ranged',
+        image: 'src/assets/images/weapon_rifle.png',
+        slotType: 'secondary',
 
-    //     baseStats: {
-    //         damage: 40,
-    //         cooldown: 1200,
-    //         knockback: 200,
-    //         knockbackDuration: 100
-    //     },
+        baseStats: {
+            damage: 40,
+            cooldown: 1200,
+            knockback: 200,
+            knockbackDuration: 100
+        },
 
-    //     strategyStats: {
-    //         projectileSpeed: 600,
-    //         range: 3000,
-    //         projectileSize: 15
-    //     },
+        strategyStats: {
+            projectileSpeed: 600,
+            range: 3000,
+            projectileSize: 15
+        },
 
-    //     projectileVisuals: {
-    //         spriteKey: 'pixel',
-    //         tint: 0xFFAA00,
-    //         scale: 1,
-    //         animations: []
-    //     },
+        projectileVisuals: {
+            spriteKey: 'pixel',
+            tint: 0xFFAA00,
+            scale: 1,
+            animations: []
+        },
 
-    //     visual: {
-    //         scale: 0.45,
-    //         offset: { x: 30, y: 18 }
-    //     },
+        visual: {
+            scale: 0.45,
+            offset: { x: 30, y: 18 }
+        },
 
-    //     effects: {
-    //         elemental: 'none',
-    //         dotDamage: 0,
-    //         dotDuration: 0
-    //     },
+        effects: {
+            elemental: 'none',
+            dotDamage: 0,
+            dotDuration: 0
+        },
 
-    //     audio: {
-    //         soundKey: 'weapon_shoot',
-    //         hitSoundKey: 'hit'
-    //     }
-    // },
+        audio: {
+            soundKey: 'weapon_shoot',
+            hitSoundKey: 'hit'
+        }
+    },
 
     // ==================== TRAIL ====================
     {

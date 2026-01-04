@@ -45,6 +45,9 @@ export class BossAIManager {
         this.behaviorTimer = 0;
         this.phaseStartTime = Date.now();
 
+        // Mark this phase as activated to prevent re-initialization
+        this.activatedPhases.add(phaseIndex);
+
         // Load first behavior of the phase
         this.loadBehavior();
 
@@ -129,10 +132,7 @@ export class BossAIManager {
             this.boss.scene.events.emit(oldPhase.onExit, this.boss);
         }
 
-        // Mark phase as activated
-        this.activatedPhases.add(phaseIndex);
-
-        // Initialize new phase
+        // Initialize new phase (this will mark it as activated)
         this.initializePhase(phaseIndex);
 
         // Emit enter event for new phase

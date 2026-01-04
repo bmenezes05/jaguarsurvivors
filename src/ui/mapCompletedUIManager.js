@@ -9,7 +9,7 @@ export class MapCompletedUIManager {
             this.scene.events.emit('endless-mode-started');
             this.hide();
             if (this.scene.bootstrap && this.scene.bootstrap.uiFlow) {
-                this.scene.bootstrap.uiFlow.resumeGame();
+                this.scene.bootstrap.uiFlow.closeScreen('map-completed');
             } else {
                 this.scene.scene.resume();
             }
