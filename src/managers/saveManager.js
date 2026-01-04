@@ -1,4 +1,4 @@
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/index.js';
 
 export class SaveManager {
     constructor() {
@@ -110,5 +110,25 @@ export class SaveManager {
         this.data.settings.screenShake = !this.data.settings.screenShake;
         this.save();
         return this.data.settings.screenShake;
+    }
+
+    unlockAchievement(achievementId) {
+        if (!this.data.achievements.includes(achievementId)) {
+            this.data.achievements.push(achievementId);
+            this.save();
+        }
+    }
+
+    areAllCharsUnlocked() {
+        return CONFIG.player.every(char => this.isCharUnlocked(char.key));
+    }
+
+    hasWonWithAllCharacters(lastPlayedChar) {
+        const wins = this.data.wins || {};
+        wins[lastPlayedChar] = true;
+        this.data.wins = wins;
+        this.save();
+
+        return CONFIG.player.every(char => wins[char.key]);
     }
 }

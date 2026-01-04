@@ -1,4 +1,6 @@
 import { SaveManager } from './saveManager.js';
+import { CONFIG } from '../config/index.js';
+
 
 export class AchievementManager {
     constructor() {
@@ -40,22 +42,44 @@ export class AchievementManager {
         }
 
         // Unlock Miss (Coin check)
-        if (data.coins >= 5000) { // Simple check, maybe too easy if spending coins? 
-            // For now, let's assume it's current holding. 
+        if (data.coins >= 5000) { // Simple check, maybe too easy if spending coins?
+            // For now, let's assume it's current holding.
             // Better design: track 'lifetime earnings'. But using current balance is a strategic tradeoff.
             this.unlock('miss');
         }
 
-        // Samurai is checked at end of run usually
+        if (this.saveManager.areAllCharsUnlocked()) {
+            this.unlockAchievement('unlock_all_characters');
+        }
     }
 
-    checkEndRunUnlocks(survivalTimeSeconds) {
-        if (survivalTimeSeconds >= 600) {
+    checkEndRunUnlocks(runData) {
+        if (runData.survivalTimeSeconds >= 600) {
             this.unlock('samurai');
+        }
+
+        if (runData.bossDefeated) {
+            this.unlockAchievement(`defeat_${runData.mapId}_boss`);
+
+            if (this.saveManager.hasWonWithAllCharacters(runData.charId)) {
+                this.unlockAchievement('win_with_all_characters');
+            }
+        }
+
+        if (runData.reachedEndless) {
+            this.unlockAchievement('reach_endless_mode');
+        }
+
+        if (runData.maxLevelItem) {
+            this.unlockAchievement('max_level_item');
         }
     }
 
     unlock(charId) {
         this.saveManager.unlockChar(charId);
+    }
+
+    unlockAchievement(achievementId) {
+        this.saveManager.unlockAchievement(achievementId);
     }
 }

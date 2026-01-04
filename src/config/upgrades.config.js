@@ -205,10 +205,10 @@ export const equipableItemsConfig = [
         name: 'Escudo de Espinhos',
         spriteKey: 'pickup_shield',
         icon: '🛡️',
-        desc: '+10% Thorns por nível',
+        desc: '+15% Thorns por nível',
         maxLevel: 5,
         levelEffects: [
-            { stat: 'thornsStat', operation: 'addFlat', value: 0.1 }
+            { stat: 'thornsStat', operation: 'addFlat', value: 0.15 }
         ]
     },
     {
@@ -265,6 +265,50 @@ export const equipableItemsConfig = [
         levelEffects: [
             { stat: 'maxHealthStat', operation: 'addMultiplier', value: 0.20 }
         ]
+    },
+    {
+        id: 'book_of_wisdom',
+        name: 'Livro da Sabedoria',
+        spriteKey: 'item_book',
+        icon: '📖',
+        desc: '+10% XP Gain por nível',
+        maxLevel: 5,
+        levelEffects: [
+            { stat: 'xpGainStat', operation: 'addMultiplier', value: 0.10 }
+        ]
+    },
+    {
+        id: 'ring_of_fire',
+        name: 'Anel de Fogo',
+        spriteKey: 'item_ring',
+        icon: '🔥',
+        desc: '+15% Dano Elemental por nível',
+        maxLevel: 5,
+        levelEffects: [
+            { stat: 'elementalDamageStat', operation: 'addMultiplier', value: 0.15 }
+        ]
+    },
+    {
+        id: 'amulet_of_luck',
+        name: 'Amuleto da Sorte',
+        spriteKey: 'item_amulet',
+        icon: '🍀',
+        desc: '+5% Chance de Drop por nível',
+        maxLevel: 5,
+        levelEffects: [
+            { stat: 'dropChanceStat', operation: 'addMultiplier', value: 0.05 }
+        ]
+    },
+    {
+        id: 'tome_of_power',
+        name: 'Tomo do Poder',
+        spriteKey: 'item_tome',
+        icon: '📜',
+        desc: '+1 Projétil por nível',
+        maxLevel: 3,
+        levelEffects: [
+            { stat: 'projectileCountStat', operation: 'addFlat', value: 1 }
+        ]
     }
 ];
 
@@ -280,10 +324,10 @@ export const legendaryConfig = [
         icon: '🔄',
         rarity: 'legendary',
         sprite: 'weapon_katana',
-        radius: 100,
-        speed: 2,
-        damage: 50,
-        scale: 1.0
+        radius: 120,
+        speed: 3,
+        damage: 75,
+        scale: 1.2
     },
     {
         id: 'auto_turret',
@@ -461,6 +505,56 @@ export const legendaryConfig = [
         buffCooldown: 10000,
         attackSpeedBonus: 0.3,
         shieldAmount: 50
+    },
+    {
+        id: 'gadget_mine',
+        name: 'Mina Terrestre',
+        type: 'gadget',
+        category: 'Gadget',
+        description: 'Deixa minas no chão que explodem em contato com inimigos.',
+        icon: '💣',
+        rarity: 'legendary',
+        sprite: 'legendary_gadget_mine',
+        radius: 150,
+        damage: 100,
+        cooldown: 3000
+    },
+    {
+        id: 'proc_nova',
+        name: 'Nova Sagrada',
+        type: 'proc',
+        category: 'Proc',
+        description: '25% de chance de emitir uma nova de energia sagrada ao ser atingido.',
+        icon: '💥',
+        rarity: 'legendary',
+        chance: 0.25,
+        damage: 80,
+        radius: 200,
+        color: 0xFFFF00,
+        cooldown: 1000
+    },
+    {
+        id: 'companion_wisp',
+        name: 'Wisp de Gelo',
+        type: 'companion',
+        category: 'Companion',
+        description: 'Um wisp que atira projéteis de gelo que lentificam inimigos.',
+        icon: '❄️',
+        rarity: 'legendary',
+        sprite: 'legendary_companion_wisp',
+        scale: 0.8,
+        tint: 0xADD8E6,
+        offset: { x: -50, y: -60 },
+        attackRate: 2000,
+        range: 400,
+        damage: 20,
+        projectileSprite: 'pixel',
+        projectileSpeed: 400,
+        effects: {
+            elemental: 'freeze',
+            slowAmount: 0.5,
+            duration: 2000
+        }
     }
 ];
 
@@ -527,5 +621,12 @@ export const metaShopConfig = [
 export const achievementsConfig = [
     { id: 'unlock_ucraniaman', title: 'O Estrangeiro', desc: 'Matar 1.000 inimigos' },
     { id: 'unlock_samurai', title: 'Código de Honra', desc: 'Sobreviver 10min' },
-    { id: 'unlock_miss', title: 'Fora da Lei', desc: 'Acumular 5.000 moedas' }
+    { id: 'unlock_miss', title: 'Fora da Lei', desc: 'Acumular 5.000 moedas' },
+    { id: 'defeat_favela_boss', title: 'Pacificador', desc: 'Derrotar o chefe da Favela' },
+    { id: 'defeat_congresso_boss', title: 'Reforma Política', desc: 'Derrotar o chefe do Congresso' },
+    { id: 'defeat_avenida_boss', title: 'Voz do Povo', desc: 'Derrotar o chefe das Manifestações' },
+    { id: 'reach_endless_mode', title: 'Sobrevivente', desc: 'Chegar ao Modo Infinito' },
+    { id: 'unlock_all_characters', title: 'Heróis da Nação', desc: 'Desbloquear todos os personagens' },
+    { id: 'max_level_item', title: 'Potencial Máximo', desc: 'Levar um item ao nível máximo' },
+    { id: 'win_with_all_characters', title: 'Líder Versátil', desc: 'Vencer com todos os personagens' }
 ];

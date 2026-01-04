@@ -31,11 +31,7 @@ export class PlayerDash {
 
         // Handle Active Dash
         if (this.isDashing) {
-            this._updateDash(cursors, wasd, delta);
-
-            // If dash ended during the update, allow normal movement to take over immediately
-            if (!this.isDashing) return false;
-
+            this._updateDash(delta);
             return true; // Return true to indicate dash is active (blocking normal movement)
         }
 
@@ -101,36 +97,8 @@ export class PlayerDash {
         this.player.view.createDashTrail();
     }
 
-    _updateDash(cursors, wasd, delta) {
+    _updateDash(delta) {
         this.dashTimer -= delta;
-
-        // PROBLEM 2: Influência direcional durante o dash (Steering)
-        const x = (cursors.left.isDown || wasd.left.isDown ? -1 : 0)
-            + (cursors.right.isDown || wasd.right.isDown ? 1 : 0);
-        const y = (cursors.up.isDown || wasd.up.isDown ? -1 : 0)
-            + (cursors.down.isDown || wasd.down.isDown ? 1 : 0);
-
-        if (x !== 0 || y !== 0) {
-            // Ajuste suave de trajetória: lerp da direção atual para o input
-            const steeringFactor = 0.08;
-            this.dashDirection.x = Phaser.Math.Linear(this.dashDirection.x, x, steeringFactor);
-            this.dashDirection.y = Phaser.Math.Linear(this.dashDirection.y, y, steeringFactor);
-            this.dashDirection.normalize();
-
-            // Atualiza a orientação visual se o ajuste for significativo horizontalmente
-            if (Math.abs(this.dashDirection.x) > 0.1) {
-                const newFacingRight = this.dashDirection.x > 0;
-                if (newFacingRight !== this.player.movement.facingRight) {
-                    this.player.movement.facingRight = newFacingRight;
-                    this.player.view.container.setScale(newFacingRight ? 1 : -1, 1);
-
-                    const bodyWidth = this.player.config.bodyWidth || 60;
-                    const bodyHeight = this.player.config.bodyHeight || 130;
-                    const offsetX = newFacingRight ? (-bodyWidth / 2) : (bodyWidth / 2);
-                    this.player.movement.body.setOffset(offsetX, -bodyHeight / 2);
-                }
-            }
-        }
 
         // Move Player
         const speed = this.stats.dashSpeed;
@@ -157,10 +125,8 @@ export class PlayerDash {
         this.isDashing = false;
         this.cooldownTimer = this.stats.dashCooldown;
 
-        // Reset Physics: PROBLEM 1 FIXED
-        // Não resetamos para (0,0) para manter o momentum. 
-        // O PlayerMovement assumirá o controle no mesmo frame.
-
+        // Reset Physics
+        this.player.movement.body.setVelocity(0, 0);
 
         // Reset Invulnerability (Player class might handle its own inv check, 
         // but we should ensure we don't clear it if player was damaged separately...
