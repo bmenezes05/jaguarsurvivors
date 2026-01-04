@@ -17,20 +17,22 @@ export const mapsConfig = [
         allowedStructures: ['crate_wood'],
         music: 'cinematic1',
         waves: [
-            { interval: 2500, enemiesPerWave: 1, enemyTypes: ['enemy_favela_basico', 'enemy_bandido2'], totalEnemies: 10, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 500 },
-            { interval: 1500, enemiesPerWave: 2, enemyTypes: ['enemy_bandido', 'enemy_bandido2'], totalEnemies: 30, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 500 },
-            { interval: 1000, enemiesPerWave: 3, enemyTypes: ['enemy_favela', 'enemy_elite_favela_1'], totalEnemies: 50, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 500 },
-            { interval: 500, enemiesPerWave: 4, enemyTypes: ['enemy_favela', 'enemy_elite_favela_2'], totalEnemies: 100, bossPerWave: 1, spawnDistance: 700, maxOnScreen: 500 }
+            { interval: 3000, enemiesPerWave: 1, enemyTypes: ['enemy_favela_basico'], totalEnemies: 20, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 500 },
+            { interval: 2500, enemiesPerWave: 2, enemyTypes: ['enemy_favela_basico', 'enemy_common_1'], totalEnemies: 30, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 500 },
+            { interval: 2000, enemiesPerWave: 2, enemyTypes: ['enemy_bandido', 'enemy_bandido2'], totalEnemies: 40, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 500 },
+            { interval: 1500, enemiesPerWave: 3, enemyTypes: ['enemy_favela', 'enemy_common_1', 'enemy_elite_favela_1'], totalEnemies: 50, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 500 },
+            { interval: 1000, enemiesPerWave: 4, enemyTypes: ['enemy_favela_basico', 'enemy_bandido', 'enemy_bandido2'], totalEnemies: 60, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 500 },
+            { interval: 800, enemiesPerWave: 5, enemyTypes: ['enemy_favela', 'enemy_elite_favela_1', 'enemy_elite_favela_2'], totalEnemies: 80, bossPerWave: 1, spawnDistance: 700, maxOnScreen: 500 }
         ],
         suddenDeath: {
             interval: 10000,
             buffPercent: 0.10
         },
         boss: 'boss_bandido_moto',
-        duration: 300,
+        duration: 900,
         events: [
-            { time: 210, type: 'boss_spawn', key: 'boss_bandido_moto' },
-            { time: 45, type: 'final_hour' }
+            { time: 900, type: 'boss_spawn', key: 'boss_bandido_moto' },
+            { time: 60, type: 'final_hour' }
         ]
     },
     {
@@ -44,16 +46,18 @@ export const mapsConfig = [
         allowedStructures: ['barrel_explosive'],
         music: 'cinematic2',
         waves: [
-            { interval: 1500, enemiesPerWave: 2, enemyTypes: ['enemy_centrao'], totalEnemies: 20, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 50 },
-            { interval: 1000, enemiesPerWave: 3, enemyTypes: ['enemy_centrao', 'enemy_politico', 'enemy_elite_congresso_1'], totalEnemies: 40, bossPerWave: 1, spawnDistance: 700, maxOnScreen: 50 },
-            { interval: 800, enemiesPerWave: 4, enemyTypes: ['enemy_politico'], totalEnemies: 60, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 50 },
-            { interval: 500, enemiesPerWave: 5, enemyTypes: ['enemy_politico', 'enemy_centrao', 'enemy_elite_congresso_2'], totalEnemies: 100, bossPerWave: 1, spawnDistance: 700, maxOnScreen: 50 }
+            { interval: 3000, enemiesPerWave: 2, enemyTypes: ['enemy_centrao'], totalEnemies: 20, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 50 },
+            { interval: 2500, enemiesPerWave: 3, enemyTypes: ['enemy_centrao', 'enemy_common_2'], totalEnemies: 40, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 50 },
+            { interval: 2000, enemiesPerWave: 3, enemyTypes: ['enemy_centrao', 'enemy_politico', 'enemy_elite_congresso_1'], totalEnemies: 50, bossPerWave: 1, spawnDistance: 700, maxOnScreen: 50 },
+            { interval: 1500, enemiesPerWave: 4, enemyTypes: ['enemy_politico', 'enemy_common_2'], totalEnemies: 60, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 50 },
+            { interval: 1000, enemiesPerWave: 5, enemyTypes: ['enemy_politico', 'enemy_centrao', 'enemy_elite_congresso_2'], totalEnemies: 80, bossPerWave: 1, spawnDistance: 700, maxOnScreen: 50 },
+            { interval: 800, enemiesPerWave: 6, enemyTypes: ['enemy_centrao', 'enemy_politico', 'enemy_common_2', 'enemy_elite_congresso_1', 'enemy_elite_congresso_2'], totalEnemies: 100, bossPerWave: 1, spawnDistance: 700, maxOnScreen: 50 }
         ],
         boss: 'boss_karl_marx',
-        duration: 300,
+        duration: 900,
         events: [
-            { time: 210, type: 'boss_spawn', key: 'boss_karl_marx' },
-            { time: 45, type: 'final_hour' }
+            { time: 900, type: 'boss_spawn', key: 'boss_karl_marx' },
+            { time: 60, type: 'final_hour' }
         ]
     },
     {
@@ -67,16 +71,18 @@ export const mapsConfig = [
         allowedStructures: ['crate_wood', 'barrel_explosive'],
         music: 'cinematic3',
         waves: [
-            { interval: 2000, enemiesPerWave: 1, enemyTypes: ['enemy_bolsonarista'], totalEnemies: 20, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 50 },
-            { interval: 1500, enemiesPerWave: 2, enemyTypes: ['enemy_bolsonarista', 'enemy_bolsonarista2', 'enemy_elite_avenida_1'], totalEnemies: 40, bossPerWave: 1, spawnDistance: 700, maxOnScreen: 50 },
-            { interval: 1200, enemiesPerWave: 3, enemyTypes: ['enemy_petista'], totalEnemies: 60, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 50 },
-            { interval: 800, enemiesPerWave: 4, enemyTypes: ['enemy_partido_amarelo', 'enemy_elite_avenida_2'], totalEnemies: 100, bossPerWave: 1, spawnDistance: 700, maxOnScreen: 50 }
+            { interval: 3000, enemiesPerWave: 1, enemyTypes: ['enemy_bolsonarista'], totalEnemies: 20, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 50 },
+            { interval: 2500, enemiesPerWave: 2, enemyTypes: ['enemy_bolsonarista', 'enemy_common_3'], totalEnemies: 40, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 50 },
+            { interval: 2000, enemiesPerWave: 2, enemyTypes: ['enemy_bolsonarista', 'enemy_bolsonarista2', 'enemy_elite_avenida_1'], totalEnemies: 50, bossPerWave: 1, spawnDistance: 700, maxOnScreen: 50 },
+            { interval: 1500, enemiesPerWave: 3, enemyTypes: ['enemy_petista', 'enemy_common_3'], totalEnemies: 60, bossPerWave: 0, spawnDistance: 700, maxOnScreen: 50 },
+            { interval: 1000, enemiesPerWave: 4, enemyTypes: ['enemy_partido_amarelo', 'enemy_elite_avenida_2'], totalEnemies: 80, bossPerWave: 1, spawnDistance: 700, maxOnScreen: 50 },
+            { interval: 800, enemiesPerWave: 5, enemyTypes: ['enemy_bolsonarista', 'enemy_petista', 'enemy_common_3', 'enemy_elite_avenida_1', 'enemy_elite_avenida_2'], totalEnemies: 100, bossPerWave: 1, spawnDistance: 700, maxOnScreen: 50 }
         ],
-        boss: 'boss_tia_zap',
-        duration: 300,
+        boss: 'boss_venus',
+        duration: 900,
         events: [
-            { time: 210, type: 'boss_spawn', key: 'boss_tia_zap' },
-            { time: 45, type: 'final_hour' }
+            { time: 900, type: 'boss_spawn', key: 'boss_venus' },
+            { time: 60, type: 'final_hour' }
         ]
     }
 ];
