@@ -18,7 +18,7 @@
 
 body {
     background: #0d0d0d;
-    /* Fundo da pÃ¡gina fora do jogo */
+    /* Fundo da página fora do jogo */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -50,7 +50,7 @@ body {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.92);
-    /* Fundo quase sÃ³lido */
+    /* Fundo quase sólido */
     display: none;
     flex-direction: column;
     justify-content: center;
@@ -73,7 +73,32 @@ h1 {
     letter-spacing: 2px;
     margin-bottom: 10px;
     text-shadow: 4px 4px 0px #333;
-    /* Sombra sÃ³lida */
+    /* Sombra sólida */
+}
+
+.stat-group {
+    text-align: center;
+    margin-bottom: 20px;
+    width: 100%;
+    padding: 0 40px;
+}
+
+.stat-line {
+    font-size: 20px;
+    color: #ccc;
+    margin: 10px 0;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 1px;
+}
+
+.stat-line span {
+    color: #fff;
+    margin-left: 5px;
+}
+
+.button-group {
+    display: flex;
+    gap: 15px;
 }
 
 h2 {
@@ -85,7 +110,7 @@ h2 {
     color: var(--cor-secundaria);
     padding: 5px 20px;
     transform: skewX(-10deg);
-    /* Estilo itÃ¡lico forÃ§ado/dinÃ¢mico */
+    /* Estilo itálico forçado/dinâmico */
 }
 
 /* Placeholders de Imagem */
@@ -193,7 +218,7 @@ h2 {
     flex-direction: column;
     gap: 8px;
     flex-grow: 1;
-    /* Faz as informaÃ§Ãµes ocuparem o espaÃ§o restante */
+    /* Faz as informações ocuparem o espaço restante */
 }
 
 .char-main-row {
@@ -240,7 +265,7 @@ h2 {
 /* ARMA: Agora com mais destaque */
 .char-weapon-display {
     flex: 1.5;
-    /* DÃ¡ um pouco mais de espaÃ§o para a arma */
+    /* Dá um pouco mais de espaço para a arma */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -268,10 +293,10 @@ h2 {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    /* EspaÃ§o horizontal entre tags */
+    /* Espaço horizontal entre tags */
     justify-content: center;
     line-height: 1.8;
-    /* Aumenta o espaÃ§o vertical quando quebra linha */
+    /* Aumenta o espaço vertical quando quebra linha */
 }
 
 .trait-good,
@@ -280,7 +305,7 @@ h2 {
     white-space: nowrap;
     /* Impede que o texto da tag quebre */
     margin-bottom: 4px;
-    /* Garante que uma linha nÃ£o encoste na outra */
+    /* Garante que uma linha não encoste na outra */
     padding: 2px 8px;
     font-size: 10px;
     border-radius: 12px;
@@ -920,8 +945,17 @@ input[type=checkbox] {
 }
 
 @keyframes endlessSlideIn {
-    from { opacity: 0; transform: translateY(-20px); filter: blur(10px); }
-    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+        filter: blur(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
 }
 
 #endless-stats {
@@ -973,8 +1007,15 @@ input[type=checkbox] {
 }
 
 @keyframes dangerBlink {
-    from { opacity: 1; text-shadow: 0 0 5px #ff3333; }
-    to { opacity: 0.7; text-shadow: 0 0 20px #ff3333; }
+    from {
+        opacity: 1;
+        text-shadow: 0 0 5px #ff3333;
+    }
+
+    to {
+        opacity: 0.7;
+        text-shadow: 0 0 20px #ff3333;
+    }
 }
 
 #game-timer.endless-timer {
@@ -990,4 +1031,3 @@ input[type=checkbox] {
     position: absolute;
     width: 100%;
 }
-

@@ -63,6 +63,7 @@ export class EnemySpawner {
      */
     update(delta) {
         this.handleCleanup();
+        this.handleWaves(delta);
         this.updateEnemies(delta);
 
         if (this.isInEndlessMode) {
@@ -146,8 +147,6 @@ export class EnemySpawner {
      * Avança para a próxima onda.
      */
     nextWave() {
-        // In Endless Mode, this is no longer called due to the update() logic branch.
-        // This remains for standard wave-based gameplay.
         const nextIndex = this.wave + 1;
         if (this.waves[nextIndex]) {
             this.initWave(nextIndex);
@@ -160,186 +159,183 @@ export class EnemySpawner {
 
     startEndlessMode() {
         this.isInEndlessMode = true;
-        this.timer = 0; // Reset timer for continuous spawning.
+        this.initEndlessWave();
     }
 
-    handleEndlessSpawning(delta) {
-        const survivalTime = this.scene.stageSystem.survivalTimer; // in seconds
+    generateEndlessWaveConfig() {
+        const endlessWave = (this.wave - this.waves.length) + 1;
+        const difficulty = 1 + (endlessWave * (CONFIG.endlessMode?.waveDifficultyMultiplier || 0.1));
+        const enemyTypes = this.mapConfig.waves[this.mapConfig.waves.length - 1].enemyTypes;
 
-        // Difficulty scales directly with survival time.
-        // Factor increases by 0.025 every second (doubles every 40s).
-        const difficultyFactor = 1 + (survivalTime * 0.025);
+        return {
+            totalEnemies: 999999, // Practically infinite
+            maxOnScreen: Math.floor(15 * difficulty),
+            enemiesPerWave: Math.floor(2 * difficulty),
+            interval: Math.max(100, 500 / difficulty),
+            enemyTypes: enemyTypes,
+            spawnDistance: 700,
+            bossPerWave: Math.random() < (CONFIG.endlessMode?.bossChance || 0.25) ? 1 : 0,
+        };
+    }
 
-        initEndlessWave() {
+    initEndlessWave() {
+        this.wave++;
+        this.waveConfig = this.generateEndlessWaveConfig();
+        this.spawnedCount = 0;
+        this.timer = 0;
+        this.isWaveFinished = false;
+        this.endlessIntervalTimer = 0; // Reset internal difficulty timer
+
+        const payload = {
+            index: this.wave + 1,
+            config: this.waveConfig,
+            isBossWave: false,
+            isEndless: true,
+        };
+        this.scene.events.emit('wave-changed', payload);
+    }
+
+    /**
+     * Updates endless mode difficulty over time.
+     */
+    updateEndlessDifficulty(delta) {
+        this.endlessIntervalTimer = (this.endlessIntervalTimer || 0) + delta;
+
+        // Use config interval (minutes to ms) or default to 30s
+        const intervalInMinutes = CONFIG.endlessMode?.difficultyIncreaseInterval || 0.5;
+        const DIFFICULTY_INCREASE_INTERVAL = intervalInMinutes * 60000;
+
+        if (this.endlessIntervalTimer >= DIFFICULTY_INCREASE_INTERVAL) {
+            this.endlessIntervalTimer = 0;
             this.wave++;
             this.waveConfig = this.generateEndlessWaveConfig();
-            this.spawnedCount = 0;
-            this.timer = 0;
-            this.isWaveFinished = false;
-            this.endlessIntervalTimer = 0; // Reset internal difficulty timer
 
-            if (this.enemies.length >= maxOnScreen) {
-                return; // Throttle spawning if max capacity is reached.
-            }
-
-            this.timer += delta;
-            if (this.timer >= spawnInterval) {
-                this.timer = 0;
-
-                const enemyTypes = this.mapConfig.waves[this.mapConfig.waves.length - 1].enemyTypes;
-                if (enemyTypes.length === 0) return;
-
-                for (let i = 0; i < enemiesPerSpawn; i++) {
-                    const type = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
-                    const enemyConfig = CONFIG.enemy.find(e => e.key === type);
-                    if (enemyConfig) {
-                        this.spawnEntity(enemyConfig, { distance: 800 });
-                    }
-                }
-            }
-        }
-
-        /**
-         * Updates endless mode difficulty over time.
-         */
-        updateEndlessDifficulty(delta) {
-            this.endlessIntervalTimer = (this.endlessIntervalTimer || 0) + delta;
-
-            // Use config interval (minutes to ms) or default to 30s
-            const intervalInMinutes = CONFIG.endlessMode?.difficultyIncreaseInterval || 0.5;
-            const DIFFICULTY_INCREASE_INTERVAL = intervalInMinutes * 60000;
-
-            if (this.endlessIntervalTimer >= DIFFICULTY_INCREASE_INTERVAL) {
-                this.endlessIntervalTimer = 0;
-                this.wave++;
-                this.waveConfig = this.generateEndlessWaveConfig();
-
-                console.debug('Endless Difficulty Increased', {
-                    wave: this.wave,
-                    maxOnScreen: this.waveConfig.maxOnScreen,
-                    interval: this.waveConfig.interval
-                });
-
-                // Emit wave-changed for HUD and other systems
-                const payload = {
-                    index: this.wave + 1,
-                    config: this.waveConfig,
-                    isBossWave: false,
-                    isEndless: true,
-                };
-                this.scene.events.emit('wave-changed', payload);
-            }
-        }
-
-        /**
-         * Spawna um conjunto de inimigos conforme config da onda.
-         */
-        spawnWave() {
-            if (this.enemies.length >= this.waveConfig.maxOnScreen) return;
-
-            const count = this.waveConfig.enemiesPerWave || 1;
-            const enemyTypes = this.waveConfig.enemyTypes || [];
-
-            if (enemyTypes.length === 0) return;
-
-            for (let i = 0; i < count; i++) {
-                // Verifica cota individualmente para cada spawn no loop (Ignorado no Endless)
-                if (!this.isInEndlessMode && this.spawnedCount >= this.waveConfig.totalEnemies) break;
-
-                // Seleciona tipo aleatório da lista (pode ser expandido para pesos)
-                const type = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
-                const enemyConfig = CONFIG.enemy.find(e => e.key === type);
-
-                if (enemyConfig) {
-                    this.spawnEntity(enemyConfig);
-                    if (!this.isInEndlessMode) {
-                        this.spawnedCount++;
-                    }
-                }
-            }
-        }
-
-        /**
-         * Spawna uma entidade específica.
-         */
-        spawnEntity(config, options = {}, onSpawn = null) {
-            const ang = options.angle || Math.random() * Math.PI * 2;
-            const dist = options.distance || this.waveConfig.spawnDistance || 700;
-
-            const margin = 50;
-            const x = Phaser.Math.Clamp(
-                options.x || this.player.x + Math.cos(ang) * dist,
-                margin,
-                CONFIG.world.width - margin
-            );
-            const y = Phaser.Math.Clamp(
-                options.y || this.player.y + Math.sin(ang) * dist,
-                margin,
-                CONFIG.world.height - margin
-            );
-
-            // Finalize spawn logic helper to avoid duplication
-            const finalize = () => {
-                const entity = this._spawnFinal(x, y, config);
-                if (onSpawn) {
-                    onSpawn(entity);
-                }
-                return entity;
-            };
-
-            // Use Telegraph if available
-            if (this.scene.telegraphManager) {
-                const telegraphType = config.isBoss ? 'boss' : (config.isElite ? 'elite' : 'enemy');
-
-                // Override radius if config provides it or use default
-                const tOptions = {
-                    radius: config.size ? config.size * 0.8 : undefined
-                };
-
-                this.scene.telegraphManager.showTelegraph(x, y, telegraphType, () => {
-                    finalize();
-                }, tOptions);
-                return null; // Interaction deferred
-            }
-
-            return finalize();
-        }
-
-        _spawnFinal(x, y, config) {
-            // Double check scene active state to prevent spawning after shutdown
-            if (!this.scene || !this.scene.sys || !this.scene.sys.isActive()) return null;
-
-            const enemy = this.enemyPool.get({ x, y, enemyConfig: config });
-
-            this.enemies.push(enemy);
-            if (!this.group.contains(enemy.container)) {
-                this.group.add(enemy.container);
-                enemy.container.enemy = enemy;
-            }
-
-            return enemy;
-        }
-
-        /**
-         * Reseta o spawner para o estado inicial.
-         */
-        reset() {
-            if (!this.enemies) return;
-
-            // In shutdown, the physics group might be unstable.
-            // We focus on clearing our local arrays and the pool.
-            this.enemies.forEach(e => {
-                if (this.enemyPool) {
-                    this.enemyPool.release(e);
-                }
+            console.debug('Endless Difficulty Increased', {
+                wave: this.wave,
+                maxOnScreen: this.waveConfig.maxOnScreen,
+                interval: this.waveConfig.interval
             });
 
-            this.enemies = [];
-            if (this.enemyPool) {
-                this.enemyPool.clear();
+            // Emit wave-changed for HUD and other systems
+            const payload = {
+                index: this.wave + 1,
+                config: this.waveConfig,
+                isBossWave: false,
+                isEndless: true,
+            };
+            this.scene.events.emit('wave-changed', payload);
+        }
+    }
+
+    /**
+     * Spawna um conjunto de inimigos conforme config da onda.
+     */
+    spawnWave() {
+        if (this.enemies.length >= this.waveConfig.maxOnScreen) return;
+
+        const count = this.waveConfig.enemiesPerWave || 1;
+        const enemyTypes = this.waveConfig.enemyTypes || [];
+
+        if (enemyTypes.length === 0) return;
+
+        for (let i = 0; i < count; i++) {
+            // Verifica cota individualmente para cada spawn no loop (Ignorado no Endless)
+            if (!this.isInEndlessMode && this.spawnedCount >= this.waveConfig.totalEnemies) break;
+
+            // Seleciona tipo aleatório da lista (pode ser expandido para pesos)
+            const type = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+            const enemyConfig = CONFIG.enemy.find(e => e.key === type);
+
+            if (enemyConfig) {
+                this.spawnEntity(enemyConfig);
+                if (!this.isInEndlessMode) {
+                    this.spawnedCount++;
+                }
             }
         }
-
-        getGroup() { return this.group; }
-        getEnemies() { return this.enemies; }
     }
+
+    /**
+     * Spawna uma entidade específica.
+     */
+    spawnEntity(config, options = {}, onSpawn = null) {
+        const ang = options.angle || Math.random() * Math.PI * 2;
+        const dist = options.distance || this.waveConfig.spawnDistance || 700;
+
+        const margin = 50;
+        const x = Phaser.Math.Clamp(
+            options.x || this.player.x + Math.cos(ang) * dist,
+            margin,
+            CONFIG.world?.width || 1500 - margin
+        );
+        const y = Phaser.Math.Clamp(
+            options.y || this.player.y + Math.sin(ang) * dist,
+            margin,
+            CONFIG.world?.height || 1500 - margin
+        );
+
+        // Finalize spawn logic helper to avoid duplication
+        const finalize = () => {
+            const entity = this._spawnFinal(x, y, config);
+            if (onSpawn) {
+                onSpawn(entity);
+            }
+            return entity;
+        };
+
+        // Use Telegraph if available
+        if (this.scene.telegraphManager) {
+            const telegraphType = config.isBoss ? 'boss' : (config.isElite ? 'elite' : 'enemy');
+
+            // Override radius if config provides it or use default
+            const tOptions = {
+                radius: config.size ? config.size * 0.8 : undefined
+            };
+
+            this.scene.telegraphManager.showTelegraph(x, y, telegraphType, () => {
+                finalize();
+            }, tOptions);
+            return null; // Interaction deferred
+        }
+
+        return finalize();
+    }
+
+    _spawnFinal(x, y, config) {
+        // Double check scene active state to prevent spawning after shutdown
+        if (!this.scene || !this.scene.sys || !this.scene.sys.isActive()) return null;
+
+        const enemy = this.enemyPool.get({ x, y, enemyConfig: config });
+
+        this.enemies.push(enemy);
+        if (!this.group.contains(enemy.container)) {
+            this.group.add(enemy.container);
+            enemy.container.enemy = enemy;
+        }
+
+        return enemy;
+    }
+
+    /**
+     * Reseta o spawner para o estado inicial.
+     */
+    reset() {
+        if (!this.enemies) return;
+
+        // In shutdown, the physics group might be unstable.
+        // We focus on clearing our local arrays and the pool.
+        this.enemies.forEach(e => {
+            if (this.enemyPool) {
+                this.enemyPool.release(e);
+            }
+        });
+
+        this.enemies = [];
+        if (this.enemyPool) {
+            this.enemyPool.clear();
+        }
+    }
+
+    getGroup() { return this.group; }
+    getEnemies() { return this.enemies; }
+}

@@ -67,11 +67,6 @@ export class GameScene extends Phaser.Scene {
         // Inicia sistema de ondas
         this.enemySystem.enemySpawner.initWave(0);
 
-        // Statistics tracking
-        this.events.on('enemy-defeated', () => {
-            this.totalEnemiesDefeated++;
-        });
-
         // Input - Pause
         this.input.keyboard.on('keydown-ESC', () => {
             if (this.bootstrap && this.bootstrap.uiFlow) {

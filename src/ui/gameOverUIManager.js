@@ -27,7 +27,7 @@ export class GameOverUIManager {
             levelSpan.textContent = this.scene.xpSystem.currentLevel || 1;
         }
         if (enemiesSpan) {
-            enemiesSpan.textContent = this.scene.totalEnemiesDefeated || 0;
+            enemiesSpan.textContent = this.scene.totalKills || 0;
         }
 
         // Handle Endless Mode stats
