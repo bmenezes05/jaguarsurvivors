@@ -527,5 +527,12 @@ export const metaShopConfig = [
 export const achievementsConfig = [
     { id: 'unlock_ucraniaman', title: 'O Estrangeiro', desc: 'Matar 1.000 inimigos' },
     { id: 'unlock_samurai', title: 'Código de Honra', desc: 'Sobreviver 10min' },
-    { id: 'unlock_miss', title: 'Fora da Lei', desc: 'Acumular 5.000 moedas' }
+    { id: 'unlock_miss', title: 'Fora da Lei', desc: 'Acumular 5.000 moedas' },
+    { id: 'defeat_favela_boss', title: 'Pacificador', desc: 'Derrotar o chefe da Favela' },
+    { id: 'defeat_congresso_boss', title: 'Reforma Política', desc: 'Derrotar o chefe do Congresso' },
+    { id: 'defeat_avenida_boss', title: 'Voz do Povo', desc: 'Derrotar o chefe das Manifestações' },
+    { id: 'reach_endless_mode', title: 'Sobrevivente', desc: 'Chegar ao Modo Infinito' },
+    { id: 'unlock_all_characters', title: 'Heróis da Nação', desc: 'Desbloquear todos os personagens' },
+    { id: 'max_level_item', title: 'Potencial Máximo', desc: 'Levar um item ao nível máximo' },
+    { id: 'win_with_all_characters', title: 'Líder Versátil', desc: 'Vencer com todos os personagens' }
 ];
