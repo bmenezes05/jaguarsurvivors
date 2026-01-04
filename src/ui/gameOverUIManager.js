@@ -5,19 +5,39 @@ export class GameOverUIManager {
     }
 
     show() {
-        // Sync stats before showing
+        // Helper function for time formatting
+        const formatTime = (seconds) => {
+            const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
+            return `${mins}:${secs}`;
+        };
+
+        // Get DOM elements
         const timeSpan = document.getElementById('survival-time');
         const levelSpan = document.getElementById('final-level');
+        const enemiesSpan = document.getElementById('enemies-defeated');
+        const endlessStatsContainer = document.getElementById('endless-mode-stats');
+        const endlessTimeSpan = document.getElementById('endless-survival-time');
 
+        // Populate standard stats
         if (timeSpan) {
-            const time = this.scene.stageSystem.totalPlayTime || 0;
-            const mins = Math.floor(time / 60).toString().padStart(2, '0');
-            const secs = Math.floor(time % 60).toString().padStart(2, '0');
-            timeSpan.textContent = `${mins}:${secs}`;
+            timeSpan.textContent = formatTime(this.scene.stageSystem.totalPlayTime || 0);
         }
-
         if (levelSpan) {
             levelSpan.textContent = this.scene.xpSystem.currentLevel || 1;
+        }
+        if (enemiesSpan) {
+            enemiesSpan.textContent = this.scene.totalEnemiesDefeated || 0;
+        }
+
+        // Handle Endless Mode stats
+        if (this.scene.isEndlessMode) {
+            if (endlessStatsContainer) endlessStatsContainer.style.display = 'block';
+            if (endlessTimeSpan) {
+                endlessTimeSpan.textContent = formatTime(this.scene.stageSystem.survivalTimer || 0);
+            }
+        } else {
+            if (endlessStatsContainer) endlessStatsContainer.style.display = 'none';
         }
 
         this.screen.classList.add('active');

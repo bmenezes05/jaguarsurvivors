@@ -26,32 +26,11 @@ export class UpgradeManager {
         const equipment = this.scene.equipmentManager;
         const weaponSlotsFull = !equipment.canAddWeapon();
 
-        // Priority 1: Check for synergy/evolution upgrades
-        const synergy = this.getSynergyUpgrade();
-        if (synergy) {
-            options.push({
-                type: 'synergy',
-                id: synergy.resultId,
-                name: synergy.name,
-                spriteKey: synergy.spriteKey || 'pickup_bomb',
-                icon: synergy.icon,
-                desc: synergy.desc,
-                isEvolution: true,
-                apply: () => {
-                    synergy.effects.forEach(effect => {
-                        this.scene.player.stats[effect.stat][effect.operation](effect.value);
-                    });
-                    this.acquiredEvolutions.add(synergy.resultId);
-                }
-            });
-        }
-
         // Build option pools
         const newWeaponOptions = this.getNewWeaponOptions(equipment);
         const weaponLevelUpOptions = this.getWeaponLevelUpOptions(equipment);
         const newItemOptions = this.getNewItemOptions(equipment);
         const itemLevelUpOptions = this.getItemLevelUpOptions(equipment);
-        //const passiveOptions = this.getPassiveUpgradeOptions();
 
         // Build weighted pool following the strict slot-based rules
         let weightedPool = [];
@@ -63,8 +42,7 @@ export class UpgradeManager {
                 ...weaponLevelUpOptions, // High weight for weapon progression
                 ...itemLevelUpOptions,
                 ...itemLevelUpOptions,
-                ...newItemOptions,
-                //...passiveOptions
+                ...newItemOptions
             ];
             // Note: newWeaponOptions is NOT added here
         } else {
@@ -75,14 +53,13 @@ export class UpgradeManager {
                 ...itemLevelUpOptions,
                 ...itemLevelUpOptions,
                 ...newWeaponOptions,
-                ...newItemOptions,
-                //...passiveOptions
+                ...newItemOptions
             ];
         }
 
         // Shuffle and select unique options
         const shuffled = weightedPool.sort(() => Math.random() - 0.5);
-        const usedIds = new Set(options.map(o => o.id));
+        const usedIds = new Set();
 
         for (const option of shuffled) {
             if (options.length >= count) break;
@@ -91,14 +68,6 @@ export class UpgradeManager {
             options.push(option);
             usedIds.add(option.id);
         }
-
-        // Fallback: if not enough unique options, fill with passives
-        // while (options.length < count && passiveOptions.length > 0) {
-        //     const fallback = passiveOptions.find(p => !usedIds.has(p.id));
-        //     if (!fallback) break;
-        //     options.push(fallback);
-        //     usedIds.add(fallback.id);
-        // }
 
         return options.slice(0, count);
     }
@@ -194,57 +163,8 @@ export class UpgradeManager {
             .filter(Boolean); // Remove nulls
     }
 
-    getPassiveUpgradeOptions() {
-        return CONFIG.upgrades.map(upgrade => ({
-            type: 'passive',
-            id: upgrade.id,
-            name: upgrade.name,
-            spriteKey: upgrade.spriteKey || 'pickup_bomb',
-            icon: upgrade.icon,
-            desc: upgrade.desc,
-            apply: () => this.applyPassiveUpgrade(upgrade)
-        }));
-    }
-
-    // ==================== SYNERGY SYSTEM ====================
-
-    getSynergyUpgrade() {
-        if (!CONFIG.synergies || !Array.isArray(CONFIG.synergies)) return null;
-
-        const equipment = this.scene.equipmentManager;
-
-        for (const syn of CONFIG.synergies) {
-            // Check if already acquired
-            if (this.acquiredEvolutions.has(syn.resultId)) continue;
-
-            // Check if ANY equipped weapon satisfies the synergy requirement
-            if (equipment.hasWeapon(syn.reqWeapon)) {
-                // Check passive requirement
-                const passiveLevel = this.upgradeCounts[syn.reqPassive] || 0;
-                if (passiveLevel >= syn.reqPassiveLevel) {
-                    return syn;
-                }
-            }
-        }
-
-        return null;
-    }
 
     // ==================== APPLY METHODS ====================
-
-    applyPassiveUpgrade(upgrade) {
-        const effect = upgrade.applyEffect;
-
-        // Generic effect application
-        if (effect.stat && effect.operation && effect.value !== undefined) {
-            this.scene.player.stats[effect.stat][effect.operation](effect.value);
-        }
-
-        // Track upgrade count
-        this.upgradeCounts[upgrade.id] = (this.upgradeCounts[upgrade.id] || 0) + 1;
-
-        console.debug(`[UpgradeManager] Applied upgrade: ${upgrade.name} (count: ${this.upgradeCounts[upgrade.id]})`);
-    }
 
     /**
      * Legacy compatibility: apply upgrade by ID

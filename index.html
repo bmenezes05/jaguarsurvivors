@@ -68,12 +68,24 @@
 
         <div id="game-over" class="overlay-screen">
             <h1 style="color: var(--cor-perigo);">MISSÃO FALHOU</h1>
-            <h2>TEMPO: <span id="survival-time" style="color: #fff">00:00</span></h2>
-            <div style="font-size: 18px; margin-bottom: 20px; color: #aaa; font-family: 'Anton', sans-serif;">
-                NÍVEL ALCANÇADO: <span id="final-level" style="color: var(--cor-primaria)">1</span>
+
+            <!-- Overall Stats -->
+            <div class="stat-group">
+                <h2>TEMPO TOTAL: <span id="survival-time" style="color: #fff">00:00</span></h2>
+                <div class="stat-line">INIMIGOS DERROTADOS: <span id="enemies-defeated">0</span></div>
+                <div class="stat-line">NÍVEL ALCANÇADO: <span id="final-level" style="color: var(--cor-primaria)">1</span></div>
             </div>
-            <button class="btn" onclick="GameEvents.goToCharSelect()">TENTAR NOVAMENTE</button>
-            <button class="btn" style="background: #333;" onclick="GameEvents.goToMainMenu()">MENU</button>
+
+            <!-- Endless Mode Stats (Hidden by default) -->
+            <div id="endless-mode-stats" class="stat-group" style="display: none; margin-top: 25px; border-top: 2px solid #555; padding-top: 15px;">
+                <h2 style="color: var(--cor-destaque);">MODO ENDLESS ALCANÇADO</h2>
+                <div class="stat-line">TEMPO EM ENDLESS: <span id="endless-survival-time">00:00</span></div>
+            </div>
+
+            <div class="button-group" style="margin-top: 30px;">
+                <button class="btn" onclick="GameEvents.goToCharSelect()">TENTAR NOVAMENTE</button>
+                <button class="btn" style="background: #333;" onclick="GameEvents.goToMainMenu()">MENU</button>
+            </div>
         </div>
 
         <div id="map-completed" class="overlay-screen">
