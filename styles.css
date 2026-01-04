@@ -114,14 +114,304 @@ h2 {
 }
 
 /* Placeholders de Imagem */
-.logo-placeholder {
-    border: 2px dashed var(--cor-primaria);
+/* --- REDESIGNED MAIN MENU --- */
+#main-menu {
+    overflow: hidden;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%) !important;
+    display: none;
+    /* Controlled by .active */
+}
+
+#main-menu.active {
+    display: flex !important;
+}
+
+.menu-background-effect {
+    position: absolute;
+    inset: 0;
+    background: url('src/assets/images/logo_small.png') no-repeat center;
+    background-size: 80%;
+    opacity: 0.05;
+    filter: blur(20px);
+    z-index: 1;
+}
+
+.menu-content-wrapper {
+    display: flex;
+    width: 90%;
+    max-width: 1100px;
+    height: 80%;
+    gap: 60px;
+    z-index: 10;
+}
+
+.menu-left-panel {
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.logo-wrapper {
+    margin-bottom: 40px;
+    animation: floating 4s ease-in-out infinite;
+}
+
+.main-logo {
+    width: 450px;
+    height: auto;
+    filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.4));
+}
+
+.menu-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 400px;
+}
+
+.btn-premium {
+    position: relative;
+    width: 100% !important;
+    margin: 0 !important;
+    text-align: left !important;
+    padding: 22px 50px !important;
+    font-size: 24px !important;
+    overflow: hidden;
+    background: linear-gradient(90deg, var(--cor-primaria) 0%, #e6c200 100%) !important;
+    clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%) !important;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    border: none;
+    color: #000;
+    font-family: 'Anton', sans-serif;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.btn-premium.secondary {
+    background: linear-gradient(90deg, #333 0%, #222 100%) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.btn-premium:hover {
+    transform: translateX(20px) scale(1.02);
+    box-shadow: -15px 0 30px rgba(255, 215, 0, 0.3);
+    background: #fff !important;
+}
+
+.btn-premium.secondary:hover {
+    background: linear-gradient(90deg, #555 0%, #444 100%) !important;
+    box-shadow: -15px 0 30px rgba(255, 255, 255, 0.1);
+}
+
+.btn-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transform: skewX(-20deg);
+    animation: shine 3s infinite;
+    pointer-events: none;
+}
+
+@keyframes shine {
+    0% {
+        left: -100%;
+    }
+
+    20% {
+        left: 150%;
+    }
+
+    100% {
+        left: 150%;
+    }
+}
+
+@keyframes floating {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* --- CONTROLS PANEL --- */
+.menu-right-panel {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px;
-    padding: 30px 80px;
 }
+
+.controls-summary {
+    background: rgba(20, 20, 20, 0.8);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 24px;
+    padding: 50px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(255, 215, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.controls-summary::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.03) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.controls-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 38px;
+    letter-spacing: 6px;
+    margin-bottom: 40px;
+    color: var(--cor-primaria);
+    text-shadow: 3px 3px 0 #000;
+}
+
+.controls-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+    width: 100%;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.key-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 140px;
+}
+
+.key-row {
+    display: flex;
+    gap: 8px;
+}
+
+.key {
+    width: 45px;
+    height: 45px;
+    background: #2a2a2a;
+    border: 2px solid #444;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    color: #fff;
+    box-shadow: 0 5px 0 #111;
+    transition: all 0.1s;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.key:hover {
+    transform: translateY(2px);
+    box-shadow: 0 3px 0 #111;
+    border-color: var(--cor-primaria);
+}
+
+.control-label {
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    color: #eee;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.control-separator {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+    width: 100%;
+}
+
+.key-double-tap {
+    display: flex;
+    gap: 15px;
+    position: relative;
+    padding: 10px;
+}
+
+.key-tap {
+    width: 50px;
+    height: 50px;
+    background: #2a2a2a;
+    border: 2px solid var(--cor-primaria);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Anton', sans-serif;
+    font-weight: bold;
+    font-size: 22px;
+    color: var(--cor-primaria);
+    box-shadow: 0 5px 0 #111;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.animate-tap {
+    animation: tapEffect 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-tap2 {
+    animation: tapEffect 2.1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes tapEffect {
+
+    0%,
+    20%,
+    100% {
+        transform: translateY(0) scale(1);
+        background: #2a2a2a;
+        color: var(--cor-primaria);
+        box-shadow: 0 5px 0 #111;
+    }
+
+    5%,
+    15% {
+        transform: translateY(3px) scale(0.95);
+        background: var(--cor-primaria);
+        color: #000;
+        box-shadow: 0 2px 0 #111;
+        text-shadow: none;
+    }
+}
+
+.controls-footer {
+    margin-top: 40px;
+    font-size: 16px;
+    color: #666;
+    letter-spacing: 1px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
 
 .logo-img {
     max-width: 100%;

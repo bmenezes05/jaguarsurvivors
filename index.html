@@ -16,13 +16,62 @@
 <body>
     <div id="game-wrapper">
         <div id="main-menu" class="overlay-screen active">
-            <div class="logo-placeholder">
-                <img src="src/assets/images/logo_small.png" alt="Logo" width="300" height="225">
-            </div>
+            <div class="menu-background-effect"></div>
 
-            <button class="btn" onclick="GameEvents.goToCharSelect()">INICIAR MISSÃO</button>
-            <button class="btn" onclick="GameEvents.goToShop()">LOJA & UPGRADES</button>
-            <button class="btn" onclick="GameEvents.goToSettings()">AJUSTES</button>
+            <div class="menu-content-wrapper">
+                <div class="menu-left-panel">
+                    <div class="logo-wrapper">
+                        <img src="src/assets/images/logo_small.png" alt="Jaguar Survivors" class="main-logo">
+                    </div>
+
+                    <div class="menu-nav">
+                        <button class="btn btn-premium" onclick="GameEvents.goToCharSelect()">
+                            <span class="btn-shine"></span>
+                            <span class="btn-label">INICIAR MISSÃO</span>
+                        </button>
+                        <button class="btn btn-premium secondary" onclick="GameEvents.goToShop()">
+                            <span class="btn-label">LOJA & UPGRADES</span>
+                        </button>
+                        <button class="btn btn-premium secondary" onclick="GameEvents.goToSettings()">
+                            <span class="btn-label">AJUSTES</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="menu-right-panel">
+                    <div class="controls-summary">
+                        <h3 class="controls-title">CONTROLES</h3>
+                        <div class="controls-grid">
+                            <div class="control-group">
+                                <div class="key-layout">
+                                    <div class="key">W</div>
+                                    <div class="key-row">
+                                        <div class="key">A</div>
+                                        <div class="key">S</div>
+                                        <div class="key">D</div>
+                                    </div>
+                                </div>
+                                <span class="control-label">MOVIMENTO</span>
+                            </div>
+
+                            <div class="control-separator"></div>
+
+                            <div class="control-group">
+                                <div class="key-layout">
+                                    <div class="key-double-tap">
+                                        <div class="key-tap animate-tap">W</div>
+                                        <div class="key-tap animate-tap2">W</div>
+                                    </div>
+                                </div>
+                                <span class="control-label">DASH (TAP DUPLO)</span>
+                            </div>
+                        </div>
+                        <div class="controls-footer">
+                            Também suporta as Setas do teclado
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="meta-shop" class="overlay-screen">
@@ -73,11 +122,13 @@
             <div class="stat-group">
                 <h2>TEMPO TOTAL: <span id="survival-time" style="color: #fff">00:00</span></h2>
                 <div class="stat-line">INIMIGOS DERROTADOS: <span id="enemies-defeated">0</span></div>
-                <div class="stat-line">NÍVEL ALCANÇADO: <span id="final-level" style="color: var(--cor-primaria)">1</span></div>
+                <div class="stat-line">NÍVEL ALCANÇADO: <span id="final-level"
+                        style="color: var(--cor-primaria)">1</span></div>
             </div>
 
             <!-- Endless Mode Stats (Hidden by default) -->
-            <div id="endless-mode-stats" class="stat-group" style="display: none; margin-top: 25px; border-top: 2px solid #555; padding-top: 15px;">
+            <div id="endless-mode-stats" class="stat-group"
+                style="display: none; margin-top: 25px; border-top: 2px solid #555; padding-top: 15px;">
                 <h2 style="color: var(--cor-destaque);">MODO ENDLESS ALCANÇADO</h2>
                 <div class="stat-line">TEMPO EM ENDLESS: <span id="endless-survival-time">00:00</span></div>
             </div>
