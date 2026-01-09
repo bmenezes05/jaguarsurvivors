@@ -26,6 +26,8 @@ export class EnemySpawner {
         this.spawnedCount = 0;
         this.isWaveFinished = false;
         this.isInEndlessMode = false;
+        this.waveDurationTimer = 0;
+        this.currentWaveDuration = 0;
 
         // Pool de objetos para performance
         this.enemyPool = new ObjectPool(scene, Enemy, 100);
@@ -45,11 +47,14 @@ export class EnemySpawner {
         this.waveConfig = this.waves[waveIndex];
         this.spawnedCount = 0;
         this.timer = 0;
+        this.waveDurationTimer = 0;
+        this.currentWaveDuration = (this.waveConfig.duration || 60) * 1000; // default 60s if not set
         this.isWaveFinished = false;
 
         // Notifica o sistema sobre a mudança de onda
         const payload = {
             index: this.wave + 1,
+            name: this.waveConfig.name || `Onda ${this.wave + 1}`,
             config: this.waveConfig,
             isBossWave: this.waveConfig.bossPerWave > 0
         };
@@ -69,7 +74,7 @@ export class EnemySpawner {
         if (this.isInEndlessMode) {
             this.updateEndlessDifficulty(delta);
         } else {
-            this.checkWaveCompletion();
+            this.checkWaveCompletion(delta);
         }
     }
 
@@ -128,16 +133,14 @@ export class EnemySpawner {
     }
 
     /**
-     * Verifica se a onda atual foi completada.
+     * Verifica se a onda atual foi completada (Baseado em TEMPO).
      */
-    checkWaveCompletion() {
+    checkWaveCompletion(delta) {
         if (this.isWaveFinished || this.isInEndlessMode) return;
 
-        // Condição: Cota atingida E todos os inimigos derrotados
-        const quotaReached = this.spawnedCount >= this.waveConfig.totalEnemies;
-        const allCleared = this.enemies.length === 0;
+        this.waveDurationTimer += delta;
 
-        if (quotaReached && allCleared) {
+        if (this.waveDurationTimer >= this.currentWaveDuration) {
             this.isWaveFinished = true;
             this.nextWave();
         }

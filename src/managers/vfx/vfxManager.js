@@ -103,6 +103,7 @@ export class VFXManager {
                 }
                 break;
             case 'structure-destroyed':
+            case 'structure-spawned':
                 // args: [structure]
                 context.target = args[0];
                 if (context.target) {

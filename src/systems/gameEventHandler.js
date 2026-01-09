@@ -242,5 +242,6 @@ export class GameEventHandler {
         this.events.off('pickup-collected');
         this.events.off('structure-damaged');
         this.events.off('structure-destroyed');
+        this.events.off('structure-spawned');
     }
 }

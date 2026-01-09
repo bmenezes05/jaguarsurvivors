@@ -104,7 +104,6 @@ export class PlayerDash {
     _updateDash(cursors, wasd, delta) {
         this.dashTimer -= delta;
 
-        // PROBLEM 2: Influência direcional durante o dash (Steering)
         const x = (cursors.left.isDown || wasd.left.isDown ? -1 : 0)
             + (cursors.right.isDown || wasd.right.isDown ? 1 : 0);
         const y = (cursors.up.isDown || wasd.up.isDown ? -1 : 0)
@@ -134,6 +133,7 @@ export class PlayerDash {
 
         // Move Player
         const speed = this.stats.dashSpeed;
+        this.player.movement.body.setMaxVelocity(speed);
         this.player.movement.body.setVelocity(
             this.dashDirection.x * speed,
             this.dashDirection.y * speed
@@ -157,9 +157,8 @@ export class PlayerDash {
         this.isDashing = false;
         this.cooldownTimer = this.stats.dashCooldown;
 
-        // Reset Physics: PROBLEM 1 FIXED
-        // Não resetamos para (0,0) para manter o momentum. 
-        // O PlayerMovement assumirá o controle no mesmo frame.
+        // Reset Physics
+        this.player.movement.body.setMaxVelocity(this.stats.moveSpeed);
 
 
         // Reset Invulnerability (Player class might handle its own inv check, 

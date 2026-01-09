@@ -22,7 +22,7 @@ export class PlayerStats {
         this.criticalDamageStat = new Stat(0);
         this.lifeStealStat = new Stat(0);
         this.dashCooldownStat = new Stat(1000);
-        this.dashSpeedStat = new Stat(800);
+        this.dashSpeedStat = new Stat(1000);
 
         if (s.moveSpeed) this.moveSpeedStat.totalMultiplier = s.moveSpeed;
         if (s.maxHealth) this.maxHealthStat.totalMultiplier = s.maxHealth;
@@ -39,8 +39,8 @@ export class PlayerStats {
         if (s.critChance) this.critChanceStat.addFlat(s.critChance);
         if (s.criticalDamage) this.criticalDamageStat.addFlat(s.criticalDamage);
         if (s.lifeSteal) this.lifeStealStat.addFlat(s.lifeSteal);
-        if (s.dashCooldown) this.dashCooldownStat.totalMultiplier = s.dashCooldown;
-        if (s.dashSpeed) this.dashSpeedStat.addFlat(s.dashSpeed);
+        if (config.dash && config.dash.cooldown) this.dashCooldownStat.totalMultiplier = config.dash.cooldown / 1000;
+        if (s.dashSpeed) this.dashSpeedStat.totalMultiplier = s.dashSpeed;
 
         this._applyMetaUpgrades();
     }

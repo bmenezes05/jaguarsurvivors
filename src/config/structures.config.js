@@ -9,50 +9,65 @@ export const structuresConfig = {
 
     // Structure Types
     types: {
-        crate_wood: {
-            key: 'crate_wood',
-            spriteKey: 'structure_crate',
-            image: 'src/assets/images/weapon_handbag.png',
-            maxHp: 50,
+        structure_barricada: {
+            key: 'structure_barricada',
+            spriteKey: 'structure_barricada',
+            image: 'src/assets/images/structure/structure_barricada.png',
+            maxHp: 100,
             solid: true,
             hitboxScale: 0.8,
             dropTable: 'common_structure'
         },
-        barrel_explosive: {
-            key: 'barrel_explosive',
-            spriteKey: 'structure_barrel',
-            image: 'src/assets/images/weapon_handbag.png',
-            maxHp: 40,
+        structure_barricada_grande: {
+            key: 'structure_barricada_grande',
+            spriteKey: 'structure_barricada_grande',
+            image: 'src/assets/images/structure/structure_barricada_grande.png',
+            maxHp: 200,
             solid: true,
             hitboxScale: 0.7,
             dropTable: 'rare_structure'
         },
-        structure_rock_1: {
-            key: 'structure_rock_1',
-            spriteKey: 'structure_rock_1',
-            image: 'src/assets/images/structure_rock_1.png',
+        structure_barricada_grande2: {
+            key: 'structure_barricada_grande2',
+            spriteKey: 'structure_barricada_grande2',
+            image: 'src/assets/images/structure/structure_barricada_grande2.png',
+            maxHp: 200,
+            solid: true,
+            hitboxScale: 0.9,
+            dropTable: 'rare_structure'
+        },
+        structure_barricada2: {
+            key: 'structure_barricada2',
+            spriteKey: 'structure_barricada2',
+            image: 'src/assets/images/structure/structure_barricada2.png',
             maxHp: 100,
             solid: true,
             hitboxScale: 0.9,
             dropTable: 'common_structure'
         },
-        structure_rock_2: {
-            key: 'structure_rock_2',
-            spriteKey: 'structure_rock_2',
-            image: 'src/assets/images/structure_rock_2.png',
-            maxHp: 150,
-            solid: true,
-            hitboxScale: 0.9,
-            dropTable: 'rare_structure'
-        },
-        structure_crystal: {
-            key: 'structure_crystal',
-            spriteKey: 'structure_crystal',
-            image: 'src/assets/images/structure_crystal.png',
-            maxHp: 80,
+        structure_cone: {
+            key: 'structure_cone',
+            spriteKey: 'structure_cone',
+            image: 'src/assets/images/structure/structure_cone.png',
+            maxHp: 60,
             solid: true,
             hitboxScale: 0.8,
-            dropTable: 'legendary_structure'
+            dropTable: 'common_structure'
+        },
+        structure_paredao: {
+            key: 'structure_paredao',
+            spriteKey: 'structure_paredao',
+            image: 'src/assets/images/structure/structure_som.png',
+            maxHp: 250,
+            solid: true,
+            hitboxScale: 0.9,
+            dropTable: 'legendary_structure',
+            vfx: {
+                interval: 400,
+                shakeIntensity: 6,
+                pulseScale: 1.02,
+                duration: 150
+            }
         }
     },
 

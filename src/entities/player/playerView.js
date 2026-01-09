@@ -99,14 +99,6 @@ export class PlayerView {
         const legTex = this.config.key + '_legs';
         const legConfig = this.config.legs || { x: 0, y: 16 };
 
-        // We only show one "legs" image for simplicity in trail or both?
-        // Let's just do body for cleaner read or both for completeness.
-        // Let's do body only to reduce noise/performance cost, as requested "Clean and non-intrusive"
-        // But "Clear motion trail" implies the silhouette. I will add legs too if it looks weird without.
-        // The implementation plan says "visual conveys speed".
-        // Let's stick to Body for now, it's the main identifier.
-        // Actually, let's add legs too, it's easy.
-
         const leftLegGhost = this.scene.add.image(
             this.container.x + (this.leftLeg.x * this.container.scaleX),
             this.container.y + this.leftLeg.y,
@@ -133,7 +125,7 @@ export class PlayerView {
         this.scene.tweens.add({
             targets: [bodyGhost, leftLegGhost, rightLegGhost],
             alpha: 0,
-            duration: 300,
+            duration: 500,
             onComplete: () => {
                 bodyGhost.destroy();
                 leftLegGhost.destroy();

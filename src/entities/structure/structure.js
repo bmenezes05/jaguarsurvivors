@@ -24,6 +24,7 @@ export class Structure {
         this.hp = this.maxHp;
 
         this.view.spawn(x, y, config);
+        this.scene.events.emit('structure-spawned', this);
     }
 
     takeDamage(amount, isCritical, attacker) {

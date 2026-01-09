@@ -15,10 +15,18 @@ export class HUDManager {
             standardUI: document.getElementById('standard-ui'),
             endlessUI: document.getElementById('endless-ui'),
             endlessKillCount: document.getElementById('endless-kill-count'),
-            endlessDangerValue: document.getElementById('endless-danger-value')
+            endlessDangerValue: document.getElementById('endless-danger-value'),
+            // Wave Announcement
+            waveAnnouncement: document.getElementById('wave-announcement'),
+            waveAnnouncementNumber: document.querySelector('#wave-announcement .wave-number'),
+            waveAnnouncementName: document.querySelector('#wave-announcement .wave-name')
         };
 
         this.scene.events.on('endless-mode-started', this.setEndlessMode, this);
+        this.scene.events.on('wave-changed', (payload) => {
+            this.showWaveAnnouncement(payload.index, payload.name);
+            this.setBossWave(payload.isBossWave, payload.index);
+        }, this);
     }
 
     show() {
@@ -165,5 +173,37 @@ export class HUDManager {
             waveText.innerHTML = `ONDA <span id="wave-count">${wave}</span>`;
             this.elements.waveCount = document.getElementById('wave-count');
         }
+    }
+
+    showWaveAnnouncement(number, name) {
+        if (!this.elements.waveAnnouncement) return;
+
+        // Reset animation if already showing
+        this.elements.waveAnnouncement.classList.remove('show', 'hidden');
+        void this.elements.waveAnnouncement.offsetWidth; // Force reflow
+
+        // Set content
+        if (this.elements.waveAnnouncementNumber) {
+            this.elements.waveAnnouncementNumber.textContent = `ONDA ${number}`;
+        }
+        if (this.elements.waveAnnouncementName) {
+            this.elements.waveAnnouncementName.textContent = name;
+        }
+
+        // Show
+        this.elements.waveAnnouncement.classList.add('show');
+
+        // Play SFX if available
+        if (this.scene.audio) {
+            this.scene.audio.play('levelup', { volume: 0.5 }); // Correct key from audio.config.js
+        }
+
+        // Hide after animation (approx 4s in CSS)
+        setTimeout(() => {
+            if (this.elements.waveAnnouncement) {
+                this.elements.waveAnnouncement.classList.remove('show');
+                this.elements.waveAnnouncement.classList.add('hidden');
+            }
+        }, 4000);
     }
 }

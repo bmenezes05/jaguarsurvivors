@@ -8,6 +8,8 @@ import { HitStopEffect } from './effects/hitStopEffect.js';
 import { DamagePopupEffect } from './effects/damagePopupEffect.js';
 import { CameraFlashEffect } from './effects/cameraFlashEffect.js';
 import { ScreenBorderFlashEffect } from './effects/screenBorderFlashEffect.js';
+import { BeatEffect } from './effects/beatEffect.js';
+
 
 export const VFX_CONFIG = {
     'enemy-damaged': [
@@ -206,5 +208,13 @@ export const VFX_CONFIG = {
             condition: () => true,
             config: { color: 0xff8c00, thickness: 20, duration: 300 }
         }
+    ],
+    'structure-spawned': [
+        {
+            effectClass: BeatEffect,
+            condition: (data) => data.target && data.target.config && data.target.config.vfx,
+            config: {} // Config is pulled from structure.config.vfx
+        }
     ]
 };
+

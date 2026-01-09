@@ -154,14 +154,22 @@ h2 {
 }
 
 .logo-wrapper {
-    margin-bottom: 40px;
-    animation: floating 4s ease-in-out infinite;
+    position: relative;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
 }
 
 .main-logo {
     width: 450px;
     height: auto;
     filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.4));
+    animation:
+        logo-heavy-pulse 2s infinite alternate ease-in-out;
+    position: relative;
+    z-index: 5;
 }
 
 .menu-nav {
@@ -232,15 +240,13 @@ h2 {
     }
 }
 
-@keyframes floating {
-
-    0%,
-    100% {
-        transform: translateY(0);
+@keyframes logo-heavy-pulse {
+    0% {
+        filter: brightness(1) drop-shadow(0 0 5px rgba(255, 215, 0, 1));
     }
 
-    50% {
-        transform: translateY(-20px);
+    100% {
+        filter: brightness(1.2) drop-shadow(0 0 15px rgba(255, 215, 0, 1));
     }
 }
 
@@ -1770,4 +1776,142 @@ input[type=checkbox] {
 .selection-footer {
     margin-top: auto;
     padding-bottom: 10px;
+}
+
+/* --- WAVE ANNOUNCEMENT --- */
+#wave-announcement {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    z-index: 5000;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+}
+
+#wave-announcement.show {
+    animation: announcementFadeIn 4s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+.announcement-content {
+    text-align: center;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 215, 0, 0.15) 50%, transparent 100%);
+    padding: 60px 0;
+    width: 100%;
+    position: relative;
+    backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.announcement-content::before,
+.announcement-content::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, var(--cor-primaria), transparent);
+    box-shadow: 0 0 20px var(--cor-primaria);
+}
+
+.announcement-content::before {
+    top: 0;
+    transform: scaleX(0);
+}
+
+.announcement-content::after {
+    bottom: 0;
+    transform: scaleX(0);
+}
+
+#wave-announcement.show .announcement-content::before {
+    animation: lineGrow 0.8s 0.2s forwards;
+}
+
+#wave-announcement.show .announcement-content::after {
+    animation: lineGrow 0.8s 0.2s forwards;
+}
+
+.wave-number {
+    font-family: 'Anton', sans-serif;
+    font-size: 32px;
+    color: var(--cor-primaria);
+    letter-spacing: 12px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+    transform: translateY(20px);
+    opacity: 0;
+}
+
+#wave-announcement.show .wave-number {
+    animation: slideUpFade 0.6s 0.4s forwards;
+}
+
+.wave-name {
+    font-family: 'Anton', sans-serif;
+    font-size: 72px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-shadow: 0 0 40px rgba(255, 255, 255, 0.4), 6px 6px 0 #000;
+    transform: scale(0.8) translateY(20px);
+    opacity: 0;
+}
+
+#wave-announcement.show .wave-name {
+    animation: popIn 0.8s 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes announcementFadeIn {
+    0% {
+        opacity: 0;
+        pointer-events: none;
+        display: flex;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    85% {
+        opacity: 1;
+        filter: blur(0px);
+    }
+
+    100% {
+        opacity: 0;
+        filter: blur(20px);
+        pointer-events: none;
+    }
+}
+
+@keyframes lineGrow {
+    to {
+        transform: scaleX(1);
+    }
+}
+
+@keyframes slideUpFade {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes popIn {
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.hidden {
+    display: none !important;
 }

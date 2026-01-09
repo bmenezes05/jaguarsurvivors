@@ -5,7 +5,7 @@ export class XPGem {
         this.scene = scene;
         // Pre-create sprite with a dummy texture
         this.sprite = this.scene.add.image(0, 0, 'xp_gem');
-        this.sprite.setDisplaySize(32, 16);
+        this.sprite.setDisplaySize(32, 32);
         this.scene.physics.add.existing(this.sprite);
         this.body = this.sprite.body;
         this.isActive = false;

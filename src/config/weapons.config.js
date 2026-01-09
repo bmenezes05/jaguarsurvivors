@@ -12,8 +12,8 @@ export const weaponsConfig = [
         baseStats: {
             damage: 25,
             cooldown: 1000,
-            knockback: 150,
-            knockbackDuration: 50
+            knockback: 250,
+            knockbackDuration: 200
         },
 
         strategyStats: {

@@ -12,7 +12,7 @@ export const playersConfig = [
         description: 'Líder equilibrado com habilidades versáteis',
         player_body_image: 'src/assets/images/presida.png',
         player_legs_image: 'src/assets/images/presida_legs.png',
-        speed: 300,
+        speed: 150,
         acceleration: 2000,
         friction: 1500,
         size: 40,
@@ -33,8 +33,7 @@ export const playersConfig = [
             restDamping: { rotation: 0.9, position: 0.2 }
         },
         dash: {
-            duration: 250,
-            speed: 1000,
+            duration: 150,
             cooldown: 1000
         },
 
@@ -52,7 +51,8 @@ export const playersConfig = [
             thorns: 0.0,
             knockback: 1.0,
             hpRegen: 0.0,
-            lifeSteal: 0.0
+            lifeSteal: 0.0,
+            dashSpeed: 1.2
         },
         traits: [
             { text: 'VERSÁTIL', good: true },
@@ -86,8 +86,7 @@ export const playersConfig = [
             restDamping: { rotation: 0.9, position: 0.2 }
         },
         dash: {
-            duration: 250,
-            speed: 1000,
+            duration: 200,
             cooldown: 1000
         },
 
@@ -130,8 +129,7 @@ export const playersConfig = [
             restDamping: { rotation: 0.9, position: 0.2 }
         },
         dash: {
-            duration: 250,
-            speed: 1000,
+            duration: 200,
             cooldown: 1000
         },
 
@@ -176,14 +174,14 @@ export const playersConfig = [
         },
         dash: {
             duration: 250,
-            speed: 1000,
             cooldown: 1000
         },
 
         stats: {
             damage: 1.5,
             projectileSpeed: 1.2,
-            evasion: 0.1
+            evasion: 0.1,
+            dashSpeed: 1.5
         },
         traits: [
             { text: 'DANO ALTO', good: true },
@@ -219,7 +217,6 @@ export const playersConfig = [
         },
         dash: {
             duration: 250,
-            speed: 1000,
             cooldown: 1000
         },
 
