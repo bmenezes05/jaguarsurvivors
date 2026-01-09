@@ -278,7 +278,7 @@ export const GameEvents = {
                     </div>
                 </div>
 
-                <button class="btn btn-equip" style="margin-top: 30px;" onclick="GameEvents.selectWeapon('${weapon.key}')">
+                <button class="btn btn-equip" onclick="GameEvents.selectWeapon('${weapon.key}')">
                     ESCOLHER ESTA ARMA
                 </button>
             </div>

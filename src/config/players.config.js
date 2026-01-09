@@ -230,7 +230,6 @@ export const playersConfig = [
         },
         traits: [
             { text: 'ELEMENTAL', good: true },
-            { text: 'ÁREA+', good: true },
             { text: 'MÍSTICO', good: true }
         ]
     }

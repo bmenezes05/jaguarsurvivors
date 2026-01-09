@@ -445,10 +445,12 @@ h2 {
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;
-    gap: 12px;
+    gap: 10px;
     width: 100%;
-    padding: 20px;
     overflow-x: auto;
+    flex: 1 !important;
+    min-height: 0 !important;
+    align-items: center !important;
 }
 
 #char-container::-webkit-scrollbar {
@@ -1589,7 +1591,6 @@ input[type=checkbox] {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 15px;
     position: relative;
     flex-shrink: 0;
 }
@@ -1655,17 +1656,15 @@ input[type=checkbox] {
     grid-template-columns: repeat(4, 1fr);
     gap: 15px;
     width: 100%;
-    margin-top: 10px;
 }
 
 .detail-stat-card {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 12px;
-    padding: 15px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 5px;
 }
 
 .detail-stat-card .label {
@@ -1727,6 +1726,7 @@ input[type=checkbox] {
 .char-card:hover .char-description {
     color: #ccc;
 }
+
 .btn-equip {
     margin: 25px auto 10px auto;
     width: 90%;
@@ -1746,4 +1746,28 @@ input[type=checkbox] {
     transform: scale(1.05);
     background: #fff;
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+}
+
+/* --- FIXES FOR WRAPPER CONSTRAINTS --- */
+.overlay-screen h1 {
+    font-size: 44px !important;
+    margin-bottom: 5px !important;
+}
+
+.weapon-selection-layout {
+    flex: 1 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: 520px !important;
+}
+
+#char-container {
+    flex: 1 !important;
+    min-height: 0 !important;
+    align-items: center !important;
+}
+
+.selection-footer {
+    margin-top: auto;
+    padding-bottom: 10px;
 }

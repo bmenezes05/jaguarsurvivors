@@ -17,20 +17,24 @@ export const mapsConfig = [
         allowedStructures: ['crate_wood', 'structure_rock_1'],
         music: 'cinematic1',
         waves: [
-            { interval: 3000, enemiesPerWave: 1, enemyTypes: ['enemy_favela_basico'], totalEnemies: 5, bossPerWave: 0, spawnDistance: 600, maxOnScreen: 500 },
+            { interval: 300, enemiesPerWave: 1, enemyTypes: ['enemy_crime5'], totalEnemies: 5, bossPerWave: 0, spawnDistance: 600, maxOnScreen: 500 },
+            {
+                interval: 20, enemiesPerWave: 1, enemyTypes: ['enemy_favela_basico', 'enemy_funkeiro3', 'enemy_crime5', 'enemy_favela', 'enemy_mendigo', 'enemy_elite_bandido',
+                    'enemy_bandido_moto', 'enemy_crime', 'enemy_crime2', 'enemy_crime3', 'enemy_crime4', 'enemy_milicia', 'enemy_milicia2', 'enemy_milicia3', 'enemy_funkeiro', 'enemy_funkeiro2', 'enemy_cria', 'enemy_cria2', 'enemy_influencer', 'enemy_influencer2'], totalEnemies: 30, bossPerWave: 0, spawnDistance: 600, maxOnScreen: 500
+            },
             { interval: 3000, enemiesPerWave: 5, enemyTypes: ['enemy_favela_basico', 'enemy_bandido'], totalEnemies: 20, bossPerWave: 0, spawnDistance: 600, maxOnScreen: 500 },
-            { interval: 2500, enemiesPerWave: 10, enemyTypes: ['enemy_favela_basico', 'enemy_bandido', 'enemy_bandido2'], totalEnemies: 30, bossPerWave: 0, spawnDistance: 600, maxOnScreen: 500 },
-            { interval: 2000, enemiesPerWave: 15, enemyTypes: ['enemy_favela_basico', 'enemy_bandido', 'enemy_bandido2'], totalEnemies: 40, bossPerWave: 0, spawnDistance: 600, maxOnScreen: 500 },
-            { interval: 1500, enemiesPerWave: 20, enemyTypes: ['enemy_favela_basico', 'enemy_bandido', 'enemy_bandido2'], totalEnemies: 50, bossPerWave: 0, spawnDistance: 600, maxOnScreen: 500 },
-            { interval: 1000, enemiesPerWave: 25, enemyTypes: ['enemy_favela_basico', 'enemy_bandido', 'enemy_bandido2'], totalEnemies: 60, bossPerWave: 0, spawnDistance: 600, maxOnScreen: 500 },
-            { interval: 800, enemiesPerWave: 30, enemyTypes: ['enemy_favela_basico', 'enemy_bandido', 'enemy_bandido2'], totalEnemies: 80, bossPerWave: 1, spawnDistance: 600, maxOnScreen: 500 }
+            { interval: 2500, enemiesPerWave: 10, enemyTypes: ['enemy_favela_basico', 'enemy_bandido', 'enemy_bandido2', 'enemy_favela', 'enemy_mendigo', 'enemy_elite_bandido', 'enemy_elite_favela_1', 'enemy_elite_favela_2', 'enemy_elite_favela_3', 'enemy_bandido_moto', 'enemy_crime', 'enemy_crime2', 'enemy_crime3', 'enemy_crime4', 'enemy_milicia', 'enemy_milicia2', 'enemy_milicia3', 'enemy_funkeiro', 'enemy_funkeiro2', 'enemy_cria', 'enemy_cria2', 'enemy_influencer', 'enemy_influencer2'], totalEnemies: 30, bossPerWave: 0, spawnDistance: 600, maxOnScreen: 500 },
+            { interval: 2000, enemiesPerWave: 15, enemyTypes: ['enemy_favela_basico', 'enemy_bandido', 'enemy_bandido2', 'enemy_favela', 'enemy_mendigo'], totalEnemies: 40, bossPerWave: 0, spawnDistance: 600, maxOnScreen: 500 },
+            { interval: 1500, enemiesPerWave: 20, enemyTypes: ['enemy_favela_basico', 'enemy_bandido', 'enemy_bandido2', 'enemy_favela', 'enemy_mendigo'], totalEnemies: 50, bossPerWave: 0, spawnDistance: 600, maxOnScreen: 500 },
+            { interval: 1000, enemiesPerWave: 25, enemyTypes: ['enemy_favela_basico', 'enemy_bandido', 'enemy_bandido2', 'enemy_favela', 'enemy_mendigo'], totalEnemies: 60, bossPerWave: 0, spawnDistance: 600, maxOnScreen: 500 },
+            { interval: 800, enemiesPerWave: 30, enemyTypes: ['enemy_favela_basico', 'enemy_bandido', 'enemy_bandido2', 'enemy_favela', 'enemy_mendigo'], totalEnemies: 80, bossPerWave: 1, spawnDistance: 600, maxOnScreen: 500 }
         ],
         suddenDeath: {
             interval: 10000,
             buffPercent: 0.10
         },
         boss: 'boss_bandido_moto',
-        duration: 180,
+        duration: 1200,
         events: [
             { time: 180, type: 'boss_spawn', key: 'boss_bandido_moto' },
             { time: 60, type: 'final_hour' }
