@@ -7,12 +7,11 @@ export class EnemyView {
         scene.physics.world.enable(this.container);
         this.container.setData('parent', enemy);
 
-        this.shadow = scene.add.image(0, 0, 'shadow').setAlpha(0.5);
         this.sprite = scene.add.image(0, 0, null);
         this.leftLeg = scene.add.image(0, 0, null);
         this.rightLeg = scene.add.image(0, 0, null);
 
-        this.container.add([this.shadow, this.leftLeg, this.rightLeg, this.sprite]);
+        this.container.add([this.leftLeg, this.rightLeg, this.sprite]);
 
         // Store body dimensions for hitbox correction
         this.bodyWidth = 60;
