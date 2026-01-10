@@ -8,6 +8,7 @@ export class Weapon {
         this.scene = scene;
         this.player = playerCombat;
         this.enemySpawner = enemySpawner;
+        this.level = 1;
 
         this.config = CONFIG.weapon.find(w => w.key === weaponKey);
 

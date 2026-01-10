@@ -83,27 +83,40 @@ export class UIFlowController {
     togglePause() {
         if (!this.activeScreens) return;
 
-        // Only allow manual pause if NO critical UI is open
+        // If currently paused explicitly by us (the pause screen is open), resume
+        if (this.activeScreens.has('pause')) {
+            this.resume();
+            return;
+        }
+
+        // Otherwise, prevent pause if other screens are active (like upgrades, game over)
         if (this.activeScreens.size > 0 || this.rewardQueue?.length > 0) return;
 
-        const pauseScreen = document.getElementById('pause-screen');
         if (this.scene.scene.isPaused('GameScene')) {
-            // Only resume if pause screen was the only one active
+            // Safety fallback if scene is paused but we don't know why
             this.resume();
         } else {
             this.scene.scene.pause();
-            if (pauseScreen) pauseScreen.classList.add('active');
+            if (this.scene.pauseUIManager) {
+                this.scene.pauseUIManager.show();
+                this.activeScreens.add('pause');
+            }
         }
     }
 
     resume() {
         if (!this.activeScreens) return;
 
-        const pauseScreen = document.getElementById('pause-screen');
+        if (this.scene.pauseUIManager) {
+            this.scene.pauseUIManager.hide();
+        }
+
+        // Remove pause from active screens if it was there
+        this.activeScreens.delete('pause');
+
         if (this.activeScreens.size === 0 && this.rewardQueue?.length === 0) {
             this.scene.scene.resume();
         }
-        if (pauseScreen) pauseScreen.classList.remove('active');
     }
 
     destroy() {

@@ -140,12 +140,12 @@ export const mapsConfig = [
         ]
     },
     {
-        id: 'crystal_caves',
-        name: 'Cavernas de Cristal',
-        description: 'Uma misteriosa caverna de cristal.',
+        id: 'universidade',
+        name: 'Universidade Pública',
+        description: 'A doutrinação do povo.',
         background: {
-            inner: 'src/assets/images/bg_crystal_caves.png',
-            outside: 'src/assets/images/bg_crystal_caves_outside.png'
+            inner: 'src/assets/images/bg_avenida.png',
+            outside: 'src/assets/images/bg_avenida_outside.png'
         },
         allowedStructures: ['structure_crystal'],
         music: 'cinematic4',

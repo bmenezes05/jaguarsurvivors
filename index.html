@@ -175,17 +175,69 @@
         </div>
 
         <div id="pause-screen" class="overlay-screen">
-            <h1>MISSAO PAUSADA</h1>
-            <button class="btn" onclick="GameEvents.resumeGame()">CONTINUAR</button>
-            <button class="btn" style="background: #555;" onclick="GameEvents.goToMainMenu()">SAIR DA MISSÃO</button>
+            <div class="pause-container">
+                <div class="pause-header">
+                    <h1 class="pause-title">MISSÃO PAUSADA</h1>
+                </div>
+
+                <div class="pause-content">
+                    <!-- Left: Character Preview -->
+                    <div class="pause-char-section">
+                        <div class="pause-char-visual">
+                            <img id="pause-char-img" src="" alt="Jaguar">
+                        </div>
+                        <h3 id="pause-char-name">NOME DO JAGUAR</h3>
+                    </div>
+
+                    <!-- Middle: Stats (Reuse Upgrade Stats Style) -->
+                    <div class="pause-stats-section">
+                        <div class="pause-section-title">STATUS DO JAGUAR</div>
+                        <div id="pause-stats-list" class="stats-list">
+                            <!-- Stats entries injected here -->
+                        </div>
+                    </div>
+
+                    <!-- Right: Equipped Loadout -->
+                    <div class="pause-loadout-section">
+                        <div class="pause-section-title">EQUIPAMENTOS</div>
+                        <div class="loadout-group">
+                            <h4>ARMAS</h4>
+                            <div id="pause-weapons-grid" class="pause-grid"></div>
+                        </div>
+                        <div class="loadout-group">
+                            <h4>ITENS</h4>
+                            <div id="pause-items-grid" class="pause-grid"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pause-footer">
+                    <button class="btn btn-premium" onclick="GameEvents.resumeGame()">CONTINUAR</button>
+                    <button class="btn btn-premium secondary" onclick="GameEvents.goToMainMenu()">ABANDONAR
+                        MISSÃO</button>
+                </div>
+            </div>
         </div>
 
         <div id="upgrade-screen" class="overlay-screen">
-            <div
-                style="font-size: 56px; color: var(--cor-primaria); font-family: 'Anton', sans-serif; margin-bottom: 20px; text-shadow: 2px 2px 0 #000;">
-                NOVO RECURSO!</div>
-            <div style="font-size: 20px; color: #fff; margin-bottom: 40px;">Escolha um reforço para a missão:</div>
-            <div id="upgrade-options"></div>
+            <div class="upgrade-container">
+                <div class="upgrade-header">
+                    <h1 class="upgrade-title">REFORÇO DISPONÍVEL</h1>
+                    <div class="level-badge">NÍVEL <span id="upgrade-level-num">1</span></div>
+                </div>
+
+                <div class="upgrade-main-layout">
+                    <div id="upgrade-options" class="upgrade-options-grid">
+                        <!-- Upgrades will be Injected here -->
+                    </div>
+
+                    <div class="player-stats-panel">
+                        <div id="upgrade-stats-list" class="stats-list">
+                            <!-- Stats entries injected here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="game-ui" style="display: none;">

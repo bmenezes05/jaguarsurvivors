@@ -100,6 +100,10 @@ export class WeaponManager {
      */
     onWeaponLeveled(weaponKey, newLevel) {
         // Stats already applied in upgradeManager, no visual changes needed yet
+        const weaponInfo = this.weapons.find(w => w.weaponKey === weaponKey);
+        if (weaponInfo && weaponInfo.weaponData) {
+            weaponInfo.weaponData.level = newLevel;
+        }
     }
 
     /**

@@ -21,6 +21,7 @@ import { UpgradeUIManager } from '../ui/upgradeUIManager.js';
 import { GameOverUIManager } from '../ui/gameOverUIManager.js';
 import { MapCompletedUIManager } from '../ui/mapCompletedUIManager.js';
 import { LoadoutUIManager } from '../ui/loadoutUIManager.js';
+import { PauseUIManager } from '../ui/pauseUIManager.js';
 import { SaveManager } from '../managers/saveManager.js';
 import { AchievementManager } from '../managers/achievementManager.js';
 
@@ -182,6 +183,7 @@ export class SceneBootstrap {
         this.scene.mapCompletedUIManager = new MapCompletedUIManager(this.scene);
         this.scene.legendaryUIManager = new LegendarySelectionUIManager(this.scene);
         this.scene.upgradeUIManager = new UpgradeUIManager(this.scene);
+        this.scene.pauseUIManager = new PauseUIManager(this.scene);
         this.scene.hud = new HUDManager(this.scene);
         this.scene.hud.show();
 

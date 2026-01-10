@@ -15,7 +15,7 @@ export const structuresConfig = {
             image: 'src/assets/images/structure/structure_barricada.png',
             maxHp: 100,
             solid: true,
-            hitboxScale: 0.8,
+            hitboxScale: 0.9,
             dropTable: 'common_structure'
         },
         structure_barricada_grande: {
@@ -24,7 +24,7 @@ export const structuresConfig = {
             image: 'src/assets/images/structure/structure_barricada_grande.png',
             maxHp: 200,
             solid: true,
-            hitboxScale: 0.7,
+            hitboxScale: 0.9,
             dropTable: 'rare_structure'
         },
         structure_barricada_grande2: {
