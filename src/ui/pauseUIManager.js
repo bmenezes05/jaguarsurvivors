@@ -1,3 +1,5 @@
+import { CONFIG } from '../config/config.js';
+
 export class PauseUIManager {
     constructor(scene) {
         this.scene = scene;
@@ -80,7 +82,6 @@ export class PauseUIManager {
         // Weapons
         this.weaponsGrid.innerHTML = '';
         const maxWeapons = 3;
-        // In some managers it's an array of strings, ensure we handle it
         const weapons = Array.isArray(equipment.equippedWeapons) ? equipment.equippedWeapons : [];
 
         for (let i = 0; i < maxWeapons; i++) {
@@ -96,7 +97,6 @@ export class PauseUIManager {
                 const levelDisplay = document.createElement('div');
                 levelDisplay.className = 'level-badge';
                 const weaponMap = this.scene.weaponManager?.weapons;
-                // Check if it's a Map (new structure) or Array (old structure)
                 let weaponLevel = '1';
 
                 if (weaponMap instanceof Map) {
@@ -118,15 +118,15 @@ export class PauseUIManager {
         // Items
         this.itemsGrid.innerHTML = '';
         const maxItems = 3;
-        const items = Array.from(equipment.equippedItems.entries()) || [];
+        const items = Array.isArray(equipment.equippedItems) ? equipment.equippedItems : [];
 
         for (let i = 0; i < maxItems; i++) {
             const slot = document.createElement('div');
             slot.className = 'pause-slot' + (items[i] ? '' : ' empty');
 
             if (items[i]) {
-                const [itemId, level] = items[i];
-                const itemConfig = equipment.allPossibleItems.find(it => it.id === itemId);
+                const { id, level } = items[i];
+                const itemConfig = CONFIG.equipableItems.find(it => it.id === id);
 
                 const img = document.createElement('img');
                 img.src = `src/assets/images/${itemConfig?.spriteKey || 'pickup_bomb'}.png`;
