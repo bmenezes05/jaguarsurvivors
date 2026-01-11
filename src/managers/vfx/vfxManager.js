@@ -120,6 +120,16 @@ export class VFXManager {
                     context.y = context.target.y;
                 }
                 break;
+            case 'weapon-attack':
+            case 'weapon-shoot':
+                // args: [weaponKey]
+                context.weaponKey = args[0];
+                // Use player position for weapon effects
+                if (this.scene.player) {
+                    context.x = this.scene.player.x;
+                    context.y = this.scene.player.y;
+                }
+                break;
             default:
                 // Fallback: try to find x/y in first arg if it's an object
                 if (args[0] && typeof args[0].x === 'number') {

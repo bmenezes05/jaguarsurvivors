@@ -215,6 +215,37 @@ export const VFX_CONFIG = {
             condition: (data) => data.target && data.target.config && data.target.config.vfx,
             config: {} // Config is pulled from structure.config.vfx
         }
+    ],
+
+    // ==================== WEAPON VFX ====================
+    'weapon-attack': [
+        // Flash effect on melee weapon swing
+        {
+            effectClass: FlashEffect,
+            condition: (data) => data.rawArgs && data.rawArgs[0],
+            config: { duration: 100, color: 0xFFFFFF }
+        },
+        // Spark burst for powerful attacks
+        {
+            effectClass: SparkEffect,
+            condition: () => true,
+            config: { count: 15, color: 0xFFFFFF, speedMin: 100, speedMax: 300, life: 300 }
+        }
+    ],
+
+    'weapon-shoot': [
+        // Muzzle flash for ranged weapons
+        {
+            effectClass: FlashEffect,
+            condition: () => true,
+            config: { duration: 50, color: 0xFFFF00, useFill: true }
+        },
+        // Spark burst for firing
+        {
+            effectClass: SparkEffect,
+            condition: () => true,
+            config: { count: 8, color: 0xFFAA00, speedMin: 50, speedMax: 150, life: 200 }
+        }
     ]
 };
 

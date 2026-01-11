@@ -38,7 +38,6 @@ export class RangedWeaponStrategy extends WeaponStrategy {
      */
     attack(target) {
         const { weapon } = this;
-        // Access stats from the weapon's processed 'current' state
         const { config, player, current } = weapon;
 
         if (!target) return;
@@ -46,50 +45,117 @@ export class RangedWeaponStrategy extends WeaponStrategy {
         console.debug("EVENT_EMITTED", { eventName: 'weapon-shoot', payload: config.key });
         this.scene.events.emit('weapon-shoot', config.key);
 
+        // Get behavior type (default to STANDARD)
+        const behaviorType = config.strategyStats?.behaviorType || 'STANDARD';
+
+        switch (behaviorType) {
+            case 'LASER':
+                this.fireLaser(target);
+                break;
+            case 'BURST':
+                this.fireBurst(target);
+                break;
+            case 'STANDARD':
+            default:
+                this.fireStandard(target);
+                break;
+        }
+    }
+
+    fireStandard(target) {
+        const { weapon } = this;
+        const { config, player, current } = weapon;
+
         const angle = Phaser.Math.Angle.Between(
             player.x, player.y, target.x, target.y
         );
 
-        // Spawn offset
+        const spawnOffset = current.projectileSize ?? 10;
+        const x = player.x + Math.cos(angle) * spawnOffset;
+        const y = player.y + Math.sin(angle) * spawnOffset;
+
+        const { damage, isCritical } = weapon.calculateDamage();
+        const speed = current.projectileSpeed || 500;
+        const range = current.range || 350;
+        let lifetimeMs = (range / speed) * 1000;
+
+        if (!isFinite(lifetimeMs) || lifetimeMs <= 0) lifetimeMs = 2000;
+
+        this.spawnProjectile(x, y, target.x, target.y, damage, isCritical, speed, lifetimeMs, config);
+    }
+
+    fireLaser(target) {
+        const { weapon } = this;
+        const { config, player, current } = weapon;
+
+        // Ultra-fast projectile
+        const speed = 1200;
+        const range = current.range || 600;
+        let lifetimeMs = (range / speed) * 1000;
+
+        const angle = Phaser.Math.Angle.Between(
+            player.x, player.y, target.x, target.y
+        );
+
         const spawnOffset = current.projectileSize ?? 10;
         const x = player.x + Math.cos(angle) * spawnOffset;
         const y = player.y + Math.sin(angle) * spawnOffset;
 
         const { damage, isCritical } = weapon.calculateDamage();
 
-        // Calculate lifetime based on range and speed
-        const speed = current.projectileSpeed || 500;
-        const range = current.range || 350;
+        this.spawnProjectile(x, y, target.x, target.y, damage, isCritical, speed, lifetimeMs, config);
+    }
 
-        // time (ms) = (range / speed) * 1000
+    fireBurst(target) {
+        const { weapon } = this;
+        const { config, player, current } = weapon;
+
+        const burstCount = 3;
+        const burstDelay = 80; // ms between shots
+        const speed = current.projectileSpeed || 600;
+        const range = current.range || 3000;
         let lifetimeMs = (range / speed) * 1000;
 
-        // Safety cap
-        if (!isFinite(lifetimeMs) || lifetimeMs <= 0) lifetimeMs = 2000;
+        for (let i = 0; i < burstCount; i++) {
+            this.scene.time.delayedCall(i * burstDelay, () => {
+                if (!weapon.player || !weapon.player.isActive) return;
 
+                const angle = Phaser.Math.Angle.Between(
+                    player.x, player.y, target.x, target.y
+                );
+
+                const spawnOffset = current.projectileSize ?? 10;
+                const x = player.x + Math.cos(angle) * spawnOffset;
+                const y = player.y + Math.sin(angle) * spawnOffset;
+
+                const { damage, isCritical } = weapon.calculateDamage();
+
+                this.spawnProjectile(x, y, target.x, target.y, damage * 0.4, isCritical, speed, lifetimeMs, config);
+            });
+        }
+    }
+
+    spawnProjectile(x, y, targetX, targetY, damage, isCritical, speed, lifetimeMs, config) {
         const projectile = this.pool.get({
             x,
             y,
-            targetX: target.x,
-            targetY: target.y,
+            targetX,
+            targetY,
             damage,
             weapon: {
-                ...config.strategyStats, // Pass strategy stats (color, size, etc)
-                effects: config.effects, // Pass effects for on-hit logic
-                projectileVisuals: config.projectileVisuals, // Data-Driven Visuals
-                // Computed lifetime for the projectile
+                ...config.strategyStats,
+                effects: config.effects,
+                projectileVisuals: config.projectileVisuals,
                 lifetimeMs: lifetimeMs
             },
             projectileSpeed: speed,
             isCritical,
-            knockbackMultiplier: player.stats.knockback
+            knockbackMultiplier: this.weapon.player.stats.knockback
         });
 
         projectile.visual.setData('parent', projectile);
         this.projectileGroup.add(projectile.visual);
-
-        // Re-apply velocity AFTER adding to the group, as adding to a group can reset it.
-        projectile.applyVelocity(x, y, target.x, target.y, speed);
+        projectile.applyVelocity(x, y, targetX, targetY, speed);
 
         this.activeProjectiles.push(projectile);
     }

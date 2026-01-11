@@ -510,15 +510,33 @@ h2 {
     opacity: 1;
 }
 
-.char-card.locked {
-    filter: grayscale(1) brightness(0.4);
-    cursor: default;
+.char-card.locked,
+.map-card.locked,
+.weapon-card-mini.locked {
+    filter: grayscale(1) brightness(0.5) !important;
+    cursor: not-allowed !important;
+    border-color: #333 !important;
+    box-shadow: none !important;
 }
 
-.char-card.locked:hover {
-    transform: none;
-    border-color: #333;
-    box-shadow: none;
+.char-card.locked:hover,
+.map-card.locked:hover,
+.weapon-card-mini.locked:hover {
+    transform: none !important;
+    border-color: #333 !important;
+    box-shadow: none !important;
+}
+
+.beta-tag {
+    background: #ff4757;
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 0;
+    vertical-align: middle;
 }
 
 /* --- IMAGEM E HEADER --- */

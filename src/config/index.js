@@ -28,7 +28,6 @@ import { enemiesConfig, bossesConfig } from './enemies.config.js';
 import { playersConfig } from './players.config.js';
 import { mapsConfig } from './maps.config.js';
 import {
-    upgradesConfig,
     equipableItemsConfig,
     legendaryConfig,
     metaShopConfig,
@@ -72,8 +71,6 @@ export const BASE_CONFIG = {
     statusEffects: statusEffectsConfig,
     // == PICKUPS ==
     pickups: pickupsConfig,
-    // == UPGRADES ==
-    upgrades: upgradesConfig,
     // == SYNERGIES ==
     synergies: [],
     // == EQUIPABLE ITEMS ==

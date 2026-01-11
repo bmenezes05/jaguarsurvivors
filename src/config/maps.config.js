@@ -92,6 +92,7 @@ export const mapsConfig = [
     {
         id: 'congresso',
         name: 'Congresso',
+        enabled: false,
         description: 'A luta contra o centrão.',
         background: {
             inner: 'src/assets/images/bg_congresso.png',
@@ -117,6 +118,7 @@ export const mapsConfig = [
     {
         id: 'avenida',
         name: 'Manifestações',
+        enabled: false,
         description: 'A desalienação do povo.',
         background: {
             inner: 'src/assets/images/bg_avenida.png',
@@ -142,6 +144,7 @@ export const mapsConfig = [
     {
         id: 'universidade',
         name: 'Universidade Pública',
+        enabled: false,
         description: 'A doutrinação do povo.',
         background: {
             inner: 'src/assets/images/bg_avenida.png',

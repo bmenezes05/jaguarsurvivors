@@ -70,11 +70,13 @@ export const GameEvents = {
         container.innerHTML = '';
 
         CONFIG.maps.forEach(map => {
+            const isEnabled = map.enabled !== false;
             const card = document.createElement('div');
             card.classList.add('map-card');
+            if (!isEnabled) card.classList.add('locked');
 
             // Find if there's a record or something (future proofing)
-            const mapStatus = "MISSAO DISPONÍVEL";
+            const mapStatus = isEnabled ? "MISSAO DISPONÍVEL" : "BLOQUEADO (VERSÃO BETA)";
 
             card.innerHTML = `
                 <div class="map-badge">MAPA</div>
@@ -89,6 +91,8 @@ export const GameEvents = {
             `;
 
             card.onclick = () => {
+                if (!isEnabled) return;
+
                 // Play sound if possible
                 const bootScene = GameEvents.gameInstance.scene.getScene('BootScene');
                 if (bootScene && bootScene.sound) {
@@ -200,12 +204,21 @@ export const GameEvents = {
         weaponContainer.innerHTML = '';
         detailPane.innerHTML = '<div class="detail-placeholder">SELECIONE UMA ARMA AO LADO</div>';
 
-        // Get all primary weapons
-        const primaryWeapons = CONFIG.weapon.filter(w => w.slotType === 'primary');
+        // Get all primary weapons and sort: enabled first
+        const primaryWeapons = CONFIG.weapon
+            .filter(w => w.slotType === 'primary')
+            .sort((a, b) => {
+                const enabledA = a.enabled !== false;
+                const enabledB = b.enabled !== false;
+                if (enabledA === enabledB) return 0;
+                return enabledA ? -1 : 1;
+            });
 
         primaryWeapons.forEach((weapon, index) => {
+            const isEnabled = weapon.enabled !== false;
             const miniCard = document.createElement('div');
             miniCard.classList.add('weapon-card-mini');
+            if (!isEnabled) miniCard.classList.add('locked');
 
             let emoji = weapon.type === 'melee' ? '⚔️' : (weapon.type === 'ranged' ? '🎯' : '✨');
             let typeName = weapon.type === 'melee' ? 'CORPO A CORPO' : (weapon.type === 'ranged' ? 'À DISTÂNCIA' : 'RASTRO');
@@ -213,7 +226,7 @@ export const GameEvents = {
             miniCard.innerHTML = `
                 <img src="${weapon.image}" onerror="this.src='src/assets/images/weapon_sword.png'">
                 <div class="mini-info">
-                    <h4>${weapon.name}</h4>
+                    <h4>${weapon.name} ${!isEnabled ? '<span class="beta-tag">(BETA)</span>' : ''}</h4>
                     <span class="mini-type">${emoji} ${typeName}</span>
                 </div>
             `;
@@ -235,9 +248,13 @@ export const GameEvents = {
 
             weaponContainer.appendChild(miniCard);
 
-            // Auto-select first weapon
-            if (index === 0) miniCard.click();
+            // Auto-select first weapon that is enabled
+            if (GameEvents.firstEnabledIndex === undefined && isEnabled) {
+                GameEvents.firstEnabledIndex = index;
+                miniCard.click();
+            }
         });
+        delete GameEvents.firstEnabledIndex;
     },
 
     showWeaponDetail: (weapon) => {
@@ -278,8 +295,9 @@ export const GameEvents = {
                     </div>
                 </div>
 
-                <button class="btn btn-equip" onclick="GameEvents.selectWeapon('${weapon.key}')">
-                    ESCOLHER ESTA ARMA
+                <button class="btn btn-equip" ${weapon.enabled === false ? 'disabled style="background: #444; cursor: not-allowed; opacity: 0.6;"' : ''} 
+                    onclick="GameEvents.selectWeapon('${weapon.key}')">
+                    ${weapon.enabled === false ? 'INDISPONÍVEL NA BETA' : 'ESCOLHER ESTA ARMA'}
                 </button>
             </div>
         `;

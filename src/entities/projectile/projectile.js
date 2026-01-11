@@ -85,7 +85,7 @@ export class Projectile {
             || weapon.projectileScale
             || 1;
 
-        if (isCritical) scale *= 1.5;
+        if (isCritical && typeof scale === 'number') scale *= 1.5;
 
         // TINT
         // If sprite is 'pixel', we default to a color.
@@ -106,7 +106,14 @@ export class Projectile {
 
         // Apply
         this.visual.setTexture(texture);
-        this.visual.setScale(scale);
+
+        // Handle scale as object {x, y} or number
+        if (typeof scale === 'object' && scale.x !== undefined && scale.y !== undefined) {
+            this.visual.setScale(scale.x, scale.y);
+        } else {
+            this.visual.setScale(scale);
+        }
+
         this.visual.setTint(tint);
 
         // Center hitbox on sprite

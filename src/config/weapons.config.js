@@ -17,6 +17,7 @@ export const weaponsConfig = [
         },
 
         strategyStats: {
+            behaviorType: 'FRONT_SWING',
             meleeHitbox: { width: 160, height: 100 },
             meleeAnimDuration: 250,
             frontalAttack: true,
@@ -60,6 +61,7 @@ export const weaponsConfig = [
         },
 
         strategyStats: {
+            behaviorType: 'AREA_360',
             meleeHitbox: { width: 180, height: 200 },
             meleeAnimDuration: 250,
             frontalAttack: false,
@@ -104,6 +106,7 @@ export const weaponsConfig = [
         },
 
         strategyStats: {
+            behaviorType: 'THRUST',
             meleeHitbox: { width: 200, height: 100 },
             meleeAnimDuration: 250,
             frontalAttack: true,
@@ -134,6 +137,7 @@ export const weaponsConfig = [
     {
         key: 'weapon_axe',
         name: 'Machado Sangrento',
+        enabled: false,
         description: 'Dano brutal e knockback massivo',
         type: 'melee',
         image: 'src/assets/images/weapon_axe.png',
@@ -147,6 +151,7 @@ export const weaponsConfig = [
         },
 
         strategyStats: {
+            behaviorType: 'WAVE',
             meleeHitbox: { width: 200, height: 200 },
             meleeAnimDuration: 250,
             frontalAttack: true,
@@ -178,6 +183,7 @@ export const weaponsConfig = [
     {
         key: 'weapon_hammer',
         name: 'Martelo Brasileiro',
+        enabled: false,
         description: 'Impacto explosivo e controle',
         type: 'melee',
         image: 'src/assets/images/weapon_hammer.png',
@@ -191,6 +197,7 @@ export const weaponsConfig = [
         },
 
         strategyStats: {
+            behaviorType: 'WAVE',
             meleeHitbox: { width: 200, height: 100 },
             meleeAnimDuration: 250,
             frontalAttack: true,
@@ -222,6 +229,7 @@ export const weaponsConfig = [
     {
         key: 'weapon_mace',
         name: 'Maça do Impeachment',
+        enabled: false,
         description: 'Força bruta e destruição',
         type: 'melee',
         image: 'src/assets/images/weapon_mace.png',
@@ -235,6 +243,7 @@ export const weaponsConfig = [
         },
 
         strategyStats: {
+            behaviorType: 'FRONT_SWING',
             meleeHitbox: { width: 200, height: 100 },
             meleeAnimDuration: 250,
             frontalAttack: true,
@@ -265,6 +274,7 @@ export const weaponsConfig = [
     {
         key: 'weapon_magic_staff',
         name: 'Microfone Gelado',
+        enabled: false,
         description: 'Controle elemental com congelamento',
         type: 'melee',
         image: 'src/assets/images/weapon_magic_staff.png',
@@ -278,6 +288,7 @@ export const weaponsConfig = [
         },
 
         strategyStats: {
+            behaviorType: 'AREA_360',
             meleeHitbox: { width: 200, height: 100 },
             meleeAnimDuration: 250,
             frontalAttack: true,
@@ -308,6 +319,7 @@ export const weaponsConfig = [
     {
         key: 'weapon_flame_sword',
         name: 'Espada de Fogo',
+        enabled: false,
         description: 'Dano contínuo com queimadura',
         type: 'melee',
         image: 'src/assets/images/weapon_flame_sword.png',
@@ -321,6 +333,7 @@ export const weaponsConfig = [
         },
 
         strategyStats: {
+            behaviorType: 'THRUST',
             meleeHitbox: { width: 200, height: 100 },
             meleeAnimDuration: 250,
             frontalAttack: true,
@@ -365,6 +378,7 @@ export const weaponsConfig = [
         },
 
         strategyStats: {
+            behaviorType: 'LASER',
             projectileSpeed: 500,
             range: 350,
             projectileSize: 10
@@ -372,8 +386,8 @@ export const weaponsConfig = [
 
         projectileVisuals: {
             spriteKey: 'pixel',
-            tint: 0x00FFFF,
-            scale: 1,
+            tint: 0xFF0000,
+            scale: { x: 3, y: 0.5 },
             animations: []
         },
 
@@ -409,6 +423,7 @@ export const weaponsConfig = [
         },
 
         strategyStats: {
+            behaviorType: 'BURST',
             projectileSpeed: 600,
             range: 3000,
             projectileSize: 15
@@ -417,7 +432,7 @@ export const weaponsConfig = [
         projectileVisuals: {
             spriteKey: 'pixel',
             tint: 0xFFAA00,
-            scale: 1,
+            scale: 1.5,
             animations: []
         },
 
@@ -454,6 +469,7 @@ export const weaponsConfig = [
         },
 
         strategyStats: {
+            behaviorType: 'MINE',
             lifetimeMs: 800,
             trailSpeed: 0,
             trailSize: 14
@@ -503,6 +519,7 @@ export const weaponsConfig = [
         },
 
         strategyStats: {
+            behaviorType: 'CONTINUOUS',
             lifetimeMs: 1200,
             trailSpeed: 0,
             trailSize: 12,
@@ -552,6 +569,7 @@ export const weaponsConfig = [
         },
 
         strategyStats: {
+            behaviorType: 'CONTINUOUS',
             lifetimeMs: 1200,
             trailSpeed: 0,
             trailSize: 12,
@@ -601,6 +619,7 @@ export const weaponsConfig = [
         },
 
         strategyStats: {
+            behaviorType: 'AREA',
             lifetimeMs: 800,
             trailSpeed: 0,
             trailSize: 14

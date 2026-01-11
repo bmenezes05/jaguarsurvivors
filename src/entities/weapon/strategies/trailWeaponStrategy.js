@@ -33,31 +33,51 @@ export class TrailWeaponStrategy extends WeaponStrategy {
         const { weapon } = this;
         const { config, player, current } = weapon;
 
-        if (!target) return; // Should not happen with current logic but safe check
+        if (!target) return;
 
         console.debug("EVENT_EMITTED", { eventName: 'weapon-shoot', payload: config.key });
         this.scene.events.emit('weapon-shoot', config.key);
 
+        // Get behavior type (default to CONTINUOUS)
+        const behaviorType = config.strategyStats?.behaviorType || 'CONTINUOUS';
+
         const angle = Phaser.Math.Angle.Between(
             player.x, player.y, target.x, target.y
         );
-        // Spawn trail slightly offset from player in direction of target
         const spawnOffset = current.trailSize ?? 10;
         const x = player.x + Math.cos(angle) * spawnOffset;
         const y = player.y + Math.sin(angle) * spawnOffset;
 
         const { damage, isCritical } = weapon.calculateDamage();
 
-        // Prepare config object for the projectile/trail
-        // We mix strategy stats with effect stats to provide everything Projectile needs
+        // Adjust properties based on behavior
+        let lifetimeMs = current.lifetimeMs;
+        let finalDamage = damage;
+
+        switch (behaviorType) {
+            case 'MINE':
+                // Mines last longer and deal more damage
+                lifetimeMs = current.lifetimeMs * 5; // 5x longer lifetime
+                finalDamage = damage * 2; // 2x damage
+                break;
+            case 'AREA':
+                // Areas deal damage over time
+                lifetimeMs = current.lifetimeMs * 3; // 3x longer lifetime
+                break;
+            case 'CONTINUOUS':
+            default:
+                // Use default values
+                break;
+        }
+
         const trailConfig = {
             ...config.strategyStats,
             elementalEffect: config.effects?.elemental,
             dotDamage: current.dotDamage,
             dotDuration: config.effects?.dotDuration,
-            projectileVisuals: config.projectileVisuals, // Data-Driven Visuals (animations, etc)
-            // Ensure lifetime is passed explicitly from calculated stats
-            lifetimeMs: current.lifetimeMs
+            projectileVisuals: config.projectileVisuals,
+            lifetimeMs: lifetimeMs,
+            behaviorType: behaviorType
         };
 
         const trail = this.pool.get({
@@ -65,9 +85,9 @@ export class TrailWeaponStrategy extends WeaponStrategy {
             y,
             targetX: target.x,
             targetY: target.y,
-            damage,
+            damage: finalDamage,
             weapon: trailConfig,
-            projectileSpeed: current.trailSpeed, // Visual speed
+            projectileSpeed: current.trailSpeed,
             isCritical,
             knockbackMultiplier: player.stats.knockback
         });

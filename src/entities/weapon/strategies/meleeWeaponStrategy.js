@@ -14,6 +14,7 @@ export class MeleeWeaponStrategy extends WeaponStrategy {
         this.spawnHitbox();
     }
 
+
     playAnimation() {
         const { config, player } = this.weapon;
         const sprite = this.getWeaponSprite();
@@ -24,6 +25,7 @@ export class MeleeWeaponStrategy extends WeaponStrategy {
 
         const visual = config.visual || {};
         const strategyStats = config.strategyStats || {};
+        const behaviorType = strategyStats.behaviorType || 'FRONT_SWING';
 
         const atkSpeed = player.stats.attackSpeed;
         const duration = (strategyStats.meleeAnimDuration ?? 250) / atkSpeed;
@@ -44,6 +46,17 @@ export class MeleeWeaponStrategy extends WeaponStrategy {
             .setAngle(visual.angleAttackOrigin ?? 0)
             .setPosition(player.x + offsetX, player.y + offsetY);
 
+        // Behavior-specific animations
+        if (behaviorType === 'THRUST') {
+            // Thrust: Forward stab motion
+            this.playThrustAnimation(sprite, player, facing, duration, visual, offsetX, offsetY);
+        } else {
+            // Default: Arc swing motion
+            this.playSwingAnimation(sprite, player, facing, duration, visual, offsetX, offsetY);
+        }
+    }
+
+    playSwingAnimation(sprite, player, facing, duration, visual, offsetX, offsetY) {
         this.scene.tweens.add({
             targets: sprite,
             angle: (visual.angleAttackEnd ?? 180) * facing,
@@ -58,39 +71,228 @@ export class MeleeWeaponStrategy extends WeaponStrategy {
         });
     }
 
+    playThrustAnimation(sprite, player, facing, duration, visual, offsetX, offsetY) {
+        // Thrust forward
+        const thrustDistance = 40 * facing;
+
+        this.scene.tweens.add({
+            targets: sprite,
+            x: player.x + offsetX + thrustDistance,
+            duration: duration * 0.4,
+            ease: 'Quad.easeOut',
+            onComplete: () => {
+                // Retract
+                this.scene.tweens.add({
+                    targets: sprite,
+                    x: player.x + offsetX,
+                    duration: duration * 0.6,
+                    ease: 'Quad.easeIn',
+                    onComplete: () => {
+                        sprite
+                            .setOrigin(0.5, 0.5)
+                            .setAngle(visual.angleOrigin ?? 0)
+                            .setPosition(player.x + offsetX, player.y + offsetY);
+                    }
+                });
+            }
+        });
+    }
+
+
     spawnHitbox() {
         const { weapon } = this;
         const { config, player, enemySpawner } = weapon;
         const strategyStats = config.strategyStats || {};
 
+        // Get behavior type (default to FRONT_SWING for backward compatibility)
+        const behaviorType = strategyStats.behaviorType || 'FRONT_SWING';
+
         const area = player.stats.area;
-        const base = strategyStats.meleeHitbox ?? { width: 200, height: 100 };
-
-        const width = base.width * area;
-        const height = base.height * area;
-        let offsetX = 0;
-        if (strategyStats.frontalAttack) {
-            offsetX = (width / 2) * (player.facingRight ? 1 : -1);
-        } else {
-            offsetX = strategyStats.meleeOffsetHitbox.x * (player.facingRight ? 1 : -1);
-        }
-
-        const hitbox = this.scene.add.zone(
-            player.x + offsetX,
-            player.y,
-            width,
-            height
-        );
-
-        this.scene.physics.world.enable(hitbox);
-        hitbox.body.setAllowGravity(false);
-        hitbox.body.moves = false;
-
         const atkSpeed = player.stats.attackSpeed;
         const duration = (strategyStats.meleeAnimDuration ?? 250) / atkSpeed;
 
         const hitTargets = new Set();
 
+        // Create behavior-specific hitbox
+        let hitbox;
+        switch (behaviorType) {
+            case 'AREA_360':
+                hitbox = this.createArea360Hitbox(player, area);
+                break;
+            case 'THRUST':
+                hitbox = this.createThrustHitbox(player, area);
+                break;
+            case 'WAVE':
+                hitbox = this.createWaveHitbox(player, area, duration);
+                break;
+            case 'FRONT_SWING':
+            default:
+                hitbox = this.createFrontSwingHitbox(player, area, strategyStats);
+                break;
+        }
+
+        if (!hitbox) return;
+
+        // Setup physics
+        this.scene.physics.world.enable(hitbox);
+        hitbox.body.setAllowGravity(false);
+        hitbox.body.moves = false;
+
+        // Hit detection
+        this.performHitDetection(hitbox, hitTargets, enemySpawner);
+
+        // Cleanup
+        this.scene.time.delayedCall(duration, () => hitbox.destroy());
+    }
+
+    createFrontSwingHitbox(player, area, strategyStats) {
+        const base = strategyStats.meleeHitbox ?? { width: 200, height: 100 };
+        const width = base.width * area;
+        const height = base.height * area;
+
+        let offsetX = 0;
+        if (strategyStats.frontalAttack !== false) {
+            offsetX = (width / 2) * (player.facingRight ? 1 : -1);
+        } else {
+            offsetX = (strategyStats.meleeOffsetHitbox?.x ?? 0) * (player.facingRight ? 1 : -1);
+        }
+
+        return this.scene.add.zone(
+            player.x + offsetX,
+            player.y,
+            width,
+            height
+        );
+    }
+
+    createArea360Hitbox(player, area) {
+        // Circular hitbox around player
+        const radius = 100 * area;
+        return this.scene.add.zone(
+            player.x,
+            player.y,
+            radius * 2,
+            radius * 2
+        );
+    }
+
+    createThrustHitbox(player, area) {
+        // Long, narrow rectangular hitbox in facing direction
+        const width = 250 * area;
+        const height = 60 * area;
+        const offsetX = (width / 2) * (player.facingRight ? 1 : -1);
+
+        return this.scene.add.zone(
+            player.x + offsetX,
+            player.y,
+            width,
+            height
+        );
+    }
+
+    createWaveHitbox(player, area, duration) {
+        // Primary hitbox (frontal)
+        const primaryWidth = 180 * area;
+        const primaryHeight = 120 * area;
+        const offsetX = (primaryWidth / 2) * (player.facingRight ? 1 : -1);
+
+        const primaryHitbox = this.scene.add.zone(
+            player.x + offsetX,
+            player.y,
+            primaryWidth,
+            primaryHeight
+        );
+
+        // Secondary wave spawns after delay
+        this.scene.time.delayedCall(duration * 0.6, () => {
+            if (!player || !player.isActive || !this.scene) return;
+
+            const waveHitbox = this.createSecondaryWave(player, area);
+            if (waveHitbox) {
+                this.scene.physics.world.enable(waveHitbox);
+                waveHitbox.body.setAllowGravity(false);
+                waveHitbox.body.moves = false;
+
+                const waveTargets = new Set();
+                this.performHitDetection(waveHitbox, waveTargets, this.weapon.enemySpawner);
+
+                // Create visual wave effect
+                this.createWaveVisual(player, area, duration * 0.4);
+
+                this.scene.time.delayedCall(duration * 0.4, () => waveHitbox.destroy());
+            }
+        });
+
+        return primaryHitbox;
+    }
+
+    createWaveVisual(player, area, duration) {
+        const facing = player.facingRight ? 1 : -1;
+        const waveDistance = 100 * area * facing;
+
+        // Create expanding arc graphic
+        const waveGraphic = this.scene.add.graphics();
+
+        // Safety check for depth access
+        const baseDepth = player?.player?.sprite?.depth || 10;
+        waveGraphic.setDepth(baseDepth - 1);
+
+        // Initial wave properties
+        const startX = player.x;
+        const startY = player.y;
+
+        // Animate wave expansion
+        let progress = 0;
+        const waveTimer = this.scene.time.addEvent({
+            delay: 16,
+            repeat: Math.floor(duration / 16),
+            callback: () => {
+                progress += 16 / duration;
+                waveGraphic.clear();
+
+                // Draw expanding arc
+                const currentDistance = waveDistance * progress;
+                const currentAlpha = 1 - progress;
+                const currentWidth = 60 * area * (1 + progress);
+
+                waveGraphic.lineStyle(4, 0xFFAA00, currentAlpha);
+                waveGraphic.fillStyle(0xFFAA00, currentAlpha * 0.3);
+
+                // Arc shape
+                waveGraphic.beginPath();
+                waveGraphic.arc(
+                    startX + currentDistance,
+                    startY,
+                    currentWidth,
+                    facing > 0 ? -Math.PI / 3 : Math.PI * 2 / 3,
+                    facing > 0 ? Math.PI / 3 : Math.PI * 4 / 3,
+                    false
+                );
+                waveGraphic.strokePath();
+                waveGraphic.fillPath();
+
+                if (progress >= 1) {
+                    waveGraphic.destroy();
+                }
+            }
+        });
+    }
+
+    createSecondaryWave(player, area) {
+        // Larger, extended hitbox for wave effect
+        const waveWidth = 220 * area;
+        const waveHeight = 140 * area;
+        const offsetX = (waveWidth / 2) * (player.facingRight ? 1 : -1);
+
+        return this.scene.add.zone(
+            player.x + offsetX,
+            player.y,
+            waveWidth,
+            waveHeight
+        );
+    }
+
+    performHitDetection(hitbox, hitTargets, enemySpawner) {
         // 1. Hit Enemies
         this.scene.physics.overlap(hitbox, enemySpawner.group, (_, enemySprite) => {
             const enemy = enemySprite.getData('parent');
@@ -106,13 +308,10 @@ export class MeleeWeaponStrategy extends WeaponStrategy {
                 const structure = structureContainer.getData('parent');
                 if (!structure?.isActive || hitTargets.has(structure)) return;
 
-                // Use the same applyDamage method (handled nicely by duck typing or explicit check)
                 this.applyDamage(structure);
                 hitTargets.add(structure);
             });
         }
-
-        this.scene.time.delayedCall(duration, () => hitbox.destroy());
     }
 
     applyDamage(target) {
