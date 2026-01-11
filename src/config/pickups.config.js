@@ -28,7 +28,6 @@ export const pickupsConfig = {
             scale: 1.0,
             spriteKey: 'pickup_cure',
             image: 'src/assets/images/pickup_cure.png',
-            icon: '➕',
             shape: 'square',
             effect: 'heal',
             value: 0.2
@@ -38,7 +37,6 @@ export const pickupsConfig = {
             scale: 1.0,
             spriteKey: 'pickup_cure',
             image: 'src/assets/images/pickup_cure.png',
-            icon: '➕',
             shape: 'square',
             effect: 'heal',
             value: 0.5
@@ -48,7 +46,6 @@ export const pickupsConfig = {
             scale: 1.0,
             spriteKey: 'pickup_shield', // Using shield as placeholder for magnet shape
             image: 'src/assets/images/pickup_shield.png',
-            icon: '🧲',
             shape: 'circle',
             effect: 'magnet'
         },
@@ -57,7 +54,6 @@ export const pickupsConfig = {
             scale: 1.0,
             spriteKey: 'pickup_speedboots',
             image: 'src/assets/images/pickup_speedboots.png',
-            icon: '👟',
             shape: 'circle',
             effect: 'speed_boost',
             value: 0.5,
@@ -68,7 +64,6 @@ export const pickupsConfig = {
             scale: 1.0,
             spriteKey: 'pickup_bomb',
             image: 'src/assets/images/pickup_bomb.png',
-            icon: '💣',
             shape: 'star',
             effect: 'bomb'
         },
@@ -77,7 +72,6 @@ export const pickupsConfig = {
             scale: 0.8,
             spriteKey: 'pickup_bomb',
             image: 'src/assets/images/pickup_bomb.png',
-            icon: '💰',
             shape: 'circle',
             effect: 'coin',
             value: 1
