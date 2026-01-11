@@ -26,48 +26,89 @@ export class TrailWeaponStrategy extends WeaponStrategy {
     }
 
     /**
-     * Spawns a trail effect toward the target
+     * Spawns a trail effect based on the weapon's trail type.
      * @param {EnemyFacade} target - The enemy to target
      */
     attack(target) {
         const { weapon } = this;
         const { config, player, current } = weapon;
+        const strategyStats = config.strategyStats || {};
 
-        if (!target) return; // Should not happen with current logic but safe check
+        if (!target) return;
 
-        console.debug("EVENT_EMITTED", { eventName: 'weapon-shoot', payload: config.key });
         this.scene.events.emit('weapon-shoot', config.key);
 
-        const angle = Phaser.Math.Angle.Between(
-            player.x, player.y, target.x, target.y
-        );
-        // Spawn trail slightly offset from player in direction of target
+        // Play attack VFX
+        if (config.visual.attackVFX) {
+            this.scene.vfxManager.playAnimation(config.visual.attackVFX, player);
+        }
+
+        // Play attack sound
+        if (config.audio && config.audio.soundKey) {
+            this.scene.audioManager.playSound(config.audio.soundKey);
+        }
+
+        switch (strategyStats.trailType) {
+            case 'mine':
+                this.dropMine(target);
+                break;
+            default:
+                this.createTrail(target);
+                break;
+        }
+    }
+
+    /**
+     * Creates a standard, continuous trail effect.
+     * @param {EnemyFacade} target - The enemy to target
+     */
+    createTrail(target) {
+        this.spawnTrailObject(target, false);
+    }
+
+    /**
+     * Drops a single, persistent mine.
+     * @param {EnemyFacade} target - The enemy to target
+     */
+    dropMine(target) {
+        this.spawnTrailObject(target, true);
+    }
+
+    /**
+     * Helper function to spawn the trail/mine object.
+     * @param {EnemyFacade} target - The enemy to target
+     * @param {boolean} isMine - Determines if the object is a mine with extended lifetime.
+     */
+    spawnTrailObject(target, isMine) {
+        const { weapon } = this;
+        const { config, player, current } = weapon;
+
+        const angle = Phaser.Math.Angle.Between(player.x, player.y, target.x, target.y);
         const spawnOffset = current.trailSize ?? 10;
         const x = player.x + Math.cos(angle) * spawnOffset;
         const y = player.y + Math.sin(angle) * spawnOffset;
 
         const { damage, isCritical } = weapon.calculateDamage();
 
-        // Prepare config object for the projectile/trail
-        // We mix strategy stats with effect stats to provide everything Projectile needs
+        let lifetime = current.lifetimeMs;
+        if (isMine) {
+            lifetime *= 5; // Mines last 5x longer
+        }
+
         const trailConfig = {
             ...config.strategyStats,
             elementalEffect: config.effects?.elemental,
             dotDamage: current.dotDamage,
             dotDuration: config.effects?.dotDuration,
-            projectileVisuals: config.projectileVisuals, // Data-Driven Visuals (animations, etc)
-            // Ensure lifetime is passed explicitly from calculated stats
-            lifetimeMs: current.lifetimeMs
+            projectileVisuals: config.projectileVisuals,
+            lifetimeMs: lifetime,
+            impactVFX: config.visual.impactVFX
         };
 
         const trail = this.pool.get({
-            x,
-            y,
-            targetX: target.x,
-            targetY: target.y,
-            damage,
+            x, y, targetX: target.x, targetY: target.y, damage,
             weapon: trailConfig,
-            projectileSpeed: current.trailSpeed, // Visual speed
+            projectileSpeed: current.trailSpeed,
             isCritical,
             knockbackMultiplier: player.stats.knockback
         });

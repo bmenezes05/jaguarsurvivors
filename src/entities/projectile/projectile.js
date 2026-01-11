@@ -200,6 +200,11 @@ export class Projectile {
     hit(enemy) {
         if (!this.active) return;
 
+        // Play impact VFX
+        if (this.weapon.impactVFX) {
+            this.scene.vfxManager.playAnimation(this.weapon.impactVFX, enemy);
+        }
+
         enemy.takeDamage(this.damage, this.isCritical);
 
         if (this.weapon.elementalEffect) {

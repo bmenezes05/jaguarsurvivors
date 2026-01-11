@@ -33,65 +33,145 @@ export class RangedWeaponStrategy extends WeaponStrategy {
     }
 
     /**
-     * Fires a projectile toward the target
+     * Dispatches the attack based on the weapon's ranged type.
      * @param {EnemyFacade} target - The enemy to target
      */
     attack(target) {
-        const { weapon } = this;
-        // Access stats from the weapon's processed 'current' state
-        const { config, player, current } = weapon;
+        const { config, player } = this.weapon;
+        const strategyStats = config.strategyStats || {};
 
         if (!target) return;
 
-        console.debug("EVENT_EMITTED", { eventName: 'weapon-shoot', payload: config.key });
         this.scene.events.emit('weapon-shoot', config.key);
 
-        const angle = Phaser.Math.Angle.Between(
-            player.x, player.y, target.x, target.y
-        );
+        // Play attack VFX
+        if (config.visual.attackVFX) {
+            this.scene.vfxManager.playAnimation(config.visual.attackVFX, player);
+        }
 
-        // Spawn offset
+        // Play attack sound
+        if (config.audio && config.audio.soundKey) {
+            this.scene.audioManager.playSound(config.audio.soundKey);
+        }
+
+        switch (strategyStats.rangedType) {
+            case 'laser':
+                this.fireLaser(target);
+                break;
+            default:
+                this.fireProjectile(target);
+                break;
+        }
+    }
+
+    /**
+     * Fires a laser beam, creating a static hitbox.
+     * @param {EnemyFacade} target - The enemy to target
+     */
+    fireLaser(target) {
+        const { weapon } = this;
+        const { player, current } = weapon;
+
+        const angle = Phaser.Math.Angle.Between(player.x, player.y, target.x, target.y);
+        const range = current.range;
+        const width = current.projectileSize;
+        const beamDuration = 150; // short duration for the beam effect
+
+        const hitbox = this.scene.add.zone(0, 0, range, width);
+        this.scene.physics.world.enable(hitbox);
+        hitbox.body.setAllowGravity(false);
+        hitbox.body.moves = false;
+
+        hitbox.setOrigin(0, 0.5);
+        hitbox.setPosition(player.x, player.y);
+        hitbox.setAngle(Phaser.Math.RadToDeg(angle));
+
+        const hitTargets = new Set();
+        const overlapCallback = (_, targetSprite) => {
+            const targetParent = targetSprite.getData('parent');
+            if (!targetParent?.isActive || hitTargets.has(targetParent)) return;
+
+            this.applyDamage(targetParent);
+            hitTargets.add(targetParent);
+        };
+
+        this.scene.physics.overlap(hitbox, this.scene.enemySpawner.group, overlapCallback);
+        if (this.scene.structureSystem && this.scene.structureSystem.group) {
+            this.scene.physics.overlap(hitbox, this.scene.structureSystem.group, overlapCallback);
+        }
+
+        this.scene.time.delayedCall(beamDuration, () => hitbox.destroy());
+    }
+
+    /**
+     * Fires a traditional projectile that travels over time.
+     * @param {EnemyFacade} target - The enemy to target
+     */
+    fireProjectile(target) {
+        const { weapon } = this;
+        const { config, player, current } = weapon;
+
+        const angle = Phaser.Math.Angle.Between(player.x, player.y, target.x, target.y);
         const spawnOffset = current.projectileSize ?? 10;
         const x = player.x + Math.cos(angle) * spawnOffset;
         const y = player.y + Math.sin(angle) * spawnOffset;
 
         const { damage, isCritical } = weapon.calculateDamage();
-
-        // Calculate lifetime based on range and speed
         const speed = current.projectileSpeed || 500;
         const range = current.range || 350;
-
-        // time (ms) = (range / speed) * 1000
         let lifetimeMs = (range / speed) * 1000;
-
-        // Safety cap
         if (!isFinite(lifetimeMs) || lifetimeMs <= 0) lifetimeMs = 2000;
 
         const projectile = this.pool.get({
-            x,
-            y,
-            targetX: target.x,
-            targetY: target.y,
-            damage,
+            x, y, targetX: target.x, targetY: target.y, damage,
             weapon: {
-                ...config.strategyStats, // Pass strategy stats (color, size, etc)
-                effects: config.effects, // Pass effects for on-hit logic
-                projectileVisuals: config.projectileVisuals, // Data-Driven Visuals
-                // Computed lifetime for the projectile
-                lifetimeMs: lifetimeMs
+                ...config.strategyStats,
+                effects: config.effects,
+                projectileVisuals: config.projectileVisuals,
+                lifetimeMs: lifetimeMs,
+                impactVFX: config.visual.impactVFX
             },
-            projectileSpeed: speed,
-            isCritical,
+            projectileSpeed: speed, isCritical,
             knockbackMultiplier: player.stats.knockback
         });
 
         projectile.visual.setData('parent', projectile);
         this.projectileGroup.add(projectile.visual);
-
-        // Re-apply velocity AFTER adding to the group, as adding to a group can reset it.
         projectile.applyVelocity(x, y, target.x, target.y, speed);
-
         this.activeProjectiles.push(projectile);
+    }
+
+    /**
+     * Applies damage and effects to a target.
+     * Required for hitbox-based attacks like the laser.
+     */
+    applyDamage(target) {
+        const { weapon } = this;
+        const { config, player, current } = weapon;
+        const { damage, isCritical } = weapon.calculateDamage();
+        const effects = config.effects || {};
+        const isStructure = target.container && target.container.getData('isStructure');
+
+        // Play impact VFX
+        if (config.visual.impactVFX) {
+            this.scene.vfxManager.playAnimation(config.visual.impactVFX, target);
+        }
+
+        if (!isStructure && effects.elemental && effects.elemental !== 'none') {
+            target.applyEffect(
+                effects.elemental,
+                weapon.current.dotDamage,
+                effects.dotDuration || 0
+            );
+        }
+
+        target.takeDamage(damage, isCritical, player);
+
+        if (!isStructure) {
+            const kb = current.knockback;
+            const kbDuration = weapon.baseStats.knockbackDuration || 0;
+            target.applyKnockback(kb, kbDuration);
+        }
     }
 
     update(delta) {
