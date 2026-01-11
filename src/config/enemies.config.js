@@ -233,7 +233,56 @@ export const enemiesConfig = [
                 distanceTolerance: 40
             }
         },
-        scalingProfile: 'ranged'
+        scalingProfile: 'ranged',
+        rangedAttack: {
+            cooldown: 3000,
+            range: 350,
+            telegraphDuration: 1000,
+            projectileConfig: {
+                speed: 300,
+                projectileVisuals: {
+                    spriteKey: 'pixel',
+                    scale: 1.2,
+                    tint: 0xFF5500,
+                }
+            }
+        }
+    },
+    {
+        key: 'enemy_trail_dropper',
+        enemy_body_image: 'src/assets/images/enemy_crime5.png',
+        enemy_legs_image: 'src/assets/images/enemy_crime_legs.png',
+        speed: 150,
+        damage: 10,
+        health: 180,
+        xpValue: 3,
+        bodyScale: 0.9,
+        legsScale: 0.6,
+        legOffset: { x: 0, y: 45 },
+        hitSoundKey: 'hit',
+        dropChance: 0.1,
+        lootTable: 'common',
+        ai: {
+            behaviorKey: 'zigzag',
+            behaviorParams: {
+                baseSpeed: 1.2,
+                amplitude: 150,
+                frequency: 2.0,
+            }
+        },
+        scalingProfile: 'standard',
+        trailAttack: {
+            cooldown: 250, // Drops a projectile every 250ms
+            projectileConfig: {
+                lifetimeMs: 3000,
+                projectileVisuals: {
+                    spriteKey: 'pixel',
+                    scale: 0.8,
+                    tint: 0x8A2BE2,
+                    animations: [{ type: 'pulse', scaleMax: 1.2, duration: 750 }]
+                }
+            }
+        }
     },
     {
         key: 'enemy_bandido_moto',
@@ -344,11 +393,19 @@ export const enemiesConfig = [
                 trackingSpeed: 0.4
             }
         },
-        canShoot: true,
-        projectileSpeed: 350,
-        shootInterval: 2500,
-        shootRange: 400,
-        projectileDamage: 10
+        rangedAttack: {
+            cooldown: 2500,
+            range: 400,
+            telegraphDuration: 800,
+            projectileConfig: {
+                speed: 350,
+                projectileVisuals: {
+                    spriteKey: 'pixel',
+                    scale: 1.0,
+                    tint: 0xFF0000,
+                }
+            }
+        }
     },
     {
         key: 'enemy_milicia2',
@@ -386,6 +443,19 @@ export const enemiesConfig = [
                 orbitSpeed: 0.7,
                 approachSpeed: 1.0,
                 orbitDirection: -1
+            }
+        },
+        rangedAttack: {
+            cooldown: 3000,
+            range: 400,
+            telegraphDuration: 1000,
+            projectileConfig: {
+                speed: 300,
+                projectileVisuals: {
+                    spriteKey: 'pixel',
+                    scale: 1.0,
+                    tint: 0xFFFF00,
+                }
             }
         }
     },
@@ -658,11 +728,19 @@ export const enemiesConfig = [
                 orbitDirection: 1
             }
         },
-        canShoot: true,
-        projectileSpeed: 250,
-        shootInterval: 4000,
-        shootRange: 500,
-        projectileDamage: 15
+        rangedAttack: {
+            cooldown: 4000,
+            range: 500,
+            telegraphDuration: 1200,
+            projectileConfig: {
+                speed: 250,
+                projectileVisuals: {
+                    spriteKey: 'pixel',
+                    scale: 1.1,
+                    tint: 0xFF00FF,
+                }
+            }
+        }
     },
     {
         key: 'enemy_influencer2',
@@ -675,11 +753,6 @@ export const enemiesConfig = [
         spawnDistance: 700,
         maxOnScreen: 50,
         xpDropChance: 0.8,
-        canShoot: true,
-        projectileSpeed: 300,
-        shootInterval: 3000,
-        shootRange: 400,
-        projectileDamage: 12,
         xpValue: 1,
         bodyScale: 0.9,
         legsScale: 0.8,
@@ -700,6 +773,19 @@ export const enemiesConfig = [
                 orbitSpeed: 0.8,
                 approachSpeed: 1.0,
                 orbitDirection: -1
+            }
+        },
+        rangedAttack: {
+            cooldown: 3000,
+            range: 400,
+            telegraphDuration: 1000,
+            projectileConfig: {
+                speed: 300,
+                projectileVisuals: {
+                    spriteKey: 'pixel',
+                    scale: 1.0,
+                    tint: 0xFFFF00,
+                }
             }
         }
     },

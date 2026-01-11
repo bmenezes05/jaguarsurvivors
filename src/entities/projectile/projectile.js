@@ -50,11 +50,13 @@ export class Projectile {
         weapon,
         projectileSpeed,
         isCritical,
-        knockbackMultiplier
+        knockbackMultiplier,
+        isEnemy = false
     }) {
         this.damage = damage;
         this.weapon = weapon;
         this.isCritical = isCritical;
+        this.isEnemy = isEnemy;
         this.knockbackMultiplier = knockbackMultiplier ?? 1;
         this.lifeTime = 0;
 
