@@ -200,6 +200,13 @@ export class Projectile {
     hit(enemy) {
         if (!this.active) return;
 
+        this.scene.events.emit('enemy-damaged', {
+            target: enemy,
+            damage: this.damage,
+            isCritical: this.isCritical,
+            weapon: this.weapon
+        });
+
         enemy.takeDamage(this.damage, this.isCritical);
 
         if (this.weapon.elementalEffect) {

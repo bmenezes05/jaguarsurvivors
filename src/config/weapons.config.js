@@ -30,7 +30,9 @@ export const weaponsConfig = [
             gripOrigin: { x: 0.5, y: 1.5 },
             angleOrigin: 0,
             angleAttack: 180,
-            rotationSmoothing: 0.2
+            rotationSmoothing: 0.2,
+            attackVFX: 'trail_start_money',
+            impactVFX: 'hit_money'
         },
 
         effects: {
@@ -64,6 +66,7 @@ export const weaponsConfig = [
             meleeAnimDuration: 250,
             frontalAttack: false,
             meleeOffsetHitbox: { x: 0, y: 40 },
+            meleeType: 'swing_360'
         },
 
         visual: {
@@ -74,7 +77,9 @@ export const weaponsConfig = [
             angleOrigin: 180,
             angleAttackOrigin: 0,
             angleAttackEnd: 900,
-            rotationSmoothing: 0.2
+            rotationSmoothing: 0.2,
+            attackVFX: 'swing_heavy',
+            impactVFX: 'hit_flesh_heavy'
         },
 
         effects: {
@@ -84,7 +89,7 @@ export const weaponsConfig = [
         },
 
         audio: {
-            soundKey: 'weapon_sword',
+            soundKey: 'weapon_heavy_swing',
             hitSoundKey: 'hit'
         }
     },
@@ -107,7 +112,8 @@ export const weaponsConfig = [
             meleeHitbox: { width: 200, height: 100 },
             meleeAnimDuration: 250,
             frontalAttack: true,
-            meleeOffsetHitbox: { x: 100, y: 0 }
+            meleeOffsetHitbox: { x: 100, y: 0 },
+            meleeType: 'thrust'
         },
 
         visual: {
@@ -367,7 +373,8 @@ export const weaponsConfig = [
         strategyStats: {
             projectileSpeed: 500,
             range: 350,
-            projectileSize: 10
+            projectileSize: 10,
+            rangedType: 'laser'
         },
 
         projectileVisuals: {
@@ -379,7 +386,9 @@ export const weaponsConfig = [
 
         visual: {
             scale: 0.45,
-            offset: { x: 45, y: 10 }
+            offset: { x: 45, y: 10 },
+            attackVFX: 'laser_beam',
+            impactVFX: 'hit_energy'
         },
 
         effects: {
@@ -456,7 +465,8 @@ export const weaponsConfig = [
         strategyStats: {
             lifetimeMs: 800,
             trailSpeed: 0,
-            trailSize: 14
+            trailSize: 14,
+            trailType: 'mine'
         },
 
         projectileVisuals: {

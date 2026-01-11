@@ -215,6 +215,18 @@ export const VFX_CONFIG = {
             condition: (data) => data.target && data.target.config && data.target.config.vfx,
             config: {} // Config is pulled from structure.config.vfx
         }
+    ],
+    'weapon-attack': [
+        {
+            effectClass: SparkEffect,
+            condition: (data) => data.weaponKey === 'weapon_arm',
+            config: { count: 10, color: 0xFFFFFF, speedMin: 50, speedMax: 200, life: 300 }
+        },
+        {
+            effectClass: FlashEffect,
+            condition: (data) => data.weaponKey === 'weapon_laser_gun',
+            config: { duration: 100, color: 0x00FFFF }
+        }
     ]
 };
 
