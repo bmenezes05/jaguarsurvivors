@@ -151,10 +151,10 @@ export const weaponsConfig = [
 
         strategyStats: {
             behaviorType: 'THRUST',
-            meleeHitbox: { width: 100, height: 50 },
+            meleeHitbox: { width: 200, height: 40 },
             meleeAnimDuration: 250,
             frontalAttack: true,
-            meleeOffsetHitbox: { x: 100, y: 0 }
+            meleeOffsetHitbox: { x: 0, y: 0 }
         },
 
         visual: {

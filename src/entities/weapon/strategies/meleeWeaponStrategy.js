@@ -121,13 +121,13 @@ export class MeleeWeaponStrategy extends WeaponStrategy {
         let hitbox;
         switch (behaviorType) {
             case 'AREA_360':
-                hitbox = this.createArea360Hitbox(player, area);
+                hitbox = this.createArea360Hitbox(player, area, strategyStats);
                 break;
             case 'THRUST':
-                hitbox = this.createThrustHitbox(player, area);
+                hitbox = this.createThrustHitbox(player, area, strategyStats);
                 break;
             case 'WAVE':
-                hitbox = this.createWaveHitbox(player, area, duration);
+                hitbox = this.createWaveHitbox(player, area, duration, strategyStats);
                 break;
             case 'FRONT_SWING':
             default:
@@ -169,9 +169,11 @@ export class MeleeWeaponStrategy extends WeaponStrategy {
         );
     }
 
-    createArea360Hitbox(player, area) {
+    createArea360Hitbox(player, area, strategyStats) {
         // Circular hitbox around player
-        const radius = 100 * area;
+        const base = strategyStats.meleeHitbox ?? { width: 100, height: 100 };
+        const radius = (base.width / 2) * area;
+
         return this.scene.add.zone(
             player.x,
             player.y,
@@ -180,24 +182,29 @@ export class MeleeWeaponStrategy extends WeaponStrategy {
         );
     }
 
-    createThrustHitbox(player, area) {
+    createThrustHitbox(player, area, strategyStats) {
         // Long, narrow rectangular hitbox in facing direction
-        const width = 250 * area;
-        const height = 60 * area;
+        const base = strategyStats.meleeHitbox ?? { width: 250, height: 60 };
+        const width = base.width * area;
+        const height = base.height * area;
+
+        // Offset logic: move it forward from player center
         const offsetX = (width / 2) * (player.facingRight ? 1 : -1);
+        const configOffset = (strategyStats.meleeOffsetHitbox?.x ?? 0) * (player.facingRight ? 1 : -1);
 
         return this.scene.add.zone(
-            player.x + offsetX,
+            player.x + offsetX + configOffset,
             player.y,
             width,
             height
         );
     }
 
-    createWaveHitbox(player, area, duration) {
+    createWaveHitbox(player, area, duration, strategyStats) {
         // Primary hitbox (frontal)
-        const primaryWidth = 180 * area;
-        const primaryHeight = 120 * area;
+        const base = strategyStats.meleeHitbox ?? { width: 180, height: 120 };
+        const primaryWidth = base.width * area;
+        const primaryHeight = base.height * area;
         const offsetX = (primaryWidth / 2) * (player.facingRight ? 1 : -1);
 
         const primaryHitbox = this.scene.add.zone(

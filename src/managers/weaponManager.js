@@ -146,7 +146,8 @@ export class WeaponManager {
                     }
                 }
 
-                data.sprite.setScale(visual.scale);
+                const area = this.player.stats.area || 1;
+                data.sprite.setScale(visual.scale * area);
                 data.sprite.setDepth(visual.depth || playerY + visual.offset.y);
             }
         });
