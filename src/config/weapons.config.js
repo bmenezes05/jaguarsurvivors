@@ -99,15 +99,15 @@ export const weaponsConfig = [
         slotType: 'primary',
 
         baseStats: {
-            damage: 20,
-            cooldown: 800,
-            knockback: 120,
-            knockbackDuration: 80
+            damage: 10,
+            cooldown: 500,
+            knockback: 60,
+            knockbackDuration: 60
         },
 
         strategyStats: {
-            behaviorType: 'THRUST',
-            meleeHitbox: { width: 200, height: 100 },
+            behaviorType: 'FRONT_SWING',
+            meleeHitbox: { width: 160, height: 100 },
             meleeAnimDuration: 250,
             frontalAttack: true,
             meleeOffsetHitbox: { x: 100, y: 0 }
@@ -121,6 +121,52 @@ export const weaponsConfig = [
             angleOrigin: 0,
             angleAttack: 180,
             rotationSmoothing: 0.2
+        },
+
+        effects: {
+            elemental: 'none',
+            dotDamage: 0,
+            dotDuration: 0
+        },
+
+        audio: {
+            soundKey: 'weapon_sword',
+            hitSoundKey: 'hit'
+        }
+    },
+    {
+        key: 'weapon_spear',
+        name: 'Lança',
+        description: 'Dano letal com alcance',
+        type: 'melee',
+        image: 'src/assets/images/weapon_spear.png',
+        slotType: 'primary',
+
+        baseStats: {
+            damage: 10,
+            cooldown: 500,
+            knockback: 60,
+            knockbackDuration: 60
+        },
+
+        strategyStats: {
+            behaviorType: 'THRUST',
+            meleeHitbox: { width: 100, height: 50 },
+            meleeAnimDuration: 250,
+            frontalAttack: true,
+            meleeOffsetHitbox: { x: 100, y: 0 }
+        },
+
+        visual: {
+            scale: 0.5,
+            offset: { x: 35, y: 10 },
+            origin: { x: 0.3, y: 0.5 },
+            gripOrigin: { x: 0.5, y: 1.5 },
+            angleOrigin: 90,
+            angleAttack: 90,
+            angleAttackOrigin: 90,
+            rotationSmoothing: 0.2,
+            depth: -1
         },
 
         effects: {

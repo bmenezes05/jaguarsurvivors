@@ -59,16 +59,36 @@ export class WeaponManager {
         const playerY = this.player.y;
         const facingRight = this.player.facingRight ? 1 : -1;
         const offset = weapon.config.visual.offset;
+        let sprite;
 
-        const sprite = this.scene.add.sprite(
-            playerX + offset.x * facingRight,
-            playerY + offset.y,
-            weapon.config.key
-        );
-        sprite.setScale(weapon.config.visual.scale || 0.6);
+        switch (weapon.config.strategyStats.behaviorType) {
+            case 'THRUST':
+                sprite = this.scene.add.sprite(
+                    playerX + offset.x * facingRight,
+                    playerY + offset.y,
+                    weapon.config.key
+                );
+                sprite.setFlipY(facingRight === -1);
+                break;
+            default:
+                sprite = this.scene.add.sprite(
+                    playerX + offset.x * facingRight,
+                    playerY + offset.y,
+                    weapon.config.key
+                );
+                sprite.setFlipX(facingRight === -1);
+                break;
+        }
+
+        const visual = weapon.config.visual || {};
+        sprite.setScale(visual.scale || 0.6);
+        if (visual.origin) {
+            sprite.setOrigin(visual.origin.x, visual.origin.y);
+        }
         sprite.setDepth(playerY + offset.y);
-        sprite.setAngle(weapon.config.visual.angleOrigin);
-        sprite.setFlipX(facingRight === -1);
+        sprite.setAngle(visual.angleOrigin);
+
+
         sprite.setData('weaponKey', weapon.config.key);
 
         return sprite;
@@ -87,10 +107,47 @@ export class WeaponManager {
         this.weapons.forEach((data) => {
             if (data && data.weaponData && data.weaponData.update) {
                 data.weaponData.update(delta);
-                data.sprite.setPosition(playerX + data.weaponData.config.visual.offset.x * facingRight, playerY + data.weaponData.config.visual.offset.y);
-                data.sprite.setFlipX(facingRight === -1);
-                data.sprite.setScale(data.weaponData.config.visual.scale);
-                data.sprite.setDepth(playerY + data.weaponData.config.visual.offset.y);
+                switch (data.weaponData.strategyStats.behaviorType) {
+                    case 'THRUST':
+                        data.sprite.setFlipY(facingRight === -1);
+                        break;
+                    default:
+                        data.sprite.setFlipX(facingRight === -1);
+                        break;
+                }
+                const visual = data.weaponData.config.visual || {};
+                const animX = data.weaponData.animOffset?.x || 0;
+                const animY = data.weaponData.animOffset?.y || 0;
+
+                data.sprite.setPosition(
+                    playerX + (visual.offset.x + animX) * facingRight,
+                    playerY + visual.offset.y + animY
+                );
+
+                // Ensure origin is correct (strategies might have changed it)
+                // We only reset if both offset is zero AND no tweens are active on the sprite
+                const isTweening = this.scene.tweens.isTweening(data.sprite);
+                if (data.weaponData.animOffset.x === 0 && data.weaponData.animOffset.y === 0 && !isTweening) {
+                    if (visual.origin) {
+                        const isThrust = data.weaponData.strategyStats.behaviorType === 'THRUST';
+                        const isFlipped = facingRight === -1;
+
+                        let ox = visual.origin.x;
+                        let oy = visual.origin.y;
+
+                        if (isFlipped) {
+                            if (isThrust) {
+                                oy = 1 - oy; // Mirror Y for flipY
+                            } else {
+                                ox = 1 - ox; // Mirror X for flipX
+                            }
+                        }
+                        data.sprite.setOrigin(ox, oy);
+                    }
+                }
+
+                data.sprite.setScale(visual.scale);
+                data.sprite.setDepth(visual.depth || playerY + visual.offset.y);
             }
         });
     }

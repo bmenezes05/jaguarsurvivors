@@ -34,65 +34,69 @@ export class MeleeWeaponStrategy extends WeaponStrategy {
         const scale = baseScale * player.stats.area;
 
         const facing = player.facingRight ? 1 : -1;
-        const radius = player.player.config.bodyWidth * facing;
-
-        const angleOrigin = visual.angleOrigin ?? 0;
-
-        const offsetX = Math.cos(angleOrigin) * radius;
-        const offsetY = Math.sin(angleOrigin) * radius;
-
-        sprite
-            .setOrigin(visual.gripOrigin?.x ?? 0.5, visual.gripOrigin?.y ?? 1.5)
-            .setAngle(visual.angleAttackOrigin ?? 0)
-            .setPosition(player.x + offsetX, player.y + offsetY);
 
         // Behavior-specific animations
         if (behaviorType === 'THRUST') {
-            // Thrust: Forward stab motion
-            this.playThrustAnimation(sprite, player, facing, duration, visual, offsetX, offsetY);
+            this.playThrustAnimation(sprite, player, facing, duration, visual);
         } else {
             // Default: Arc swing motion
-            this.playSwingAnimation(sprite, player, facing, duration, visual, offsetX, offsetY);
+            this.playSwingAnimation(sprite, player, facing, duration, visual);
         }
     }
 
-    playSwingAnimation(sprite, player, facing, duration, visual, offsetX, offsetY) {
+    playSwingAnimation(sprite, player, facing, duration, visual) {
+        // Apply grip origin for rotating around the handle/center
+        const isFlipped = facing === -1;
+        let gx = visual.gripOrigin?.x ?? 0.5;
+        let gy = visual.gripOrigin?.y ?? 1.5;
+
+        if (isFlipped) {
+            gx = 1 - gx; // Mirror X for flipX
+        }
+        sprite.setOrigin(gx, gy);
+
         this.scene.tweens.add({
             targets: sprite,
-            angle: (visual.angleAttackEnd ?? 180) * facing,
+            angle: (visual.angleAttack ?? 180) * facing,
             duration,
             ease: 'Cubic.easeOut',
             onComplete: () => {
-                sprite
-                    .setOrigin(0.5, 0.5)
-                    .setAngle(visual.angleOrigin ?? 0)
-                    .setPosition(player.x + offsetX, player.y + offsetY);
+                // Revert to default origin (mirrored if needed)
+                if (visual.origin) {
+                    let ox = visual.origin.x;
+                    let oy = visual.origin.y;
+                    if (isFlipped) ox = 1 - ox;
+                    sprite.setOrigin(ox, oy);
+                } else {
+                    sprite.setOrigin(0.5, 0.5);
+                }
+                sprite.setAngle(visual.angleOrigin ?? 0);
             }
         });
     }
 
-    playThrustAnimation(sprite, player, facing, duration, visual, offsetX, offsetY) {
-        // Thrust forward
-        const thrustDistance = 40 * facing;
+    playThrustAnimation(sprite, player, facing, duration, visual) {
+        // We do NOT change origin or angle here anymore to avoid jumping,
+        // The WeaponManager handles the base origin (including mirroring).
+        // However, we must ensure any previous transient origin is cleared.
+        const isFlipped = facing === -1;
 
+        // Thrust forward (relatively)
+        const thrustDistance = 60;
+
+        // Important: We target the weapon's animOffset property
         this.scene.tweens.add({
-            targets: sprite,
-            x: player.x + offsetX + thrustDistance,
+            targets: this.weapon.animOffset,
+            x: thrustDistance,
             duration: duration * 0.4,
             ease: 'Quad.easeOut',
             onComplete: () => {
                 // Retract
                 this.scene.tweens.add({
-                    targets: sprite,
-                    x: player.x + offsetX,
+                    targets: this.weapon.animOffset,
+                    x: 0,
                     duration: duration * 0.6,
-                    ease: 'Quad.easeIn',
-                    onComplete: () => {
-                        sprite
-                            .setOrigin(0.5, 0.5)
-                            .setAngle(visual.angleOrigin ?? 0)
-                            .setPosition(player.x + offsetX, player.y + offsetY);
-                    }
+                    ease: 'Quad.easeIn'
                 });
             }
         });

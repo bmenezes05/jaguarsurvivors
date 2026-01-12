@@ -23,6 +23,7 @@ export class Weapon {
         this.strategyStats = this.config.strategyStats || {};
 
         this.current = {};
+        this.animOffset = { x: 0, y: 0 };
         this.strategy = this.createStrategy();
     }
 
