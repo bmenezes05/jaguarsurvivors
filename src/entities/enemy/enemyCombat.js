@@ -1,5 +1,3 @@
-import { EnemyProjectile } from '../enemyProjectile.js';
-
 export class EnemyCombat {
     constructor(scene, enemy) {
         this.scene = scene;
@@ -9,7 +7,6 @@ export class EnemyCombat {
         // Telegraph
         this.isTelegraphing = false;
         this.telegraphLine = null;
-        this.telegraphTimer = 0;
 
         // Boss Stomp
         this.stompTimer = 0;
@@ -41,31 +38,37 @@ export class EnemyCombat {
             return; // Busy aiming
         }
 
-        // 4. Shooting Logic
-        if (this.enemy.entity.config.canShoot && this.cooldown <= 0) {
-            const distance = Phaser.Math.Distance.Between(
-                this.enemy.x, this.enemy.y,
-                player.x, player.y
-            );
+        // 4. Attack Logic
+        if (this.cooldown <= 0) {
+            const config = this.enemy.entity.config;
+            const distance = Phaser.Math.Distance.Between(this.enemy.x, this.enemy.y, player.x, player.y);
 
-            if (distance < (this.enemy.entity.config.shootRange || 400)) {
+            // Ranged Attack
+            if (config.rangedAttack && distance < config.rangedAttack.range) {
                 this.startTelegraph(player);
+                return;
+            }
+
+            // Trail Attack (no range check, happens as it moves)
+            if (config.trailAttack) {
+                this.executeAttack(player);
+                return;
             }
         }
     }
 
     startTelegraph(player) {
         this.isTelegraphing = true;
+        const telegraphDuration = this.enemy.entity.config.rangedAttack.telegraphDuration ?? 1000;
 
         // Visual
         this.telegraphLine = this.scene.add.graphics();
         this.enemy.view.container.add(this.telegraphLine);
 
         // Schedule Attack
-        this.scene.time.delayedCall(1000, () => {
-            // Validate state before shooting
+        this.scene.time.delayedCall(telegraphDuration, () => {
             if (this.enemy.isActive && this.enemy.entity.health > 0) {
-                this.shoot(player);
+                this.executeAttack(player);
             }
             this.clearTelegraph();
         });
@@ -77,11 +80,8 @@ export class EnemyCombat {
         this.telegraphLine.clear();
         this.telegraphLine.lineStyle(2, 0xFF0000, 0.5);
         this.telegraphLine.beginPath();
-        this.telegraphLine.moveTo(0, 0); // Local 0,0 (enemy center)
+        this.telegraphLine.moveTo(0, 0);
 
-        // Calculate relative position to player
-        // Since graphic is in container, we need local coordinates of player relative to container
-        // Actually simplest is just simple subtraction since container is at enemy.x/y
         const relX = player.x - this.enemy.view.container.x;
         const relY = player.y - this.enemy.view.container.y;
 
@@ -97,23 +97,55 @@ export class EnemyCombat {
         }
     }
 
-    shoot(player) {
-        // Create Projectile
-        const proj = new EnemyProjectile(
-            this.scene,
-            this.enemy.x,
-            this.enemy.y,
-            player,
-            this.enemy.entity.config
-        );
+    executeAttack(player) {
+        const config = this.enemy.entity.config;
 
-        if (this.scene.enemyProjectiles) {
-            this.scene.enemyProjectiles.add(proj.sprite);
+        if (config.rangedAttack) {
+            this.performRangedAttack(player, config.rangedAttack);
+        } else if (config.trailAttack) {
+            this.performTrailAttack(player, config.trailAttack);
         }
 
-        // Reset Cooldown
-        this.cooldown = this.enemy.entity.config.shootInterval || 2000;
+        const cooldown = config.rangedAttack?.cooldown || config.trailAttack?.cooldown || 2000;
+        this.cooldown = cooldown;
     }
+
+    performRangedAttack(player, attackConfig) {
+        if (!this.scene.projectiles) return;
+
+        const projectile = this.scene.projectiles.spawn({
+            x: this.enemy.x,
+            y: this.enemy.y,
+            targetX: player.x,
+            targetY: player.y,
+            damage: this.enemy.entity.stats.damage,
+            weapon: attackConfig.projectileConfig,
+            isEnemy: true
+        });
+
+        if (projectile) {
+            projectile.applyVelocity(
+                this.enemy.x,
+                this.enemy.y,
+                player.x,
+                player.y,
+                attackConfig.projectileConfig.speed
+            );
+        }
+    }
+
+    performTrailAttack(player, attackConfig) {
+        if (!this.scene.projectiles) return;
+
+        this.scene.projectiles.spawn({
+            x: this.enemy.x,
+            y: this.enemy.y,
+            damage: this.enemy.entity.stats.damage,
+            weapon: attackConfig.projectileConfig,
+            isEnemy: true
+        });
+    }
+
 
     updateBossStomp(delta) {
         const bossData = this.enemy.entity.config.bossData || {};
@@ -128,7 +160,6 @@ export class EnemyCombat {
     }
 
     performStomp() {
-        // Visual
         const stompCircle = this.scene.add.circle(
             this.enemy.x, this.enemy.y, 10, 0xFF0000, 0.4
         );
@@ -140,11 +171,7 @@ export class EnemyCombat {
             onComplete: () => stompCircle.destroy()
         });
 
-        // Screen Shake
         this.scene.cameras.main.shake(100, 0.005);
-
-        // Logic (Optional: Damage nearby player? Not in legacy code, but good to add if needed)
-        // Legacy code didn't have damage logic for stomp itself, just the shake/visual.
     }
 
     isBlockingMovement() {

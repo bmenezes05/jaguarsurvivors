@@ -32,7 +32,7 @@ export class CombatSystem {
             });
         }
 
-        // Projectiles x Enemies (Overlap ÚNICO)
+        // Projectiles x Enemies
         if (this.scene.projectileGroup && this.enemySpawner && this.enemySpawner.group) {
             this.scene.physics.add.overlap(
                 this.scene.projectileGroup,
@@ -43,12 +43,12 @@ export class CombatSystem {
             );
         }
 
-        // Enemy Projectiles x Player
-        if (this.scene.enemyProjectiles && this.playerBody) {
+        // Projectiles x Player
+        if (this.scene.projectileGroup && this.playerBody) {
             this.scene.physics.add.overlap(
                 this.playerBody,
-                this.scene.enemyProjectiles,
-                this.onEnemyProjectileHitPlayer,
+                this.scene.projectileGroup,
+                this.onProjectileHitPlayer,
                 null,
                 this
             );
@@ -86,12 +86,14 @@ export class CombatSystem {
     /* --------------------------- COLLISIONS ---------------------------- */
     /* ------------------------------------------------------------------ */
 
-    onEnemyProjectileHitPlayer(playerBody, projectileSprite) {
-        if (!projectileSprite.active) return;
+    onProjectileHitPlayer(playerBody, projectileSprite) {
+        const projectile = projectileSprite.getData('projectile');
+        if (!projectile || !projectile.isActive || !projectile.isEnemy) {
+            return;
+        }
 
-        const proj = projectileSprite.getData('parent');
-        this.player.takeDamage(Math.ceil(proj?.damage || 10));
-        projectileSprite.destroy();
+        this.player.takeDamage(Math.ceil(projectile.damage || 10));
+        projectile.kill();
     }
 
     onPlayerHitEnemy(playerBody, enemyContainer) {
@@ -105,12 +107,13 @@ export class CombatSystem {
     }
 
     onProjectileHitEnemy(projectileSprite, enemyContainer) {
-        if (!enemyContainer.active) return;
+        const projectile = projectileSprite.getData('projectile');
+        if (!projectile || !projectile.isActive || projectile.isEnemy) {
+            return;
+        }
 
-        const projectile = projectileSprite.getData('projectile') || projectileSprite.getData('parent');
         const enemy = enemyContainer.getData('parent');
-
-        if (projectile && projectile.isActive && enemy) {
+        if (enemy && enemyContainer.active) {
             projectile.hit(enemy);
         }
     }

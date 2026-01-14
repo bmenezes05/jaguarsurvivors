@@ -59,7 +59,7 @@ export const mapsConfig = [
                 duration: 120,
                 interval: 3000,
                 enemiesPerWave: 2,
-                enemyTypes: ['enemy_elite_bandido', 'enemy_bandido_moto', 'enemy_crime', 'enemy_crime2', 'enemy_crime3', 'enemy_crime5'],
+                enemyTypes: ['enemy_elite_bandido', 'enemy_bandido_moto', 'enemy_crime', 'enemy_crime2', 'enemy_crime3', 'enemy_crime5', 'enemy_trail_dropper'],
                 totalEnemies: 9999,
                 spawnDistance: 700,
                 maxOnScreen: 80
