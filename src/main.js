@@ -378,10 +378,10 @@ const gameConfig = {
         default: 'arcade',
         arcade: {
             gravity: { y: 0 },
-            debug: false,
-            debugShowBody: false,
-            debugShowStaticBody: false,
-            debugShowVelocity: false,
+            debug: true,
+            debugShowBody: true,
+            debugShowStaticBody: true,
+            debugShowVelocity: true,
             debugBodyColor: 0x00ff00
         }
     },

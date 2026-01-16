@@ -52,7 +52,11 @@ export class PulseEffect extends BaseVFXEffect {
                 duration: duration / 2,
                 yoyo: true,
                 onComplete: () => {
-                    if (objectToPulse && objectToPulse.setScale) {
+                    // CRITICAL FIX: Only reset scale if the object is still active/visible.
+                    // If it was a pickup that got collected, we don't want to bring it back!
+                    if (objectToPulse && objectToPulse.setScale &&
+                        (objectToPulse.active !== false) &&
+                        (objectToPulse.visible !== false)) {
                         objectToPulse.setScale(targetBaseX, targetBaseY);
                     }
                     this.complete();

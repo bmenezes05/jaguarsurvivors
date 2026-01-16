@@ -19,12 +19,14 @@ export class EnemyMovement {
         // Handle knockback priority
         if (this.knockbackTimer > 0) {
             this.knockbackTimer -= delta;
+            this._applySafetyClamp();
             return;
         }
 
         // Stop if no vector
         if (!vector) {
             this.enemy.view.container.body.setVelocity(0, 0);
+            this._applySafetyClamp();
             return;
         }
 
@@ -41,6 +43,19 @@ export class EnemyMovement {
 
         // Visual flipping delegate
         this.updateFacing(x);
+
+        this._applySafetyClamp();
+    }
+
+    _applySafetyClamp() {
+        // Safety clamp: Ensure they don't walk or get pushed outside even if physics fails
+        if (this.scene.world && typeof this.scene.world.clampPosition === 'function') {
+            const pos = this.enemy.view.container;
+            const clamped = this.scene.world.clampPosition(pos.x, pos.y, 10);
+            if (clamped.x !== pos.x || clamped.y !== pos.y) {
+                this.enemy.view.container.setPosition(clamped.x, clamped.y);
+            }
+        }
     }
 
     updateFacing(velocityX) {

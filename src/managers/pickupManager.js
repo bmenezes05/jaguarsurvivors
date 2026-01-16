@@ -50,13 +50,12 @@ export class PickupManager {
         // Return collected/inactive pickups to the pool
         for (let i = this.activePickups.length - 1; i >= 0; i--) {
             const pickup = this.activePickups[i];
-            if (!pickup.isActive) {
-                // If it's been collected and finished its animation
-                if (pickup.alpha === 0 || !pickup.visible) {
-                    this.group.remove(pickup);
-                    this.pool.release(pickup);
-                    this.activePickups.splice(i, 1);
-                }
+
+            // If it's been collected, wait for it to become invisible (post-animation)
+            if (!pickup.isActive && !pickup.visible) {
+                this.group.remove(pickup);
+                this.pool.release(pickup);
+                this.activePickups.splice(i, 1);
             }
         }
     }

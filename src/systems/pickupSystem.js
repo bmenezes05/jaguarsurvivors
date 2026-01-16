@@ -47,7 +47,8 @@ export class PickupSystem {
         if (typeof this.pickupManager.group.children.iterate !== 'function') return;
 
         this.pickupManager.group.children.iterate(pickup => {
-            if (!pickup || !pickup.active) return;
+            // Check BOTH active (Phaser state) and isActive (our collection state)
+            if (!pickup || !pickup.active || !pickup.isActive) return;
 
             const dist = Phaser.Math.Distance.Between(
                 pickup.x,

@@ -44,6 +44,9 @@ export class Pickup extends Phaser.GameObjects.Container {
         this.alpha = 1;
         this.setScale(0);
 
+        // Kill any residual tweens (e.g. from previous collection)
+        this.scene.tweens.killTweensOf([this, this.icon]);
+
         // Use sprite from config
         const spriteKey = this.pickupConfig.spriteKey || 'pickup_bomb';
         this.icon.setTexture(spriteKey);
@@ -85,20 +88,25 @@ export class Pickup extends Phaser.GameObjects.Container {
         this.isActive = false;
         this.body.enable = false;
 
-        // Stop tweens
+        // Stop all active tweens on this object and its icon
         if (this.floatTween) this.floatTween.remove();
         if (this.pulseTween) this.pulseTween.remove();
+        this.scene.tweens.killTweensOf([this, this.icon]);
 
-        // Exit animation
+        // Exit animation: "Absorbed" feel
         this.scene.tweens.add({
             targets: this,
-            scale: 1.8,
+            scale: 0.1,
             alpha: 0,
-            duration: 250,
-            ease: 'Cubic.out',
+            duration: 150,
+            ease: 'Power2.in',
             onComplete: () => {
                 this.setVisible(false);
+                this.alpha = 0;
+                this.setScale(0);
                 this.setActive(false);
+                // Clear texture to be safe
+                this.icon.setTexture('');
             }
         });
 

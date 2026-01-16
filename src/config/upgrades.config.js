@@ -192,12 +192,12 @@ export const legendaryConfig = [
         name: 'Totem Sagrado',
         type: 'gadget',
         category: 'Gadget',
-        description: 'Totem que aumenta seu dano em 50% quando você está próximo.',
+        description: 'Totem que aumenta seu dano em 100% quando você está próximo.',
         icon: '🗿',
         rarity: 'legendary',
         sprite: 'legend_totem',
         radius: 200,
-        damageBonus: 0.5
+        damageBonus: 1.0
     },
     {
         id: 'legend_dark_field',
@@ -408,12 +408,12 @@ export const legendaryConfig = [
         icon: '❄️',
         rarity: 'legendary',
         sprite: 'legend_wisp',
-        scale: 0.8,
+        scale: 0.35,
         tint: 0xADD8E6,
         offset: { x: -50, y: -60 },
         attackRate: 2000,
         range: 400,
-        damage: 20,
+        damage: 40,
         projectileSprite: 'projectile_ice',
         projectileSpeed: 400,
         effects: {

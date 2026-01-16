@@ -70,6 +70,13 @@ export class EnemyView {
         this.container.setScale(1, 1);
         this.container.setData('baseScaleX', 1);
         this.container.setData('baseScaleY', 1);
+
+        // Reinforce physics properties
+        if (this.container.body) {
+            this.container.body.setCollideWorldBounds(true);
+            this.container.body.setBounce(0, 0);
+        }
+
         this.setFacing(true);
 
         this.animTimer = Math.random() * 1000; // Random offset

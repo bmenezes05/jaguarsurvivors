@@ -4,7 +4,7 @@ export const weaponsConfig = [
     {
         key: 'weapon_sword',
         name: 'Espada',
-        description: 'Ataques rápidos e equilibrados',
+        description: 'Ataques fortes e equilibrados',
         type: 'melee',
         image: 'src/assets/images/weapon_sword.png',
         slotType: 'primary',
@@ -13,12 +13,12 @@ export const weaponsConfig = [
             damage: 120,
             cooldown: 1000,
             knockback: 600,
-            knockbackDuration: 200
+            knockbackDuration: 300
         },
 
         strategyStats: {
             behaviorType: 'FRONT_SWING',
-            meleeHitbox: { width: 160, height: 100 },
+            meleeHitbox: { width: 200, height: 300 },
             meleeAnimDuration: 250,
             frontalAttack: true,
             meleeOffsetHitbox: { x: 100, y: 0 }
@@ -26,7 +26,7 @@ export const weaponsConfig = [
 
         visual: {
             scale: 0.6,
-            offset: { x: 20, y: 0 },
+            offset: { x: 15, y: -20 },
             origin: { x: 0.3, y: 0.5 },
             gripOrigin: { x: 0.5, y: 1.5 },
             angleOrigin: 0,
@@ -48,7 +48,7 @@ export const weaponsConfig = [
     {
         key: 'weapon_katana',
         name: 'Katana',
-        description: 'Velocidade letal com alcance',
+        description: 'Velocidade letal',
         type: 'melee',
         image: 'src/assets/images/weapon_katana.png',
         slotType: 'primary',
@@ -57,12 +57,12 @@ export const weaponsConfig = [
             damage: 50,
             cooldown: 600,
             knockback: 300,
-            knockbackDuration: 60
+            knockbackDuration: 300
         },
 
         strategyStats: {
             behaviorType: 'FRONT_SWING',
-            meleeHitbox: { width: 160, height: 100 },
+            meleeHitbox: { width: 200, height: 300 },
             meleeAnimDuration: 250,
             frontalAttack: true,
             meleeOffsetHitbox: { x: 100, y: 0 }
@@ -70,7 +70,7 @@ export const weaponsConfig = [
 
         visual: {
             scale: 0.6,
-            offset: { x: 25, y: -20 },
+            offset: { x: 15, y: -20 },
             origin: { x: 0.3, y: 0.5 },
             gripOrigin: { x: 0.5, y: 1.5 },
             angleOrigin: 0,
@@ -372,8 +372,8 @@ export const weaponsConfig = [
         slotType: 'primary',
 
         baseStats: {
-            damage: 30,
-            cooldown: 1000,
+            damage: 40,
+            cooldown: 600,
             knockback: 20,
             knockbackDuration: 50
         },
@@ -418,7 +418,7 @@ export const weaponsConfig = [
 
         baseStats: {
             damage: 40,
-            cooldown: 2000,
+            cooldown: 1000,
             knockback: 50,
             knockbackDuration: 100
         },

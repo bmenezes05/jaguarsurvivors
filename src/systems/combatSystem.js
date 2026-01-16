@@ -73,13 +73,13 @@ export class CombatSystem {
             );
         }
 
-        // // Enemies x Structures (COLLIDER - Blocks movement)
-        // if (this.enemySpawner && this.enemySpawner.group && this.structureSystem && this.structureSystem.group) {
-        //     this.scene.physics.add.collider(
-        //         this.enemySpawner.group,
-        //         this.structureSystem.group
-        //     );
-        // }
+        // Enemies x Structures (COLLIDER - Blocks movement)
+        if (this.enemySpawner && this.enemySpawner.group && this.structureSystem && this.structureSystem.group) {
+            this.scene.physics.add.collider(
+                this.enemySpawner.group,
+                this.structureSystem.group
+            );
+        }
     }
 
     /* ------------------------------------------------------------------ */

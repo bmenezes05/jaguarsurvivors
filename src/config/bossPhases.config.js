@@ -288,57 +288,6 @@ export const bossPhaseConfig = {
                     }
                 ],
                 loop: true
-            },
-            {
-                id: 'phase2_aggressive_riding',
-                name: 'Aggressive Riding',
-                trigger: { type: 'health', value: 0.5 },
-                behaviors: [
-                    {
-                        key: 'zigzag',
-                        duration: 3000,
-                        params: {
-                            baseSpeed: 1.8,
-                            amplitude: 100,
-                            frequency: 4.0
-                        }
-                    },
-                    {
-                        key: 'charge',
-                        duration: 2500,
-                        params: {
-                            chargeUpTime: 400,
-                            chargeSpeed: 3.0,
-                            chargeDuration: 500,
-                            cooldownTime: 1000,
-                            idleSpeed: 0,
-                            lockDirection: true
-                        }
-                    }
-                ],
-                loop: true,
-                onEnter: 'boss-enrage'
-            },
-            {
-                id: 'phase3_reckless',
-                name: 'Reckless',
-                trigger: { type: 'health', value: 0.2 },
-                behaviors: [
-                    {
-                        key: 'charge',
-                        duration: 4000,
-                        params: {
-                            chargeUpTime: 200,
-                            chargeSpeed: 3.5,
-                            chargeDuration: 400,
-                            cooldownTime: 300,
-                            idleSpeed: 0,
-                            lockDirection: true
-                        }
-                    }
-                ],
-                loop: true,
-                onEnter: 'boss-berserk'
             }
         ]
     },
