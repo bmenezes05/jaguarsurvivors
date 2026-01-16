@@ -117,11 +117,23 @@ export class Projectile {
         this.visual.setTint(tint);
 
         // Center hitbox on sprite
-        // We use the texture dimensions if available, otherwise fallback to reasonable default
-        const width = this.visual.width || 32;
-        const height = this.visual.height || 32;
-        this.body.setSize(width, height);
-        this.body.setOffset(0, 0); // Sprite origin is 0.5,0.5 by default, so 0,0 offset is centered
+        const size = weapon.trailSize || weapon.projectileSize;
+        if (size) {
+            this.body.setCircle(size);
+            // Center the circle on the sprite (assuming 0.5 origin)
+            // By default setCircle(r) puts top-left at sprite origin.
+            // We need to offset by -radius to center it if origin is 0.5
+            // But wait, Phaser body.setCircle offset is relative to the sprite's top-left if we don't account for origin.
+            // If origin is 0.5, 0.5, sprite top-left is at (-w/2, -h/2) relative to container center.
+
+            // Standardizing for our project:
+            this.body.setCircle(size, -size, -size);
+        } else {
+            const width = this.visual.width || 32;
+            const height = this.visual.height || 32;
+            this.body.setSize(width, height);
+            this.body.setOffset(0, 0);
+        }
 
         // ANIMATIONS
         this.scene.tweens.killTweensOf(this.visual);

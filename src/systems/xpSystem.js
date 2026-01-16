@@ -66,9 +66,18 @@ export class XPSystem {
     }
 
     dropXP(x, y, value) {
+        // Validation: Clamp to world bounds to ensure reachable position
+        let spawnX = x;
+        let spawnY = y;
+        if (this.scene.world && typeof this.scene.world.clampPosition === 'function') {
+            const clamped = this.scene.world.clampPosition(x, y, 20); // Smaller margin for gems
+            spawnX = clamped.x;
+            spawnY = clamped.y;
+        }
+
         const gem = this.gemPool.get({
-            x,
-            y,
+            x: spawnX,
+            y: spawnY,
             gemConfig: CONFIG.xp.gems[value] || CONFIG.xp.gems[0]
         });
 

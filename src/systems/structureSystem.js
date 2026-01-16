@@ -69,17 +69,28 @@ export class StructureSystem {
     }
 
     spawn(x, y, config) {
+        // Validation: Clamp to world bounds
+        let spawnX = x;
+        let spawnY = y;
+        const margin = 100; // Larger margin for structures
+
+        if (this.scene.world && typeof this.scene.world.clampPosition === 'function') {
+            const clamped = this.scene.world.clampPosition(x, y, margin);
+            spawnX = clamped.x;
+            spawnY = clamped.y;
+        }
+
         if (this.scene.telegraphManager) {
-            const pendingObj = { x, y };
+            const pendingObj = { x: spawnX, y: spawnY };
             this.pendingSpawns.push(pendingObj);
 
-            this.scene.telegraphManager.showTelegraph(x, y, 'structure', () => {
+            this.scene.telegraphManager.showTelegraph(spawnX, spawnY, 'structure', () => {
                 // Remove from pending
                 this.pendingSpawns = this.pendingSpawns.filter(p => p !== pendingObj);
-                this._spawnActual(x, y, config);
+                this._spawnActual(spawnX, spawnY, config);
             });
         } else {
-            this._spawnActual(x, y, config);
+            this._spawnActual(spawnX, spawnY, config);
         }
     }
 

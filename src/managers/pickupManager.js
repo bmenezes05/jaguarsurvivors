@@ -16,12 +16,21 @@ export class PickupManager {
     }
 
     spawn(x, y, type) {
+        // Validation: Clamp to world bounds
+        let spawnX = x;
+        let spawnY = y;
+        if (this.scene.world && typeof this.scene.world.clampPosition === 'function') {
+            const clamped = this.scene.world.clampPosition(x, y, 30); // Margin for items
+            spawnX = clamped.x;
+            spawnY = clamped.y;
+        }
+
         if (this.scene.telegraphManager) {
-            this.scene.telegraphManager.showTelegraph(x, y, 'item', () => {
-                this._spawnActual(x, y, type);
+            this.scene.telegraphManager.showTelegraph(spawnX, spawnY, 'item', () => {
+                this._spawnActual(spawnX, spawnY, type);
             });
         } else {
-            this._spawnActual(x, y, type);
+            this._spawnActual(spawnX, spawnY, type);
         }
     }
 

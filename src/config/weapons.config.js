@@ -10,9 +10,9 @@ export const weaponsConfig = [
         slotType: 'primary',
 
         baseStats: {
-            damage: 25,
+            damage: 120,
             cooldown: 1000,
-            knockback: 250,
+            knockback: 600,
             knockbackDuration: 200
         },
 
@@ -26,7 +26,7 @@ export const weaponsConfig = [
 
         visual: {
             scale: 0.6,
-            offset: { x: 30, y: 0 },
+            offset: { x: 20, y: 0 },
             origin: { x: 0.3, y: 0.5 },
             gripOrigin: { x: 0.5, y: 1.5 },
             angleOrigin: 0,
@@ -54,9 +54,9 @@ export const weaponsConfig = [
         slotType: 'primary',
 
         baseStats: {
-            damage: 10,
-            cooldown: 500,
-            knockback: 60,
+            damage: 50,
+            cooldown: 600,
+            knockback: 300,
             knockbackDuration: 60
         },
 
@@ -69,8 +69,8 @@ export const weaponsConfig = [
         },
 
         visual: {
-            scale: 0.5,
-            offset: { x: 40, y: -10 },
+            scale: 0.6,
+            offset: { x: 25, y: -20 },
             origin: { x: 0.3, y: 0.5 },
             gripOrigin: { x: 0.5, y: 1.5 },
             angleOrigin: 0,
@@ -98,10 +98,10 @@ export const weaponsConfig = [
         slotType: 'primary',
 
         baseStats: {
-            damage: 50,
-            cooldown: 2000,
-            knockback: 200,
-            knockbackDuration: 100
+            damage: 150,
+            cooldown: 2500,
+            knockback: 600,
+            knockbackDuration: 250
         },
 
         strategyStats: {
@@ -144,10 +144,10 @@ export const weaponsConfig = [
         slotType: 'primary',
 
         baseStats: {
-            damage: 10,
-            cooldown: 500,
-            knockback: 60,
-            knockbackDuration: 60
+            damage: 100,
+            cooldown: 1500,
+            knockback: 300,
+            knockbackDuration: 250
         },
 
         strategyStats: {
@@ -372,8 +372,8 @@ export const weaponsConfig = [
         slotType: 'primary',
 
         baseStats: {
-            damage: 25,
-            cooldown: 1200,
+            damage: 30,
+            cooldown: 1000,
             knockback: 20,
             knockbackDuration: 50
         },
@@ -381,7 +381,7 @@ export const weaponsConfig = [
         strategyStats: {
             behaviorType: 'LASER',
             projectileSpeed: 200,
-            range: 350,
+            range: 400,
             projectileSize: 10
         },
 
@@ -418,15 +418,15 @@ export const weaponsConfig = [
 
         baseStats: {
             damage: 40,
-            cooldown: 1200,
-            knockback: 200,
+            cooldown: 2000,
+            knockback: 50,
             knockbackDuration: 100
         },
 
         strategyStats: {
             behaviorType: 'BURST',
             projectileSpeed: 600,
-            range: 3000,
+            range: 400,
             projectileSize: 15
         },
 
@@ -608,30 +608,30 @@ export const weaponsConfig = [
     {
         key: 'weapon_clt',
         name: 'Carteira de Trabalho',
-        type: 'trail',
+        type: 'orbital',
         image: 'src/assets/images/weapon_clt.png',
         slotType: 'secondary',
 
         baseStats: {
-            damage: 20,
-            cooldown: 300,
-            knockback: 10,
-            knockbackDuration: 30
+            damage: 25,
+            cooldown: 10000,
+            knockback: 15,
+            knockbackDuration: 50
         },
 
         strategyStats: {
-            behaviorType: 'AREA',
-            lifetimeMs: 800,
-            trailSpeed: 0,
-            trailSize: 14
+            behaviorType: 'ORBITAL',
+            projectileCount: 5,
+            orbitRadius: 100,
+            rotationSpeed: 0.001,
+            trailSize: 20
         },
 
         projectileVisuals: {
             spriteKey: 'proj_clt',
-            scale: 0.4,
-            animations: [
-                { type: 'pulse', scaleMax: 1.5, duration: 2000 }
-            ]
+            scale: 0.45,
+            rotationOffset: 0,
+            animations: []
         },
 
         visual: {

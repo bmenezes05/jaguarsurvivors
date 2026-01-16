@@ -70,4 +70,21 @@ export class WorldManager {
         );
         graphics.setDepth(0);
     }
+
+    /**
+     * Clamps a position strictly inside the playable world bounds.
+     * @param {number} x 
+     * @param {number} y 
+     * @param {number} margin - Padding from the edge
+     * @returns {Object} {x, y}
+     */
+    clampPosition(x, y, margin = 50) {
+        const worldW = CONFIG.world?.width || 1500;
+        const worldH = CONFIG.world?.height || 1500;
+
+        return {
+            x: Phaser.Math.Clamp(x, margin, worldW - margin),
+            y: Phaser.Math.Clamp(y, margin, worldH - margin)
+        };
+    }
 }

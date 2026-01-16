@@ -279,10 +279,10 @@ export const bossPhaseConfig = {
                         duration: 3000,
                         params: {
                             chargeUpTime: 600,
-                            chargeSpeed: 4.0,
+                            chargeSpeed: 2.5,
                             chargeDuration: 600,
-                            cooldownTime: 800,
-                            idleSpeed: 0.3,
+                            cooldownTime: 1500,
+                            idleSpeed: 0,
                             lockDirection: true
                         }
                     }
@@ -308,9 +308,11 @@ export const bossPhaseConfig = {
                         duration: 2500,
                         params: {
                             chargeUpTime: 400,
-                            chargeSpeed: 5.0,
+                            chargeSpeed: 3.0,
                             chargeDuration: 500,
-                            cooldownTime: 600
+                            cooldownTime: 1000,
+                            idleSpeed: 0,
+                            lockDirection: true
                         }
                     }
                 ],
@@ -327,10 +329,11 @@ export const bossPhaseConfig = {
                         duration: 4000,
                         params: {
                             chargeUpTime: 200,
-                            chargeSpeed: 6.0,
+                            chargeSpeed: 3.5,
                             chargeDuration: 400,
                             cooldownTime: 300,
-                            idleSpeed: 0.5
+                            idleSpeed: 0,
+                            lockDirection: true
                         }
                     }
                 ],

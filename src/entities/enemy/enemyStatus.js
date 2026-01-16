@@ -68,11 +68,28 @@ export class EnemyStatus {
             this.isEnraged = true;
 
             // Pop effect
+            const sprite = this.enemy.view.sprite;
+            // Stop any existing scale tweens to prevent accumulation
+            this.scene.tweens.killTweensOf(sprite, ['scaleX', 'scaleY']);
+
+            // Get original scale from config if possible, or current if it's the first time
+            let originalScaleX = sprite.getData('originalScaleX');
+            if (originalScaleX === undefined || originalScaleX === null) {
+                originalScaleX = sprite.scaleX;
+                sprite.setData('originalScaleX', originalScaleX);
+            }
+
             this.scene.tweens.add({
-                targets: this.enemy.view.sprite,
-                scale: this.enemy.view.sprite.scaleX * 1.2,
+                targets: sprite,
+                scaleX: originalScaleX * 1.2,
+                scaleY: originalScaleX * 1.2, // Assuming uniform scale for sprite
                 yoyo: true,
-                duration: 200
+                duration: 200,
+                onComplete: () => {
+                    if (sprite && sprite.setScale) {
+                        sprite.setScale(originalScaleX);
+                    }
+                }
             });
         }
     }

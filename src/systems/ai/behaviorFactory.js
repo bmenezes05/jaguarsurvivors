@@ -4,6 +4,9 @@ import { ZigZagBehavior } from './behaviors/zigzagBehavior.js';
 import { BurstPursuitBehavior } from './behaviors/burstPursuitBehavior.js';
 import { OrbitBehavior } from './behaviors/orbitBehavior.js';
 import { FleeBehavior } from './behaviors/fleeBehavior.js';
+import { StationaryBurstBehavior } from './behaviors/stationaryBurstBehavior.js';
+import { TacticalChaseBehavior } from './behaviors/tacticalChaseBehavior.js';
+import { RhythmicAreaBehavior } from './behaviors/rhythmicAreaBehavior.js';
 /**
  * BehaviorFactory
  * 
@@ -31,6 +34,9 @@ export class BehaviorFactory {
         this.register('burst_pursuit', BurstPursuitBehavior);
         this.register('orbit', OrbitBehavior);
         this.register('flee', FleeBehavior);
+        this.register('stationary_burst', StationaryBurstBehavior);
+        this.register('tactical_chase', TacticalChaseBehavior);
+        this.register('rhythmic_area', RhythmicAreaBehavior);
         this.initialized = true;
 
         console.debug('BehaviorFactory initialized with behaviors:',

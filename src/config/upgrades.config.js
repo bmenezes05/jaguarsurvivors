@@ -8,21 +8,21 @@
 // ==================== EQUIPABLE ITEMS ====================
 export const equipableItemsConfig = [
     {
-        id: 'item_luva',
-        name: 'Luva do Brasil',
-        spriteKey: 'item_luva',
-        image: 'src/assets/images/item_luva.png',
-        desc: '+25% Move Speed por nível',
-        maxLevel: 5,
-        levelEffects: [
-            { stat: 'moveSpeedStat', operation: 'addMultiplier', value: 0.25 }
-        ]
-    },
-    {
         id: 'item_medalha',
         name: 'Medalha de Honra',
         spriteKey: 'item_medalha',
         image: 'src/assets/images/item_medalha.png',
+        desc: '+20% Move Speed por nível',
+        maxLevel: 5,
+        levelEffects: [
+            { stat: 'moveSpeedStat', operation: 'addMultiplier', value: 0.20 }
+        ]
+    },
+    {
+        id: 'item_luva',
+        name: 'Luva do Brasil',
+        spriteKey: 'item_luva',
+        image: 'src/assets/images/item_luva.png',
         desc: '+20% Dano por nível',
         maxLevel: 5,
         levelEffects: [
@@ -45,10 +45,10 @@ export const equipableItemsConfig = [
         name: 'Óculos do Futuro',
         spriteKey: 'item_oculos',
         image: 'src/assets/images/item_oculos.png',
-        desc: '+10% Chance Crítico por nível',
+        desc: '+15% Chance Crítico por nível',
         maxLevel: 5,
         levelEffects: [
-            { stat: 'critChanceStat', operation: 'addFlat', value: 0.10 }
+            { stat: 'critChanceStat', operation: 'addFlat', value: 0.15 }
         ]
     },
     {
@@ -81,7 +81,7 @@ export const equipableItemsConfig = [
         desc: '+5% Life Steal por nível',
         maxLevel: 5,
         levelEffects: [
-            { stat: 'lifeStealStat', operation: 'addFlat', value: 0.05 }
+            { stat: 'lifeStealStat', operation: 'addFlat', value: 0.5 }
         ]
     },
     {
@@ -89,10 +89,10 @@ export const equipableItemsConfig = [
         name: 'Bandeira de Missão',
         spriteKey: 'item_bandeira_missao',
         image: 'src/assets/images/item_bandeira_missao.png',
-        desc: '-15% Recarga Dash por nível',
+        desc: '-25% Recarga Dash por nível',
         maxLevel: 5,
         levelEffects: [
-            { stat: 'dashCooldownStat', operation: 'addMultiplier', value: -0.15 }
+            { stat: 'dashCooldownStat', operation: 'addMultiplier', value: -0.25 }
         ]
     },
     {
@@ -100,10 +100,10 @@ export const equipableItemsConfig = [
         name: 'Corrente de Ouro',
         spriteKey: 'item_corrente',
         image: 'src/assets/images/item_corrente.png',
-        desc: '+20 Espinhos por nível',
+        desc: '+10 Espinhos por nível',
         maxLevel: 5,
         levelEffects: [
-            { stat: 'thornsStat', operation: 'addFlat', value: 20 }
+            { stat: 'thornsStat', operation: 'addFlat', value: 10 }
         ]
     },
     {
@@ -144,10 +144,10 @@ export const equipableItemsConfig = [
         name: 'Bracelete de Força',
         spriteKey: 'item_bracelete',
         image: 'src/assets/images/item_bracelete.png',
-        desc: '+15% Vel. Ataque por nível',
+        desc: '+25% Vel. Ataque por nível',
         maxLevel: 5,
         levelEffects: [
-            { stat: 'attackSpeedStat', operation: 'addMultiplier', value: 0.15 }
+            { stat: 'attackSpeedStat', operation: 'addMultiplier', value: 0.25 }
         ]
     }
 ];

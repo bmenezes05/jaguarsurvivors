@@ -6,7 +6,7 @@
 
 // ==================== XP SYSTEM ====================
 export const xpConfig = {
-    baseXPToLevel: 20,
+    baseXPToLevel: 40,
     xpScaling: 1.4,
     magnetRange: 150,
     magnetSpeed: 500,
@@ -52,7 +52,8 @@ export const worldConfig = {
 // ==================== EQUIPMENT LIMITS ====================
 export const equipmentLimitsConfig = {
     maxWeapons: 2,
-    maxItems: 3
+    maxItems: 3,
+    maxLegendaries: 4
 };
 
 

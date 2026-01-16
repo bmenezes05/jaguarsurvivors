@@ -71,14 +71,13 @@ export class LoadoutUIManager {
 
         const legendaryTitle = document.createElement('div');
         legendaryTitle.className = 'loadout-title legendary';
-        legendaryTitle.innerText = 'LEGENDÁRIOS';
+        legendaryTitle.innerText = 'PODERES';
 
         this.legendarySlotsContainer = document.createElement('div');
         this.legendarySlotsContainer.className = 'loadout-slots';
         this.legendarySlotsContainer.id = 'legendary-slots';
 
-        // Create 3 fixed placeholder slots for legendaries (max 3)
-        const maxLegendaries = 3;
+        const maxLegendaries = CONFIG.equipmentLimits?.maxLegendaries || 4;
         for (let i = 0; i < maxLegendaries; i++) {
             const slot = this.createLegendaryPlaceholderSlot();
             this.legendarySlots.push(slot);
@@ -130,13 +129,12 @@ export class LoadoutUIManager {
 
     createLegendaryPlaceholderSlot() {
         const el = document.createElement('div');
-        el.className = 'loadout-slot legendary empty';
+        el.className = 'loadout-slot legendary';
 
         const img = document.createElement('img');
         img.style.display = 'none';
         img.alt = '';
 
-        // Tooltip (hidden by default on empty slots)
         const tooltip = document.createElement('div');
         tooltip.className = 'legendary-tooltip';
         tooltip.style.display = 'none';
@@ -197,7 +195,6 @@ export class LoadoutUIManager {
     }
 
     onLegendaryObtained(config) {
-        // Find the first empty legendary slot
         const emptySlot = this.legendarySlots.find(s => s.isEmpty);
         if (!emptySlot) {
             console.warn('[LoadoutUI] No more legendary slots available');
@@ -219,7 +216,6 @@ export class LoadoutUIManager {
         // Mark as filled
         emptySlot.isEmpty = false;
         emptySlot.legendaryId = config.id;
-        emptySlot.el.classList.remove('empty');
 
         // Add entrance animation
         emptySlot.el.style.animation = 'legendarySlotEntrance 0.4s ease-out';

@@ -266,16 +266,21 @@ export class EnemySpawner {
         const dist = options.distance || this.waveConfig.spawnDistance || 700;
 
         const margin = 50;
-        const x = Phaser.Math.Clamp(
-            options.x || this.player.x + Math.cos(ang) * dist,
-            margin,
-            CONFIG.world?.width || 1500 - margin
-        );
-        const y = Phaser.Math.Clamp(
-            options.y || this.player.y + Math.sin(ang) * dist,
-            margin,
-            CONFIG.world?.height || 1500 - margin
-        );
+        let x = options.x || this.player.x + Math.cos(ang) * dist;
+        let y = options.y || this.player.y + Math.sin(ang) * dist;
+
+        // Ensure within world bounds
+        if (this.scene.world && typeof this.scene.world.clampPosition === 'function') {
+            const clamped = this.scene.world.clampPosition(x, y, margin);
+            x = clamped.x;
+            y = clamped.y;
+        } else {
+            // Fallback if world manager not ready
+            const worldW = CONFIG.world?.width || 1500;
+            const worldH = CONFIG.world?.height || 1500;
+            x = Phaser.Math.Clamp(x, margin, worldW - margin);
+            y = Phaser.Math.Clamp(y, margin, worldH - margin);
+        }
 
         // Finalize spawn logic helper to avoid duplication
         const finalize = () => {

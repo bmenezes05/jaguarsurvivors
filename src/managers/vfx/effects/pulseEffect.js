@@ -7,22 +7,53 @@ export class PulseEffect extends BaseVFXEffect {
         const objectToPulse = (target && target.container) ? target.container : target;
 
         if (objectToPulse && objectToPulse.setScale) {
+            // Stop any existing pulse tweens on this object to prevent accumulation
+            this.scene.tweens.killTweensOf(objectToPulse, ['scaleX', 'scaleY']);
+
             const scaleFactor = this.config.scale || 1.2;
             const duration = this.config.duration || 100;
 
-            const originalScaleX = objectToPulse.scaleX;
-            const originalScaleY = objectToPulse.scaleY;
+            // Determine base scale. 
+            // If it's an enemy container, we know magnitude should be 1.
+            // For other objects, we might want to store it.
+            // To be safe and generic: if it's already been modified, we might be in trouble.
+            // However, killTweensOf above stops the movement.
+
+            // RELIABLE FIX: Reset to magnitude 1 if it's a container (most common use case)
+            // or use a 'baseScale' data property if available.
+            let baseScaleX = objectToPulse.getData('baseScaleX');
+            let baseScaleY = objectToPulse.getData('baseScaleY');
+
+            if (baseScaleX === undefined || baseScaleX === null) {
+                // First time pulsing, or no base scale stored.
+                // Store current as base, but if it's a container we usually want 1.
+                baseScaleX = objectToPulse.scaleX;
+                baseScaleY = objectToPulse.scaleY;
+
+                // If it looks like it's already scaled by a previous broken pulse, 
+                // we can't easily recover here without more context, 
+                // but killing tweens of helps for future pulses.
+                objectToPulse.setData('baseScaleX', baseScaleX);
+                objectToPulse.setData('baseScaleY', baseScaleY);
+            }
+
+            // Ensure we use the base scale for the tween start/end
+            // Keep the current sign (for facing)
+            const currentDirX = Math.sign(objectToPulse.scaleX) || 1;
+            const currentDirY = Math.sign(objectToPulse.scaleY) || 1;
+
+            const targetBaseX = Math.abs(baseScaleX) * currentDirX;
+            const targetBaseY = Math.abs(baseScaleY) * currentDirY;
 
             this.scene.tweens.add({
                 targets: objectToPulse,
-                scaleX: originalScaleX * scaleFactor,
-                scaleY: originalScaleY * scaleFactor,
+                scaleX: targetBaseX * scaleFactor,
+                scaleY: targetBaseY * scaleFactor,
                 duration: duration / 2,
                 yoyo: true,
                 onComplete: () => {
-                    // Safety check if object still exists
                     if (objectToPulse && objectToPulse.setScale) {
-                        objectToPulse.setScale(originalScaleX, originalScaleY);
+                        objectToPulse.setScale(targetBaseX, targetBaseY);
                     }
                     this.complete();
                 }

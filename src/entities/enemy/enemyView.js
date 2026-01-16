@@ -5,6 +5,7 @@ export class EnemyView {
 
         this.container = scene.add.container(0, 0);
         scene.physics.world.enable(this.container);
+        this.container.body.setCollideWorldBounds(true);
         this.container.setData('parent', enemy);
 
         this.sprite = scene.add.image(0, 0, null);
@@ -39,6 +40,10 @@ export class EnemyView {
         this.leftLeg.setScale(legsScale);
         this.rightLeg.setScale(legsScale);
 
+        // Store base scale for VFX to prevent accumulation
+        this.sprite.setData('originalScaleX', bodyScale);
+        this.sprite.setData('originalScaleY', bodyScale);
+
         // Standardize Origin to Top Center for proper rotation (hips)
         this.leftLeg.setOrigin(0.5, 0);
         this.rightLeg.setOrigin(0.5, 0);
@@ -63,6 +68,8 @@ export class EnemyView {
         this.container.body.setOffset(-this.bodyWidth / 2, -this.bodyHeight / 2);
 
         this.container.setScale(1, 1);
+        this.container.setData('baseScaleX', 1);
+        this.container.setData('baseScaleY', 1);
         this.setFacing(true);
 
         this.animTimer = Math.random() * 1000; // Random offset

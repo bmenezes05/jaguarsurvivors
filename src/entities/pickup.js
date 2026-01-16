@@ -16,6 +16,7 @@ export class Pickup extends Phaser.GameObjects.Container {
         scene.physics.world.enable(this);
         this.body.setCircle(15);
         this.body.setOffset(-15, -15);
+        this.body.setCollideWorldBounds(true);
 
         // Hide initially
         this.setActive(false);

@@ -12,7 +12,7 @@ export const playersConfig = [
         description: 'Líder equilibrado com habilidades versáteis',
         player_body_image: 'src/assets/images/presida.png',
         player_legs_image: 'src/assets/images/presida_legs.png',
-        speed: 150,
+        speed: 200,
         acceleration: 2000,
         friction: 1500,
         size: 40,

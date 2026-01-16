@@ -8,6 +8,7 @@ export class XPGem {
         this.sprite.setDisplaySize(32, 32);
         this.scene.physics.add.existing(this.sprite);
         this.body = this.sprite.body;
+        this.body.setCollideWorldBounds(true);
         this.isActive = false;
 
         // Initial state

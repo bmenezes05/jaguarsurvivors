@@ -204,11 +204,11 @@ export const enemiesConfig = [
         spawnDistance: 700,
         maxOnScreen: 50,
         xpDropChance: 0.75,
-        canShoot: true,
-        projectileSpeed: 300,
-        shootInterval: 3000,
-        shootRange: 350,
-        projectileDamage: 12,
+        canShoot: false,
+        projectileSpeed: 0,
+        shootInterval: 0,
+        shootRange: 0,
+        projectileDamage: 0,
         xpValue: 1,
         bodyScale: 0.7,
         legsScale: 0.7,
@@ -224,13 +224,14 @@ export const enemiesConfig = [
         isElite: true,
         lootTable: 'common',
         ai: {
-            behaviorKey: 'orbit',
+            behaviorKey: 'charge',
             behaviorParams: {
-                preferredDistance: 250,
-                orbitSpeed: 0.9,
-                approachSpeed: 1.2,
-                orbitDirection: 1,
-                distanceTolerance: 40
+                chargeUpTime: 2000,
+                chargeSpeed: 3.0,
+                chargeDuration: 500,
+                cooldownTime: 1500,
+                idleSpeed: 0.3,
+                lockDirection: true
             }
         },
         scalingProfile: 'ranged'
@@ -242,7 +243,7 @@ export const enemiesConfig = [
         speed: 300,
         size: 35,
         damage: 25,
-        health: 400,
+        health: 500,
         spawnDistance: 700,
         maxOnScreen: 5,
         xpDropChance: 1.0,
@@ -277,36 +278,6 @@ export const enemiesConfig = [
             }
         },
         scalingProfile: 'aggressive'
-    },
-    {
-        key: 'enemy_crime',
-        enemy_body_image: 'src/assets/images/enemy_crime.png',
-        enemy_legs_image: 'src/assets/images/enemy_crime_legs.png',
-        speed: 100,
-        size: 32,
-        damage: 10,
-        health: 100,
-        spawnDistance: 700,
-        maxOnScreen: 50,
-        xpDropChance: 0.8,
-        canShoot: false,
-        projectileSpeed: 0,
-        shootInterval: 0,
-        shootRange: 0,
-        projectileDamage: 0,
-        xpValue: 1,
-        bodyScale: 1,
-        legsScale: 0.6,
-        bodyWidth: 60,
-        bodyHeight: 100,
-        hitbox: { width: 40, height: 80 },
-        bossScale: 0.6,
-        legOffset: { x: -10, y: 45 },
-        projectileColor: 0xFF0000,
-        projectileScale: 1.0,
-        hitSoundKey: 'hit',
-        dropChance: 0.05,
-        lootTable: 'common'
     },
     {
         key: 'enemy_milicia',
@@ -714,31 +685,31 @@ export const enemiesConfig = [
         spawnDistance: 700,
         maxOnScreen: 50,
         xpDropChance: 0.8,
-        canShoot: false,
-        projectileSpeed: 0,
-        shootInterval: 0,
-        shootRange: 0,
-        projectileDamage: 0,
+        canShoot: true,
+        projectileSpeed: 200,
+        shootInterval: 1000,
+        shootRange: 350,
+        projectileDamage: 12,
         xpValue: 1,
-        bodyScale: 0.8,
-        legsScale: 0.5,
+        bodyScale: 0.9,
+        legsScale: 0.6,
         bodyWidth: 60,
         bodyHeight: 100,
         hitbox: { width: 40, height: 80 },
         bossScale: 0.6,
-        legOffset: { x: 0, y: 40 },
+        legOffset: { x: -10, y: 40 },
         projectileColor: 0xFF0000,
         projectileScale: 1.0,
         hitSoundKey: 'hit',
         dropChance: 0.05,
         lootTable: 'common',
         ai: {
-            behaviorKey: 'burst_pursuit',
+            behaviorKey: 'orbit',
             behaviorParams: {
-                pursuitSpeed: 1.4,
-                pursuitDuration: 1500,
-                pauseDuration: 1000,
-                pauseSpeed: 0.2
+                preferredDistance: 3000,
+                orbitSpeed: 0.7,
+                approachSpeed: 1.0,
+                orbitDirection: -1
             }
         }
     },
@@ -753,14 +724,14 @@ export const enemiesConfig = [
         spawnDistance: 700,
         maxOnScreen: 50,
         xpDropChance: 0.8,
-        canShoot: false,
-        projectileSpeed: 0,
-        shootInterval: 0,
-        shootRange: 0,
-        projectileDamage: 0,
+        canShoot: true,
+        projectileSpeed: 200,
+        shootInterval: 1000,
+        shootRange: 350,
+        projectileDamage: 12,
         xpValue: 1,
         bodyScale: 0.8,
-        legsScale: 0.5,
+        legsScale: 0.6,
         bodyWidth: 60,
         bodyHeight: 100,
         hitbox: { width: 40, height: 80 },
@@ -772,10 +743,12 @@ export const enemiesConfig = [
         dropChance: 0.05,
         lootTable: 'common',
         ai: {
-            behaviorKey: 'chase',
+            behaviorKey: 'orbit',
             behaviorParams: {
-                speed: 1.3,
-                trackingSpeed: 0.9
+                preferredDistance: 250,
+                orbitSpeed: 1.7,
+                approachSpeed: 1.0,
+                orbitDirection: -1
             }
         }
     },
@@ -790,11 +763,11 @@ export const enemiesConfig = [
         spawnDistance: 700,
         maxOnScreen: 50,
         xpDropChance: 0.8,
-        canShoot: false,
-        projectileSpeed: 0,
-        shootInterval: 0,
-        shootRange: 0,
-        projectileDamage: 0,
+        canShoot: true,
+        projectileSpeed: 200,
+        shootInterval: 1000,
+        shootRange: 350,
+        projectileDamage: 12,
         xpValue: 1,
         bodyScale: 0.9,
         legsScale: 0.6,
@@ -811,11 +784,11 @@ export const enemiesConfig = [
         ai: {
             behaviorKey: 'charge',
             behaviorParams: {
-                chargeUpTime: 700,
-                chargeSpeed: 3.5,
-                chargeDuration: 400,
-                cooldownTime: 1800,
-                idleSpeed: 0.2
+                chargeUpTime: 100,
+                chargeSpeed: 5.5,
+                chargeDuration: 200,
+                cooldownTime: 400,
+                idleSpeed: 0
             }
         }
     },
@@ -897,6 +870,89 @@ export const enemiesConfig = [
             }
         },
         scalingProfile: 'aggressive'
+    },
+    {
+        key: 'enemy_boss_bandido',
+        enemy_body_image: 'src/assets/images/boss_bandido.png',
+        enemy_legs_image: 'src/assets/images/enemy_favela_legs.png',
+        speed: 50,
+        size: 64,
+        damage: 20,
+        health: 1000,
+        canShoot: true,
+        projectileSpeed: 400,
+        shootInterval: 100,
+        shootRange: 600,
+        projectileDamage: 15,
+        xpValue: 100,
+        bodyScale: 0.8,
+        legsScale: 0.1,
+        hitbox: { width: 80, height: 120 },
+        ai: {
+            behaviorKey: 'stationary_burst',
+            behaviorParams: {
+                pauseDuration: 2500,
+                shotsPerBurst: 15,
+                fireRate: 80,
+                idleSpeed: 0.1,
+                telegraphDuration: 1200
+            }
+        }
+    },
+    {
+        key: 'enemy_boss_milicia',
+        enemy_body_image: 'src/assets/images/boss_milicia.png',
+        enemy_legs_image: 'src/assets/images/enemy_milicia_legs.png',
+        speed: 120,
+        size: 64,
+        damage: 25,
+        health: 1000,
+        canShoot: true,
+        projectileSpeed: 450,
+        shootInterval: 1500,
+        shootRange: 500,
+        projectileDamage: 20,
+        xpValue: 120,
+        bodyScale: 0.7,
+        legsScale: 1.4,
+        legOffset: { x: -10, y: 80 },
+        hitbox: { width: 80, height: 120 },
+        ai: {
+            behaviorKey: 'tactical_chase',
+            behaviorParams: {
+                chaseDuration: 4000,
+                repositionDuration: 3000,
+                preferredDistance: 350,
+                approachSpeed: 1.3,
+                retreatSpeed: 0.9
+            }
+        }
+    },
+    {
+        key: 'enemy_boss_funkeiro',
+        enemy_body_image: 'src/assets/images/boss_funkeiro.png',
+        enemy_legs_image: 'src/assets/images/enemy_funkeiro_legs.png',
+        speed: 150,
+        size: 64,
+        damage: 20,
+        health: 1000,
+        canShoot: false,
+        xpValue: 150,
+        bodyScale: 0.7,
+        legsScale: 1.4,
+        legOffset: { x: 0, y: 90 },
+        hitbox: { width: 80, height: 120 },
+        ai: {
+            behaviorKey: 'rhythmic_area',
+            behaviorParams: {
+                pulseInterval: 1800,
+                orbitDuration: 2500,
+                dashDuration: 600,
+                dashSpeed: 5.0,
+                orbitSpeed: 1.2,
+                orbitDirection: 1
+            }
+        }
     },
     /* -----------------------------*/
     {
@@ -1324,7 +1380,7 @@ export const bossesConfig = [
         key: 'boss_bandido_moto',
         name: 'Dois homens numa moto',
         baseEnemy: 'enemy_bandido_moto',
-        healthMultiplier: 0.1,
+        healthMultiplier: 1.5,
         damageMultiplier: 0.2,
         speedMultiplier: 0.7,
         sizeMultiplier: 1.6,
@@ -1374,6 +1430,57 @@ export const bossesConfig = [
         enrageSpeedBonus: 0.5,
         stompInterval: 3000,
         gameplayRhythm: 0.8,
+        dropChance: 1.0,
+        lootTable: 'boss'
+    },
+    {
+        key: 'boss_bandido',
+        name: 'Chefe do Tráfico',
+        baseEnemy: 'enemy_boss_bandido',
+        healthMultiplier: 1.5,
+        damageMultiplier: 1.5,
+        speedMultiplier: 1.0,
+        sizeMultiplier: 1.0,
+        xpDropChance: 1.0,
+        xpValue: 500,
+        tint: 0xFFFFFF,
+        enrageTint: 0xFF0000,
+        enrageHealthThreshold: 0.5,
+        stompInterval: 2500,
+        dropChance: 1.0,
+        lootTable: 'boss'
+    },
+    {
+        key: 'boss_milicia',
+        name: 'Comandante da Milícia',
+        baseEnemy: 'enemy_boss_milicia',
+        healthMultiplier: 1.5,
+        damageMultiplier: 2,
+        speedMultiplier: 1.1,
+        sizeMultiplier: 1.0,
+        xpDropChance: 1.0,
+        xpValue: 600,
+        tint: 0xFFFFFF,
+        enrageTint: 0xFF5500,
+        enrageHealthThreshold: 0.4,
+        stompInterval: 3000,
+        dropChance: 1.0,
+        lootTable: 'boss'
+    },
+    {
+        key: 'boss_funkeiro',
+        name: 'MC Latrocínio',
+        baseEnemy: 'enemy_boss_funkeiro',
+        healthMultiplier: 1.5,
+        damageMultiplier: 1.5,
+        speedMultiplier: 1.2,
+        sizeMultiplier: 1.2,
+        xpDropChance: 1.0,
+        xpValue: 700,
+        tint: 0xFFFFFF,
+        enrageTint: 0xFF00FF,
+        enrageHealthThreshold: 0.3,
+        stompInterval: 1800,
         dropChance: 1.0,
         lootTable: 'boss'
     }

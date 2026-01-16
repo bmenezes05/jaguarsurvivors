@@ -119,6 +119,9 @@ export class EnemyCombat {
             this.scene.enemyProjectiles.add(proj.sprite);
         }
 
+        // Apply velocity AFTER adding to group to avoid physics reset
+        proj.applyVelocity(player, this.enemy.entity.config);
+
         // Reset Cooldown
         this.cooldown = this.enemy.entity.config.shootInterval || 2000;
     }

@@ -2,6 +2,7 @@ import { CONFIG } from '../../config/config.js';
 import { MeleeWeaponStrategy } from './strategies/meleeWeaponStrategy.js';
 import { TrailWeaponStrategy } from './strategies/trailWeaponStrategy.js';
 import { RangedWeaponStrategy } from './strategies/rangedWeaponStrategy.js';
+import { OrbitalWeaponStrategy } from './strategies/orbitalWeaponStrategy.js';
 
 export class Weapon {
     constructor(scene, playerCombat, enemySpawner, weaponKey) {
@@ -17,7 +18,7 @@ export class Weapon {
             return;
         }
 
-        this.cooldownTimer = 0;
+        this.cooldownTimer = 99999; // Initialize high to fire immediately on first update
 
         this.baseStats = this.config.baseStats || {};
         this.strategyStats = this.config.strategyStats || {};
@@ -37,6 +38,8 @@ export class Weapon {
                 return new RangedWeaponStrategy(this);
             case 'trail':
                 return new TrailWeaponStrategy(this);
+            case 'orbital':
+                return new OrbitalWeaponStrategy(this);
             default:
                 console.warn(`[Weapon] Unknown type '${type}' for weapon '${this.config.key}'. Defaulting to Melee.`);
                 return new MeleeWeaponStrategy(this);
@@ -51,16 +54,21 @@ export class Weapon {
         const range = this.current.detectionRange || 400;
         const target = this.findNearestEnemy(range);
 
-        if (!target) return;
+        // Always update strategy (handles orbital movement, projectile cleanup, etc.)
+        this.strategy.update?.(delta);
 
-        this.updateWeaponRotation(target);
-
-        if (this.cooldownTimer >= this.current.cooldown) {
-            this.strategy.attack(target);
-            this.cooldownTimer = 0;
+        if (target) {
+            this.updateWeaponRotation(target);
         }
 
-        this.strategy.update?.(delta);
+        // Check cooldown and trigger attack
+        if (this.cooldownTimer >= this.current.cooldown) {
+            // Orbital/Passive weapons fire (or refresh) even without a direct target
+            if (target || this.config.type === 'orbital') {
+                this.strategy.attack(target);
+                this.cooldownTimer = 0;
+            }
+        }
     }
 
     updateDynamicStats() {
@@ -89,6 +97,11 @@ export class Weapon {
             this.current.trailSpeed = (this.strategyStats.trailSpeed || 0) * stats.projectileSpeed;
             this.current.trailSize = (this.strategyStats.trailSize || 10) * stats.area;
             this.current.detectionRange = 400; // Default range for trail weapons
+
+        } else if (this.config.type === 'orbital') {
+            this.current.trailSize = (this.strategyStats.trailSize || 10) * stats.area;
+            this.current.orbitRadius = (this.strategyStats.orbitRadius || 120) * stats.area;
+            this.current.detectionRange = this.current.orbitRadius + this.current.trailSize;
 
         } else if (this.config.type === 'melee') {
             const hitbox = this.strategyStats.meleeHitbox || { width: 100, height: 100 };
