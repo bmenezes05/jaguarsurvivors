@@ -16,7 +16,9 @@ export class SaveManager {
             },
             settings: {
                 volume: 1.0,
-                screenShake: true
+                screenShake: true,
+                fullscreen: false,
+                resolution: '1280x720'
             },
             achievements: []
         };

@@ -181,6 +181,8 @@ export const GameEvents = {
         const s = GameEvents.saveManager.data.settings;
         document.getElementById('setting-volume').value = s.volume * 100;
         document.getElementById('setting-shake').checked = s.screenShake;
+        document.getElementById('setting-fullscreen').checked = !!s.fullscreen;
+        document.getElementById('setting-resolution').value = s.resolution || 'auto';
     },
 
     setVolume: (val) => {
@@ -196,6 +198,63 @@ export const GameEvents = {
 
     toggleShake: () => {
         GameEvents.saveManager.toggleScreenShake();
+    },
+
+    toggleFullscreen: () => {
+        const isFullscreen = !GameEvents.saveManager.data.settings.fullscreen;
+        GameEvents.saveManager.data.settings.fullscreen = isFullscreen;
+        GameEvents.saveManager.save();
+
+        if (isFullscreen) {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+                    GameEvents.saveManager.data.settings.fullscreen = false;
+                    GameEvents.saveManager.save();
+                    document.getElementById('setting-fullscreen').checked = false;
+                });
+            }
+        } else {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+        }
+        GameEvents.updateResolution();
+    },
+
+    setResolution: (val) => {
+        GameEvents.saveManager.data.settings.resolution = val;
+        GameEvents.saveManager.save();
+        GameEvents.updateResolution();
+    },
+
+    updateResolution: () => {
+        const wrapper = document.getElementById('game-wrapper');
+        const targetWidth = 1280;
+        const targetHeight = 720;
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+
+        const resSetting = GameEvents.saveManager.data.settings.resolution || 'auto';
+
+        let scale;
+        if (resSetting === 'auto' || document.fullscreenElement) {
+            const scaleX = windowWidth / targetWidth;
+            const scaleY = windowHeight / targetHeight;
+            scale = Math.min(scaleX, scaleY);
+        } else {
+            const [w, h] = resSetting.split('x').map(Number);
+            scale = w / targetWidth;
+
+            // Check if it fits in window, if not, fallback to auto scale
+            if (w > windowWidth || h > windowHeight) {
+                const scaleX = windowWidth / targetWidth;
+                const scaleY = windowHeight / targetHeight;
+                scale = Math.min(scaleX, scaleY);
+            }
+        }
+
+        wrapper.style.transform = `scale(${scale})`;
     },
 
     generateWeaponSelection: () => {
@@ -400,4 +459,19 @@ window.onload = () => {
     GameEvents.achievementManager.checkGlobalUnlocks();
 
     GameEvents.generateCharacterSelection();
+
+    // Listen for resize and fullscreen changes
+    window.addEventListener('resize', GameEvents.updateResolution);
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+            GameEvents.saveManager.data.settings.fullscreen = false;
+            GameEvents.saveManager.save();
+            const checkbox = document.getElementById('setting-fullscreen');
+            if (checkbox) checkbox.checked = false;
+        }
+        GameEvents.updateResolution();
+    });
+
+    // Initial scale
+    GameEvents.updateResolution();
 };
